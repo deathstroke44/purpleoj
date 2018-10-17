@@ -1,0 +1,36 @@
+
+{% block head %}
+{% endblock head %}
+
+{% block content %}
+<style>
+    body
+    {
+        padding: 120px;
+        margin: 120px;
+        background: url("/static/post_editor_pop.jpeg");
+        background-size: cover;
+        background-position: center;
+    }
+    h1   {color: blue;}
+    p    {color: red;}
+
+</style>
+<body>
+
+{%  include 'layout.html' %}
+  <h1 class="lead" align="center"><font size="10px">Create Post</font></h1>
+{%  from  "includes/_formhelpers.html" import render_field %}
+<form method="POST" action="">
+
+<div class="form-group" >
+      {{render_field(form.title, class_="form-control")}}
+</div>
+<div class="form-group">
+      {{render_field(form.text, class_="form-control",id="editor")}}
+</div>
+<p><input type="submit" class="btn btn-primary" value="Submit"></p>
+</form>
+</body>
+
+{% endblock content %}

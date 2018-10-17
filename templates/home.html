@@ -1,0 +1,34 @@
+
+{% block head %}
+{% endblock head %}
+
+{% block content %}<style>
+    body {padding-top:20px;padding: 20px;background-color: powderblue;}
+    h1   {color: blue;}
+    p    {color: red;}
+</style>
+<body>
+	
+{%  include 'layout.html' %}
+    <ul class="list-group">
+        {%  for post in posts %}
+            <li class="list-group-item">
+            <div class="jumbotron">
+                <p> {{ post.title }} </p>
+                <p> {{ post.user_ }} </p>
+                <p>
+                    {{ post.dt }}
+                </p>
+                <details>
+                    <SUMMARY>View Details</SUMMARY>
+                    <P>
+                        {{ post.text }}
+                    </P>
+                </details>
+            </div>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock content %}
+  

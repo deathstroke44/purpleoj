@@ -1,0 +1,75 @@
+{% block head %}
+{% endblock head %}
+
+{% block content %}
+<style>
+    body {padding-top:20px;padding: 20px;background-color: powderblue;}
+    h1   {color: blue;}
+    p    {color: red;}
+    .dom {padding-top: 40px}
+
+#header
+{
+    width: 100%;
+    height: 10%;
+    background_color: red;
+    height: 30px;
+}
+#container
+{
+    width: 100%;
+    margin: auto;
+}
+#first
+{
+    width: 45%;
+
+    margin: 2%;
+
+
+    float: left;
+}
+#second
+{
+    width: 45%;
+    margin: 2%;
+    float: right;
+}
+#third
+{
+    width: 28%;
+    margin: 2%;
+    float: right;
+
+}
+#clear
+{
+    clear: both;
+}
+
+
+</style>
+
+<body>
+{%  include 'layout.html' %}
+
+<h4 class="dom">Upload Problem</h4>
+<hr>
+
+    </form>
+    <form method=post enctype=multipart/form-data>
+        {%  from  "includes/_formhelpers.html" import render_field %}
+        <div class="form-group">
+            <div id="first">
+            {{ render_field(nameform.count,class_="form-control")}}
+            </div>
+            <div id="second">
+            {{ render_field(nameform.name,class_="form-control")}}
+            </div>
+        </div>
+      <input type=file name=file>
+      <input type=submit value=Upload>
+    </form>
+
+</body>
+{% endblock content %}

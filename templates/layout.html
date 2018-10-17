@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Portfolio Item - Start Bootstrap Template</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/static/css/portfolio-item.css" rel="stylesheet">
+      <script src="/static/editor/ckeditor.js"></script>
+      <script type="text/javascript">
+      CKEDITOR.replace('editor')
+    </script>
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
+        <a class="navbar-brand" href="#"><b>My Online Judge</b></a>
+
+        <div id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Home
+
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/pdfviewers">Problem</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/upload">Upload Problem</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/post">Create Post</a>
+            </li>
+          </ul>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Sign in</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/register">Register</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/logout">Sign Out</a>
+            </li>
+          </ul>
+        </div>
+    </nav>
+
+{%  include 'includes/_messeages.html' %}
+
+    <!-- Page Content -->
+
+  </body>
+
+</html>
+
