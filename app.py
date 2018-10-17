@@ -9,7 +9,7 @@ import os
 app = Flask(__name__)
 UPLOAD_FOLDER = '/home/aniomi/PycharmProjects/purpleoj/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
-
+import uuid
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MONGO_URI']='mongodb://red44:omi123@ds131963.mlab.com:31963/purpleoj'
 mongo = PyMongo(app)
@@ -18,16 +18,96 @@ app.secret_key = "super secret key"
 sess = Session()
 
 class UploadForm(Form):
-    name = StringField('name', [validators.DataRequired()])
-    count = IntegerField('count', [validators.DataRequired()])
+    name = StringField('Problem name', [validators.DataRequired()])
+    count = IntegerField('Number Of subtask(at least 1 at most 2)', [validators.DataRequired()])
+    point1 = IntegerField('Point for Subtask 1')
+    point2 = IntegerField('Point for Subtask 2')
+    point3 = IntegerField('Point for Subtask 3')
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+class problem:
+    def __init__(self,sub_task_count,id,pnt1,pnt2,pnt3):
+        self.sub_task_count=sub_task_count
+        self.pnt1=pnt1
+        self.pnt2=pnt2
+        self.pnt3=pnt3
+        self.id=id
+
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     nameform=UploadForm(request.form)
+    if request.method == 'POST':
+        # check if the post request has the file part
+        sbcnt=nameform.count.data
+        if not valid(strr='file',request=request):
+            return redirect(request.url)
+        if sbcnt<=1:
+            if not valid(strr='ifile1', request=request) or not valid(strr='ofile1', request=request) or nameform.point1.data==None:
+                return redirect(request.url)
+        if sbcnt<=2:
+            if not valid(strr='ifile2', request=request) or not valid(strr='ofile2', request=request) or nameform.point2.data==None:
+                return redirect(request.url)
+        if sbcnt<=3:
+            if not valid(strr='ifile3', request=request) or not valid(strr='ofile3', request=request) or nameform.point3.data==None:
+                return redirect(request.url)
+
+        gpb=uuid.uuid4().__str__()
+        file= request.files['file']
+        filename = gpb+'.pdf'#secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        for i in range(1,sbcnt+1):
+            inp='ifile'+str(i)
+            out='ofile'+str(i)
+            file=request.files[inp]
+            filename=gpb+'in'+str(i)+'.txt'
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file = request.files[out]
+            filename = gpb + 'out' + str(i) + '.txt'
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        pnt1 ,pnt2,pnt3=0,0,0
+        if not nameform.point1 == None:
+            pnt1=nameform.point1.data
+        if not nameform.point1 == None:
+            pnt2=nameform.point2.data
+        if not nameform.point1 == None:
+            pnt3=nameform.point3.data
+
+        pb=problem(sbcnt,gpb,pnt1,pnt2,pnt3)
+        problemdb=mongo.db.problems
+        problemdb.insert({
+            'sub_task_count': pb.sub_task_count,
+            'myid': pb.id,
+            'pnt1':pb.pnt1,
+            'pnt2':pb.pnt2,
+            'pnt3':pb.pnt3,
+            'author':session['username'],
+            'name':nameform.name.data
+        })
+
+        return redirect(url_for('upload_file', filename=filename))
+
+
+
+    return render_template('upload_problem.html',nameform=nameform)
+
+
+def valid(strr,request):
+    if strr not in request.files:
+        return False
+    filee= request.files[strr]
+    if filee.filename=='':
+        return  False
+    if filee and allowed_file(filee.filename):
+        print("Something")
+        return True
+    return False
+
+def upload_prev():
+    nameform = UploadForm(request.form)
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -42,8 +122,8 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('upload_file',filename=filename))
-    return render_template('upload_problem.html',nameform=nameform)
+            return redirect(url_for('upload_file', filename=filename))
+    return render_template('upload_problem.html', nameform=nameform)
 
 class postob:
     def __init__(self,xtitle, xtext, xdt, xuser_, xid_):
@@ -123,6 +203,8 @@ class LoginForm(Form):
     username = StringField('Username', [validators.DataRequired()])
     password = PasswordField('Password', [validators.DataRequired()])
 
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     print('st')
@@ -179,6 +261,7 @@ def post():
 
     if request.method == 'POST':
         title= form.title.data
+        print("Reach")
         text = form.text.data
         dt=datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")
         ppt = mongo.db.posts
