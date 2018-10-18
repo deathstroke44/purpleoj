@@ -34,7 +34,7 @@
                 <th>Category</th>
                 <th>Accepted Submission</th>
                 <th>Total Submission</th>
-                <th></th>
+
             </tr>
     </thead>
         <tfoot>
@@ -44,14 +44,16 @@
                 <th>Category</th>
                 <th>Accepted Submission</th>
                 <th>Total Submission</th>
-                <th></th>
+
             </tr>
     </tfoot>
     <tbody>
     {% for problem in obj %}
         <tr>
             <td>
+                <a href="about/{{problem.id}}">
                 {{ problem.name }}
+                </a>
             </td>
             <td>
                 {{ problem.setter }}
@@ -65,7 +67,6 @@
             <td>
                 {{ problem.sub }}
             </td>
-            <td><a href="about/{{problem.id}}" class="btn-dark">View</a></td>
         </tr>
     {% endfor %}
      <!---   <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
