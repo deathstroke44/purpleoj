@@ -9,6 +9,7 @@ import os
 app = Flask(__name__)
 UPLOAD_FOLDER = '/home/aniomi/PycharmProjects/purpleoj/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
+ALLOWED_CATEGORY=set(['ACM','IOI'])
 import uuid
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MONGO_URI']='mongodb://red44:omi123@ds131963.mlab.com:31963/purpleoj'
@@ -18,6 +19,9 @@ app.secret_key = "super secret key"
 sess = Session()
 
 class UploadForm(Form):
+    time_limit = IntegerField("Time limit(ms)",[validators.DataRequired()])
+    memory_limit = IntegerField("Memory Limit(MB)",[validators.DataRequired()])
+    category = StringField("Problem Style(ACM,IOI)",[validators.DataRequired()])
     name = StringField('Problem name', [validators.DataRequired()])
     count = IntegerField('Number Of subtask(at least 1 at most 2)', [validators.DataRequired()])
     point1 = IntegerField('Point for Subtask 1')
@@ -29,12 +33,19 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 class problem:
-    def __init__(self,sub_task_count,id,pnt1,pnt2,pnt3):
+    def __init__(self,sub_task_count,id,pnt1,pnt2,pnt3,time_limit,memory_limit,stylee,name,acsub,sub,setter):
         self.sub_task_count=sub_task_count
         self.pnt1=pnt1
         self.pnt2=pnt2
         self.pnt3=pnt3
         self.id=id
+        self.time_limit=time_limit
+        self.memory_limit=memory_limit
+        self.stylee=stylee
+        self.name=name
+        self.acsub= acsub
+        self.sub= sub
+        self.setter=setter
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -45,13 +56,13 @@ def upload_file():
         sbcnt=nameform.count.data
         if not valid(strr='file',request=request):
             return redirect(request.url)
-        if sbcnt<=1:
+        if sbcnt>=1:
             if not valid(strr='ifile1', request=request) or not valid(strr='ofile1', request=request) or nameform.point1.data==None:
                 return redirect(request.url)
-        if sbcnt<=2:
+        if sbcnt>=2:
             if not valid(strr='ifile2', request=request) or not valid(strr='ofile2', request=request) or nameform.point2.data==None:
                 return redirect(request.url)
-        if sbcnt<=3:
+        if sbcnt>=3:
             if not valid(strr='ifile3', request=request) or not valid(strr='ofile3', request=request) or nameform.point3.data==None:
                 return redirect(request.url)
 
@@ -76,7 +87,7 @@ def upload_file():
         if not nameform.point1 == None:
             pnt3=nameform.point3.data
 
-        pb=problem(sbcnt,gpb,pnt1,pnt2,pnt3)
+        pb=problem(sbcnt,gpb,pnt1,pnt2,pnt3,nameform.time_limit.data,nameform.memory_limit.data,nameform.category.data,nameform.name.data,0,0,session['username'])
         problemdb=mongo.db.problems
         problemdb.insert({
             'sub_task_count': pb.sub_task_count,
@@ -85,7 +96,13 @@ def upload_file():
             'pnt2':pb.pnt2,
             'pnt3':pb.pnt3,
             'author':session['username'],
-            'name':nameform.name.data
+            'name':nameform.name.data,
+            'time_limit':pb.time_limit,
+            'memory_limit':pb.memory_limit,
+            'stylee':pb.stylee,
+            'acsub':0,
+            'sub':0,
+            'setter':session['username']
         })
 
         return redirect(url_for('upload_file', filename=filename))
@@ -274,6 +291,44 @@ def post():
             'USER':user_
         })
     return render_template('create_post.html',form = form)
+
+class prob_struct:
+    def __init__(self,pn,tl,ml):
+        self.pn=pn
+        self.tl='Time Limit : '+str(tl)+'ms'
+        self.ml='Memory Limit: '+str(ml)+'mb'
+
+
+@app.route('/about/<id>/')
+def pdfviewers(id):
+    pbdb=mongo.db.problems
+    pb=pbdb.find_one({'myid': id})
+    pbds=prob_struct(pb['name'],pb['time_limit'],pb['memory_limit'])
+    return render_template("pdfviewer.html", pdf_src='/static/uploads/'+id+'.pdf',pbds=pbds)
+
+@app.route('/about')
+def postab():
+    problemsdb=mongo.db.problems
+    list = []
+    existing_posts = problemsdb.find({})
+    i = 0
+    for existing_post in existing_posts:
+        ppp= problem(existing_post['sub_task_count'],
+                     existing_post['myid'],
+                     existing_post['pnt1'],
+                     existing_post['pnt2'],
+                     existing_post['pnt3'],
+                     existing_post['time_limit'],
+                     existing_post['memory_limit'],
+                     existing_post['stylee'],
+                     existing_post['name'],
+                     existing_post['acsub'],
+                     existing_post['sub'],
+                     existing_post['setter'])
+        list.append(ppp)
+        i = i + 1
+    print(len(list))
+    return render_template('problem_list.html',obj=list)
 
 if __name__ == '__main__':
     app.secret_key = 'SUPER SECRET KEY'

@@ -90,6 +90,17 @@
         </div>
         <div class="form-group">
             <div id="third">
+            {{ render_field(nameform.category,class_="form-control")}}
+            </div>
+            <div id="fourth">
+            {{ render_field(nameform.memory_limit,class_="form-control")}}
+            </div>
+            <div id="fifth">
+                {{ render_field(nameform.time_limit,class_="form-control")}}
+            </div>
+        </div>
+        <div class="form-group">
+            <div id="third">
                 {{ render_field(nameform.point1,class_="form-control")}}
             </div>
             <div id="fourth">
