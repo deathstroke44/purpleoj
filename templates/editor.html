@@ -1,0 +1,27 @@
+{% block head %}
+{% endblock head %}
+{% block content %}
+    <head>
+        {{ codemirror.include_codemirror() }}
+    </head>
+    <body>
+    {% include 'layout.html' %}
+    {% from "includes/_formhelpers.html" import render_field %}
+    <h1 class="lead" align="center"><font size="10px">Code</font></h1>
+    <div class="container">
+
+        {{ codemirror.include_codemirror() }}
+
+        <form method="POST" action="">
+            <div class="form-group">
+                {{render_field(form.source_code,class_="form_control") }}
+            </div>
+
+             <p><input type="submit" class="btn btn-primary" value="Run"></p>
+        </form>
+    </div>
+
+
+    </body>
+
+{% endblock content %}
