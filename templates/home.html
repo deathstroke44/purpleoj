@@ -11,10 +11,9 @@
     <style>
     body {padding-top:20px;padding: 20px;background-color: powderblue;}
     h1   {color: blue;}
-    p    {color: red;}
 </style>
 
-
+<body>
 
 {%  include 'layout.html' %}
 <div>
@@ -54,6 +53,21 @@
 
     $('#mydata').dataTable()
 </script>
+<!--
+    <div>
+        <ul class="list-group">
+             {% for post in posts %}
+                <li class="list-group-item">
+                    <div>
+                        <div>
+                            <p><font size="4px"><b>{{ post.title }}</b></font>&nbsp;<font size="2px">posted by</font><font size="2px>"> {{ post.user_ }}</font><font size="2px"> {{ post.dt }}</font></p>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+</ul>
+    </div>
+    -->
 </body>
 {% endblock content %}
-  
+
