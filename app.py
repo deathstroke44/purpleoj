@@ -341,7 +341,33 @@ def postab():
         list.append(ppp)
         i = i + 1
     print(len(list))
+<<<<<<< HEAD
+    return render_template('problem_list.html', obj=list)
+
+
+@app.route('/news')
+def news():
+        class Article:
+        def __init__(self, title, detail):
+            self.title = title
+            self.detail = detail
+
+    article_array = []
+
+    source = requests.get('https://atcoder.jp/').text
+    soup = BeautifulSoup(source, 'lxml')
+    div = soup.find_all('div', class_='panel panel-default')
+
+    for i in div:
+        details = i.find_all('div')
+        detail1 = details[1].text.replace("[", "").replace("]", " ")
+        article_array.append(Article(details[0].h3.text, detail1))
+
+    return render_template('news.html', article_array=article_array)
+
+=======
     return render_template('problem_list.html',obj=list)
+>>>>>>> 16a253606d370a01488637f30a54ef4edfef4f06
 
 if __name__ == '__main__':
     app.secret_key = 'SUPER SECRET KEY'
