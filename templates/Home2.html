@@ -1,0 +1,56 @@
+
+{% block head %}
+{% endblock head %}
+
+{% block content %}
+     <head>
+        <meta http-equiv="x-ua-compatible" content="IE-edge">
+        <meta name="viewport" content="width-device-width, initial-scale=1">
+        <link href="/static/For%20Table/dataTables.bootstrap.min.css" rel="stylesheet">
+    </head>
+    <style>
+    body {padding-top:20px;padding: 20px;background-color: powderblue;}
+    h1   {color: blue;}
+    .verticaline
+    {
+         border-left: thick solid #000002;
+        margin: 1px;
+    }
+</style>
+
+<body>
+
+
+{%  include 'layout.html' %}
+
+
+    <div>
+
+             {% for post in posts %}
+                <div>
+                    <div>
+                        <div>
+
+                            <p><font color="blue" size="4px">
+                                <b>{{ post.title }}</b>
+                            </font> </p>
+                            <p>
+                                <b>
+                                <font size="2px">Posted By</font>
+                                <font size="2px">{{ post.user_ }}</font>
+                                <font size="2px">,</font>
+                                <font size="2px">{{ post.dt }}</font>
+                                </b>
+                            </p>
+                            <div class="verticaline">
+                                {{ post.text }}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+    </div>
+</body>
+{% endblock content %}

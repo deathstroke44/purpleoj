@@ -4,8 +4,11 @@ from flask_pymongo import PyMongo
 from wtforms import Form,IntegerField,StringField, PasswordField, validators, FileField, FloatField,TextAreaField
 from wtforms.widgets import TextArea
 from werkzeug.utils import secure_filename
+from flask_ckeditor import CKEditor, CKEditorField
+
 import datetime
 import os
+
 app = Flask(__name__)
 UPLOAD_FOLDER = '/home/aniomi/PycharmProjects/purpleoj/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
@@ -13,6 +16,11 @@ ALLOWED_CATEGORY=set(['ACM','IOI'])
 import uuid
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MONGO_URI']='mongodb://red44:omi123@ds131963.mlab.com:31963/purpleoj'
+app.config['CKEDITOR_SERVE_LOCAL'] = True
+app.config['CKEDITOR_HEIGHT'] = 400
+
+
+ckeditor = CKEditor(app)
 mongo = PyMongo(app)
 import pymongo as pm
 app.secret_key = "super secret key"
@@ -283,10 +291,15 @@ def post():
         dt=datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")
         ppt = mongo.db.posts
         user_= session['username']
+        gpb = uuid.uuid4().__str__()
+        gpb='static/posts/'+gpb+'.html'
+        f=open(gpb,"w")
+        print(text,file=f)
+        f.close()
         #postt = postob(title=title,text=text,dt=dt,user_=user_)
         ppt.insert({
             'TITLE':title,
-            'TEXT':text,
+            'TEXT':gpb,
             'DATE':dt,
             'USER':user_
         })
