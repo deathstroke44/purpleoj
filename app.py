@@ -306,17 +306,20 @@ def post():
     return render_template('create_post.html',form = form)
 
 class prob_struct:
-    def __init__(self,pn,tl,ml):
+    def __init__(self,pn,tl,ml,id):
         self.pn=pn
         self.tl='Time Limit : '+str(tl)+'ms'
         self.ml='Memory Limit: '+str(ml)+'mb'
-
+        self.id=id
+@app.route('/about/<id>/submit/')
+def prob_submit(id):
+    return 'Submit '+id
 
 @app.route('/about/<id>/')
 def pdfviewers(id):
     pbdb=mongo.db.problems
     pb=pbdb.find_one({'myid': id})
-    pbds=prob_struct(pb['name'],pb['time_limit'],pb['memory_limit'])
+    pbds=prob_struct(pb['name'],pb['time_limit'],pb['memory_limit'],id)
     return render_template("pdfviewer.html", pdf_src='/static/uploads/'+id+'.pdf',pbds=pbds)
 
 @app.route('/about')
