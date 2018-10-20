@@ -9,15 +9,52 @@
     {% from "includes/_formhelpers.html" import render_field %}
     <h1 class="lead" align="center"><font size="10px">Code</font></h1>
     <div class="container">
+        <div>
+
+            <select name=languages method="GET" action="">
+                {% for language in languages %}
+                    <option value="{{ language }}" SELECTED>{{ language }}</option>"
+                {% endfor %}
+            </select>
+        </div>
 
         {{ codemirror.include_codemirror() }}
 
         <form method="POST" action="">
             <div class="form-group">
-                {{render_field(form.source_code,class_="form_control") }}
+                {{ render_field(form.source_code,class_="form_control") }}
             </div>
 
-             <p><input type="submit" class="btn btn-primary" value="Run"></p>
+            <p>
+                <input type="submit" class="btn btn-primary" name="run" value="Run"/>
+                <input type="submit" class="btn btn-primary" name="submit" value="Submit"/>
+                <input type="checkbox" class="checkbox-inline" name="custom_input" value="custom inputs"/>
+            </p>
+            <div class="form-group">
+                {{ render_field(form.inputs, class_="form-control",id="editor") }}
+            </div>
+            <table class="table table-striped table-hover table-bordered" id="mydata">
+                <p><font size="12"> <b><i> {{ status }}</i></b></font></p>
+
+                <hr>
+                <thead>
+                <tr>
+                    <th></th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr></tr>
+                </tfoot>
+                {% for output in outputs %}
+                    <tr>
+                        <td>
+                            <p> {{ output }} </p>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+
         </form>
     </div>
 
