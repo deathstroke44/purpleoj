@@ -1,0 +1,19 @@
+
+{% block head %}
+{% endblock head %}
+
+{% extends "layout_2.html" %}
+{% block content %}
+    {% for article in article_array %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ article.title }}</a>
+              <!--<small class="text-muted">{{ article.detail }}</small>-->
+            </div>
+            <!--<h2><a class="article-title" href="#">{{ article.title }}</a></h2>-->
+            <p class="article-content">{{ article.detail }}</p>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
