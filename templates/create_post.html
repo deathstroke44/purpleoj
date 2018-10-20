@@ -30,6 +30,8 @@
 </div>
 <p><input type="submit" class="btn btn-primary" value="Submit"></p>
 </form>
+{{ ckeditor.load() }}
+{{ ckeditor.config(name='text') }}
 </body>
 
 {% endblock content %}

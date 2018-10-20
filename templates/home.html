@@ -7,10 +7,25 @@
         <meta http-equiv="x-ua-compatible" content="IE-edge">
         <meta name="viewport" content="width-device-width, initial-scale=1">
         <link href="/static/For%20Table/dataTables.bootstrap.min.css" rel="stylesheet">
+        <script src="/static/For%20Table/jquery.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                var htmll=$('.seethis').text();
+
+                $('.seethis').after(htmll)
+
+            });
+
+        </script>
     </head>
     <style>
     body {padding-top:20px;padding: 20px;background-color: powderblue;}
     h1   {color: blue;}
+    .seethis
+    {
+
+    }
 </style>
 
 <body>
@@ -37,9 +52,13 @@
                 </p>
                 <details>
                     <SUMMARY>View Details</SUMMARY>
-                    <P>
-                        {{ post.text }}
-                    </P>
+                    <div class="seethis">
+
+                            {{ post.text }}
+
+                    </div>
+
+
                 </details>
             </td>
             </tr>
@@ -53,6 +72,7 @@
 
     $('#mydata').dataTable()
 </script>
+
 <!--
     <div>
         <ul class="list-group">

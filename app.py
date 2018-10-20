@@ -4,8 +4,12 @@ from flask_pymongo import PyMongo
 from wtforms import Form,IntegerField,StringField, PasswordField, validators, FileField, FloatField,TextAreaField
 from wtforms.widgets import TextArea
 from werkzeug.utils import secure_filename
+from flask_ckeditor import CKEditor, CKEditorField
 import datetime
+import htmlslacker
 import os
+import html2text
+from htmlslacker import HTMLSlacker
 app = Flask(__name__)
 UPLOAD_FOLDER = '/home/aniomi/PycharmProjects/purpleoj/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
@@ -13,10 +17,13 @@ ALLOWED_CATEGORY=set(['ACM','IOI'])
 import uuid
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MONGO_URI']='mongodb://red44:omi123@ds131963.mlab.com:31963/purpleoj'
+app.config['CKEDITOR_SERVE_LOCAL'] = True
+app.config['CKEDITOR_HEIGHT'] = 400
 mongo = PyMongo(app)
 import pymongo as pm
 app.secret_key = "super secret key"
 sess = Session()
+ckeditor = CKEditor(app)
 
 class UploadForm(Form):
     time_limit = IntegerField("Time limit(ms)",[validators.DataRequired()])
@@ -150,8 +157,22 @@ class postob:
         self.user_ = xuser_
         self.id_ = xid_
 
+def parse(st):
+    stt=''
+    i=0
+    while i<len(st):
+        #print(i)
+        stt=stt+str(st[i])
+        if st[i]=='<' and st[i+1]=='\\' :
+            i=i+1
+        i=i+1
+
+    return stt
+
+
 @app.route('/')
 def index():
+    #print(HTMLSlacker(parse('<p>OMi<\/p><p>ONI</p>')).get_output())
     list =[]
     postdb = mongo.db.posts
     existing_post= postdb.find({})
@@ -159,7 +180,7 @@ def index():
     for posts in existing_post:
         print(posts)
         posttitle=posts['TITLE']
-        posttext=posts['TEXT']
+        posttext=((parse(posts['TEXT'])))
         postuser=posts['USER']
         postdate=posts['DATE']
         postid=posts['_id']
@@ -214,7 +235,7 @@ def register():
 
 class create_article_form(Form):
     title = StringField(u'title',[validators.DataRequired()])
-    text = TextAreaField(u'text',[validators.DataRequired()])
+    text = CKEditorField(u'text',[validators.DataRequired()])
 
 class LoginForm(Form):
     username = StringField('Username', [validators.DataRequired()])
