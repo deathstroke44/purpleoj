@@ -9,6 +9,7 @@
     {% from "includes/_formhelpers.html" import render_field %}
     <h1 class="lead" align="center"><font size="10px">Code</font></h1>
     <div class="container">
+    <form method="POST" action="">
         <div>
 
             <select name=languages method="GET" action="">
@@ -20,7 +21,7 @@
 
         {{ codemirror.include_codemirror() }}
 
-        <form method="POST" action="">
+
             <div class="form-group">
                 {{ render_field(form.source_code,class_="form_control") }}
             </div>
