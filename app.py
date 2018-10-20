@@ -341,6 +341,7 @@ def postab():
         list.append(ppp)
         i = i + 1
     print(len(list))
+    #lol
     return render_template('problem_list.html',obj=list)
 
 if __name__ == '__main__':
