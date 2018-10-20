@@ -362,9 +362,9 @@ def news():
 
     source = requests.get('https://atcoder.jp/').text
     soup = BeautifulSoup(source, 'lxml')
-    x1 = soup.find_all('div', class_='panel panel-default')
+    div = soup.find_all('div', class_='panel panel-default')
 
-    for i in x1:
+    for i in div:
         details = i.find_all('div')
         detail1 = details[1].text.replace("[", "").replace("]", " ")
         article_array.append(Article(details[0].h3.text, detail1))
