@@ -353,7 +353,7 @@ def postab():
 
 @app.route('/news')
 def news():
-    class Article:
+        class Article:
         def __init__(self, title, detail):
             self.title = title
             self.detail = detail
