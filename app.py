@@ -116,7 +116,8 @@ def upload_file():
         return redirect(url_for('upload_file', filename=filename))
 
 
-
+    if not ('username' in session):
+        return redirect(url_for('login'))
     return render_template('upload_problem.html',nameform=nameform)
 
 
@@ -303,6 +304,8 @@ def post():
             'DATE':dt,
             'USER':user_
         })
+    if not ('username' in session):
+        return redirect(url_for('login'))
     return render_template('create_post.html',form = form)
 
 class prob_struct:
@@ -320,6 +323,8 @@ def pdfviewers(id):
     pbdb=mongo.db.problems
     pb=pbdb.find_one({'myid': id})
     pbds=prob_struct(pb['name'],pb['time_limit'],pb['memory_limit'],id)
+    if not ('username' in session):
+        return redirect(url_for('login'))
     return render_template("pdfviewer.html", pdf_src='/static/uploads/'+id+'.pdf',pbds=pbds)
 
 @app.route('/about')
@@ -345,6 +350,8 @@ def postab():
         i = i + 1
     print(len(list))
     #lol
+    if not ('username' in session):
+        return redirect(url_for('login'))
     return render_template('problem_list.html',obj=list)
 
 if __name__ == '__main__':
