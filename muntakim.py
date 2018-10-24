@@ -6,7 +6,7 @@ from flask_codemirror.fields import CodeMirrorField
 from wtforms.fields import SubmitField, TextAreaField
 from flask_codemirror import CodeMirror
 import os
-
+from flask_testing import TestCase
 dir_path = os.path.dirname(os.path.realpath(__file__))
 languages = ["Java", "C", "Python"]
 
@@ -25,9 +25,7 @@ CODEMIRROR_THEME = '3024-day'
 CODEMIRROR_ADDONS = (
 
     ('display', 'placeholder'),
-
     ('hint', 'anyword-hint'),
-
     ('hint', 'show-hint'),
 
 )
@@ -68,15 +66,6 @@ def runPython(auxForm):
             "Python") + " 1>" + getOutputFileName() + " 2>"
                   + getErrorFileName())
         then = time.time()
-        # timeElapsed = then - now
-        # finputs = open(getOutputFileName(), "r")
-        # outputs = finputs.readlines()
-        # outputs.append("Time elapsed during execution: " + str(round(timeElapsed, 3)) + " s")
-        # finputs.close()
-        # finputs = open(getErrorFileName(), "r")
-        # errors = finputs.readlines()
-        # finputs.close()
-        # os.system("rm -r submissions/" + getUserId())
     finputs = open(getOutputFileName(), "r")
     timeElapsed = then - now
     outputs = finputs.readlines()
@@ -85,9 +74,9 @@ def runPython(auxForm):
     finputs = open(getErrorFileName(), "r")
     errors = finputs.readlines()
     finputs.close()
-    os.system("rm -r submissions/" + getUserId())
+    #os.system("rm -r submissions/" + getUserId())
     if len(errors) == 0:
-        print(outputs)
+        # print(outputs)
         return render_template('editor.html', form=form, status="Program Output", outputs=outputs, languages=languages)
     else:
         print(errors)
@@ -98,7 +87,6 @@ def runPython(auxForm):
 def runJava(auxForm):
     form = MyForm(auxForm)
     text = form.source_code.data
-    text = "public class Main{\n" + text + "\n}"
     now = time.time()
     then = time.time()
     fout = open(getProgramFileName("Java"), "w")
@@ -124,7 +112,7 @@ def runJava(auxForm):
             then= time.time()
         else:
             print(errors)
-            os.system("rm -r submissions/" + getUserId())
+            #os.system("rm -r submissions/" + getUserId())
             return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
                                    languages=languages)
     # running without inputs
@@ -137,19 +125,20 @@ def runJava(auxForm):
 
         else:
             print(errors)
-            os.system("rm -r submissions/" + getUserId())
+            #os.system("rm -r submissions/" + getUserId())
             return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
                                    languages=languages)
     finputs = open(getOutputFileName(), "r")
     outputs = finputs.readlines()
     finputs.close()
     timeElapsed = then - now
+    # outputs=list("")
     outputs.append("Time elapsed during execution: " + str(round(timeElapsed, 3)) + " s")
     finputs = open(getErrorFileName(), "r")
     # print(finputs)
     errors = finputs.readlines()
     finputs.close()
-    os.system("rm -r submissions/" + getUserId())
+    #os.system("rm -r submissions/" + getUserId())
     if len(errors) == 0:
         print(outputs)
         return render_template('editor.html', form=form, status="Program Output", outputs=outputs, languages=languages)
@@ -188,7 +177,7 @@ def runC(auxForm):
             then=time.time()
 
         else:
-            os.system("rm -r submissions/" + getUserId())
+            #os.system("rm -r submissions/" + getUserId())
             return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
                                    languages=languages)
     # running without inputs
@@ -198,7 +187,7 @@ def runC(auxForm):
             os.system(" ./" + getExecutibleFileName("C") +" 1> " + getOutputFileName() + " 2> " + getErrorFileName())
             then=time.time()
         else:
-            os.system("rm -r submissions/" + getUserId())
+            #os.system("rm -r submissions/" + getUserId())
             return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
                                    languages=languages)
     # reading program outputs
@@ -211,7 +200,7 @@ def runC(auxForm):
     finputs = open(getErrorFileName(), "r")
     errors = finputs.readlines()
     finputs.close()
-    os.system("rm -r submissions/" + getUserId())
+    #os.system("rm -r submissions/" + getUserId())
     # checking for RTE
     if len(errors) == 0:
         print(outputs)
@@ -243,8 +232,6 @@ def getExecutibleFileName(language):
 def getOutputFileName():
     return "submissions/" + getUserId() + "/" + getProblemId()+"/outputs/1.txt"
 def getErrorFileName():
-    # if language=="java":
-    #     return "outputs/error.txt"
     return "submissions/" + getUserId() + "/" + getProblemId()+"/outputs/error.txt"
 
 def getCustomInputsFileName():
@@ -256,31 +243,118 @@ def getUserId():
 def getProblemId():
     return "TestProblem"
 
+def getExpectedOutputFileName(problemId):
+    return "static/uploads/"+problemId+"out1.txt"
+
+def getTestCaseFileName(problemId):
+    return "static/uploads/" + problemId + "in1.txt"
+
+
+def doesOutputMatch(userOutputFile,expectedOutputFile):
+    try:
+        userOutput=open(userOutputFile)
+    except:
+        return False
+    expectedOutput=open(expectedOutputFile)
+    for (x,y) in zip(userOutput.readlines(),expectedOutput.readlines()):
+        if x !=y:
+            userOutput.close()
+            expectedOutput.close()
+            return False
+    userOutput.close()
+    expectedOutput.close()
+    return True
+
+
 def makeSubmissionFolders():
     os.system("mkdir submissions/" + getUserId())
     os.system("mkdir submissions/" + getUserId() + "/" + getProblemId())
     os.system("mkdir submissions/" + getUserId() + "/" + getProblemId()+"/outputs")
     os.system("mkdir submissions/" + getUserId() + "/" + getProblemId() + "/custom_inputs")
 
-
-@app.route('/editor', methods=['GET', 'POST'])
-def editor():
-    selectedLanguage = request.form.get('languages')
+def runCode(form):
+    selectedLanguage = form.get('languages')
     print(selectedLanguage)
-    print(dir_path)
+    makeSubmissionFolders()
+    if selectedLanguage == "Python":
+        return runPython(form)
+    elif selectedLanguage == "C":
+        return runC(form)
+    elif selectedLanguage == "Java":
+        return runJava(form)
+
+def submitCode(auxform,problemId):
+    selectedLanguage = auxform.get('languages')
+    print(selectedLanguage)
+    makeSubmissionFolders()
+    form = MyForm(auxform)
+    text = form.source_code.data
+    now=time.time()
+    then=time.time()
+    fout = open(getProgramFileName(selectedLanguage), "w")
+    print(text, file=fout)
+    fout.close()
+    #compiling
+    if selectedLanguage=="Python":
+        now = time.time()
+        os.system("python3 " + getProgramFileName("Python") + " < " + getTestCaseFileName(problemId) + " 1>" +
+                  getOutputFileName() + " 2>" + getErrorFileName())
+        then = time.time()
+    elif selectedLanguage=="Java":
+        os.system("javac " + getProgramFileName("Java") + " 2>" + getErrorFileName())
+    else:
+        os.system(" g++ -o " + getExecutibleFileName("C") + " " + getProgramFileName("C") + " 2>" + getErrorFileName())
+    # reading compile errors
+    finputs = open(getErrorFileName(), "r")
+    errors = finputs.readlines()
+    finputs.close()
+
+    if(len(errors)!=0):
+        return "CE"
+    # running the program
+    if selectedLanguage=="Java":
+        now = time.time()
+        os.system("java -cp " + getExecutibleFileName("Java") + " Main <" + getTestCaseFileName(problemId) +
+                  " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+        then = time.time()
+    elif selectedLanguage=="C":
+        now = time.time()
+        os.system(" ./" + getExecutibleFileName("C") + " < " + getTestCaseFileName(problemId) +
+                  " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+        then = time.time()
+
+    # reading runtime errors
+    finputs = open(getErrorFileName(), "r")
+    errors = finputs.readlines()
+    finputs.close()
+    if len(errors)!=0:
+        return "RTE"
+    timeElapsed=then-now
+    if timeElapsed>2:
+        return "TLE"
+    elif doesOutputMatch(getExpectedOutputFileName(problemId),getOutputFileName()) == False :
+        return "WA"
+    else:
+        return "AC"
+
+
+def cleanup():
+    os.system("rm -r submissions/" + getUserId())
+
+@app.route('/editor/<problemId>', methods=['GET', 'POST'])
+def editor(problemId):
+
     if request.method == 'POST':
         if "run" in request.form:
-            makeSubmissionFolders()
-            if selectedLanguage == "Python":
-                return runPython(request.form)
-            elif selectedLanguage == "C":
-                return runC(request.form)
-            elif selectedLanguage == "Java":
-                return runJava(request.form)
+            template = runCode(request.form)
+            cleanup()
+            return template
 
         elif "submit" in request.form:
-
+            verdict=submitCode(request.form,problemId)
             print("submit")
+            print(verdict)
+            cleanup()
 
     return render_template('editor.html', form=MyForm(request.form), languages=languages)
 
