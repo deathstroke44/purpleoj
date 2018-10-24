@@ -53,19 +53,20 @@ def runPython(auxForm):
     fout.close()
     if auxForm.get("custom_input") != None:
         inputs = form.inputs.data
-        finputs = open(getCustomInputsFileName("Python"), "w")
+        finputs = open(getCustomInputsFileName(), "w")
         print(inputs, file=finputs)
         finputs.close()
         now=time.time()
-        os.system("python3 "+ getProgramFileName("Python")+" < "+getCustomInputsFileName("Python")+" 1>"+getOutputFileName("Python")+ " 2>"
-                  +getErrorFileName("Python"))
+        os.system("python3 "+ getProgramFileName("Python")+" < "+getCustomInputsFileName()+" 1>"+
+                  getOutputFileName()+ " 2>"
+                  +getErrorFileName())
         then=time.time()
 
     else:
         now = time.time()
         os.system("python3 " + getProgramFileName(
-            "Python") + " 1>" + getOutputFileName("Python") + " 2>"
-                  + getErrorFileName("Python"))
+            "Python") + " 1>" + getOutputFileName() + " 2>"
+                  + getErrorFileName())
         then = time.time()
         # timeElapsed = then - now
         # finputs = open(getOutputFileName(), "r")
@@ -76,12 +77,12 @@ def runPython(auxForm):
         # errors = finputs.readlines()
         # finputs.close()
         # os.system("rm -r submissions/" + getUserId())
-    finputs = open(getOutputFileName("Python"), "r")
+    finputs = open(getOutputFileName(), "r")
     timeElapsed = then - now
     outputs = finputs.readlines()
     outputs.append("Time elapsed during execution: " + str(round(timeElapsed, 3)) + " s")
     finputs.close()
-    finputs = open(getErrorFileName("Python"), "r")
+    finputs = open(getErrorFileName(), "r")
     errors = finputs.readlines()
     finputs.close()
     os.system("rm -r submissions/" + getUserId())
@@ -104,9 +105,9 @@ def runJava(auxForm):
     print(text, file=fout)
     fout.close()
     # compiling the program
-    os.system("javac "  + getProgramFileName("Java") + " 2>" + getErrorFileName("Java"))
+    os.system("javac "  + getProgramFileName("Java") + " 2>" + getErrorFileName())
     # reading errors
-    finputs = open(getErrorFileName("Java"), "r")
+    finputs = open(getErrorFileName(), "r")
     errors = finputs.readlines()
     finputs.close()
     print(errors)
@@ -117,30 +118,38 @@ def runJava(auxForm):
         print(inputs, file=finputs)
         finputs.close()
         if len(errors)==0:
-            os.system("cd "+getExecutibleFileName()+" && java Main <"+ getCustomInputsFileName() +
-                      " 1> "+getOutputFileName()+ " 2> " +getErrorFileName("Java"))
+            now = time.time()
+            os.system("java -cp "+getExecutibleFileName("Java")+" Main <"+ getCustomInputsFileName() +
+                      " 1> "+getOutputFileName()+ " 2> " +getErrorFileName())
+            then= time.time()
         else:
             print(errors)
+            os.system("rm -r submissions/" + getUserId())
             return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
                                    languages=languages)
     # running without inputs
     else:
         if len(errors)==0:
-            os.system("cd "+getExecutibleFileName("Java") + " && java Main"  +
-                      " 1> " + getOutputFileName("Java") + " 2> " + getErrorFileName("Java"))
-            print("cd "+getExecutibleFileName("Java") + " && java Main"  +
-                      " 1> " + getOutputFileName("Java") + " 2> " + getErrorFileName("Java"))
+            now = time.time()
+            os.system("java -cp " + getExecutibleFileName("Java") + " Main " +" 1> " +
+                      getOutputFileName() + " 2> " + getErrorFileName())
+            then = time.time()
+
         else:
             print(errors)
+            os.system("rm -r submissions/" + getUserId())
             return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
                                    languages=languages)
     finputs = open(getOutputFileName(), "r")
     outputs = finputs.readlines()
     finputs.close()
+    timeElapsed = then - now
+    outputs.append("Time elapsed during execution: " + str(round(timeElapsed, 3)) + " s")
     finputs = open(getErrorFileName(), "r")
     # print(finputs)
     errors = finputs.readlines()
     finputs.close()
+    os.system("rm -r submissions/" + getUserId())
     if len(errors) == 0:
         print(outputs)
         return render_template('editor.html', form=form, status="Program Output", outputs=outputs, languages=languages)
@@ -173,28 +182,36 @@ def runC(auxForm):
         finputs.close()
         # checking for compile errors
         if len(errors) == 0:
+            now=time.time()
             os.system(" ./"+ getExecutibleFileName("C") +" < "+getCustomInputsFileName()+
                       " 1> "+getOutputFileName()+" 2> "+getErrorFileName())
+            then=time.time()
 
         else:
+            os.system("rm -r submissions/" + getUserId())
             return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
                                    languages=languages)
     # running without inputs
     else:
         if len(errors) == 0:
+            now=time.time()
             os.system(" ./" + getExecutibleFileName("C") +" 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+            then=time.time()
         else:
+            os.system("rm -r submissions/" + getUserId())
             return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
                                    languages=languages)
     # reading program outputs
     finputs = open(getOutputFileName(), "r")
     outputs = finputs.readlines()
     finputs.close()
+    timeElapsed = then - now
+    outputs.append("Time elapsed during execution: " + str(round(timeElapsed, 3)) + " s")
     # reading RTE
     finputs = open(getErrorFileName(), "r")
     errors = finputs.readlines()
     finputs.close()
-
+    os.system("rm -r submissions/" + getUserId())
     # checking for RTE
     if len(errors) == 0:
         print(outputs)
@@ -214,6 +231,7 @@ def getProgramFileName(language):
         return "submissions/" + getUserId() + "/" + getProblemId() + "/Main.java"
     else:
         return "submissions/" + getUserId() + "/" + getProblemId()+"/1.cpp"
+
 def getExecutibleFileName(language):
     if language=="Python":
         return "submissions/" + getUserId() + "/" + getProblemId()+"/a"
@@ -221,18 +239,15 @@ def getExecutibleFileName(language):
         return "submissions/" + getUserId() + "/" + getProblemId()
     else:
         return "submissions/" + getUserId() + "/" + getProblemId()+"/a"
-def getOutputFileName(language):
-    if language=="java":
-        return "outputs/1.txt"
+
+def getOutputFileName():
     return "submissions/" + getUserId() + "/" + getProblemId()+"/outputs/1.txt"
-def getErrorFileName(language):
-    if language=="java":
-        return "outputs/error.txt"
+def getErrorFileName():
+    # if language=="java":
+    #     return "outputs/error.txt"
     return "submissions/" + getUserId() + "/" + getProblemId()+"/outputs/error.txt"
 
-def getCustomInputsFileName(language):
-    if language=="java":
-        return "custom_inputs/1.txt"
+def getCustomInputsFileName():
     return "submissions/" + getUserId() + "/" + getProblemId()+"/custom_inputs/1.txt"
 
 def getUserId():
