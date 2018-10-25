@@ -314,11 +314,11 @@ class prob_struct:
         self.tl='Time Limit : '+str(tl)+'ms'
         self.ml='Memory Limit: '+str(ml)+'mb'
         self.id=id
-@app.route('/about/<id>/submit/')
+@app.route('/problemset/<id>/submit/')
 def prob_submit(id):
     return 'Submit '+id
 
-@app.route('/about/<id>/')
+@app.route('/problemset/<id>/')
 def pdfviewers(id):
     pbdb=mongo.db.problems
     pb=pbdb.find_one({'myid': id})
@@ -327,7 +327,7 @@ def pdfviewers(id):
         return redirect(url_for('login'))
     return render_template("pdfviewer.html", pdf_src='/static/uploads/'+id+'.pdf',pbds=pbds)
 
-@app.route('/about')
+@app.route('/problemset')
 def postab():
     problemsdb=mongo.db.problems
     list = []
@@ -354,6 +354,47 @@ def postab():
         return redirect(url_for('login'))
     return render_template('problem_list.html',obj=list)
 
+
+class lol:
+    def __init__(self,id,name,acc,sc,box):
+        self.id=id
+        self.name=name
+        self.acc=acc
+        self.sc=sc
+        self.box=box
+
+class create_contest_form(Form):
+    contestname=StringField("Contest Name",[validators.DataRequired()])
+
+@app.route('/contest',methods=['GET', 'POST'])
+def contest():
+    form = create_contest_form(request.form)
+
+    problemdb=mongo.db.problems
+    list=[]
+    existing_pbs=problemdb.find({})
+    for existing_pb in existing_pbs:
+        list.append(lol(existing_pb['myid'],existing_pb['name'],existing_pb['acsub'],existing_pb['sub'],existing_pb['myid']))
+    if request.method == 'POST':
+        print(request.form[form.contestname.name])
+        cnt=0;
+        selected_problem_id=[]
+        for prblm in list:
+            if request.form.get(prblm.id):
+                cnt+=1
+                selected_problem_id.append(prblm.id);
+                print(prblm.name)
+        if cnt==0:
+            flash('You have to Choose at least 1 problem to set a contest.','failure')
+            return render_template('contest.html',obj=list,form=form)
+        else:
+            contests=mongo.db.contests
+            contests.insert({'Contest Title':form.contestname.data,'Start Date':request.form['date'],
+                             'Start Time':request.form['start_time'],'End Time':request.form['end_time'],'Problem ID':selected_problem_id})
+            return 'You have successfully created a contest'
+
+    return render_template('contest.html',obj=list,form=form)
+
 if __name__ == '__main__':
     app.secret_key = 'SUPER SECRET KEY'
     app.config['SESSION_TYPE'] = 'filesystem'
@@ -361,5 +402,4 @@ if __name__ == '__main__':
 
     app.debug = True
     app.run()
-
 
