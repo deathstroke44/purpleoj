@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 from flask_ckeditor import CKEditor, CKEditorField
 import requests
 from bs4 import BeautifulSoup
-
+from wtforms.fields.html5 import EmailField
 import datetime
 import os
 
@@ -34,7 +34,7 @@ class UploadForm(Form):
     memory_limit = IntegerField("Memory Limit(MB)", [validators.DataRequired()])
     category = StringField("Problem Style(ACM,IOI)", [validators.DataRequired()])
     name = StringField('Problem name', [validators.DataRequired()])
-    count = IntegerField('Number Of subtask(at least 1 at most 2)', [validators.DataRequired()])
+    count = IntegerField('Number Of subtask(at least 1 at most 3)', [validators.DataRequired()] and [validators.number_range(1, 3)])
     point1 = IntegerField('Point for Subtask 1')
     point2 = IntegerField('Point for Subtask 2')
     point3 = IntegerField('Point for Subtask 3')
@@ -202,7 +202,7 @@ def index():
 class RegisterForm(Form):
     name = StringField('Name', [validators.Length(min=1, max=50)])
     username = StringField('Username', [validators.Length(min=4, max=50)])
-    email = StringField('Email', [validators.Length(min=1, max=50)])
+    email = EmailField('Email', [validators.Length(min=1, max=50)])
     password = PasswordField('Password', [
         validators.DataRequired(),
         validators.EqualTo('confirm', message='Passwords do not match')
@@ -237,8 +237,8 @@ def register():
 
 
 class create_article_form(Form):
-    title = StringField(u'title', [validators.DataRequired()])
-    text = CKEditorField(u'text', [validators.DataRequired()])
+    title = StringField('Post Title', [validators.DataRequired()])
+    text = CKEditorField('Post Body', [validators.DataRequired()])
 
 
 class LoginForm(Form):
