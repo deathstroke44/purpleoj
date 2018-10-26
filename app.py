@@ -18,14 +18,11 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MONGO_URI']='mongodb://red44:omi123@ds131963.mlab.com:31963/purpleoj'
 app.config['CKEDITOR_SERVE_LOCAL'] = True
 app.config['CKEDITOR_HEIGHT'] = 400
-
-
 ckeditor = CKEditor(app)
 mongo = PyMongo(app)
 import pymongo as pm
 app.secret_key = "super secret key"
 sess = Session()
-
 class UploadForm(Form):
     time_limit = IntegerField("Time limit(ms)",[validators.DataRequired()])
     memory_limit = IntegerField("Memory Limit(MB)",[validators.DataRequired()])
@@ -223,7 +220,7 @@ def register():
 
 class create_article_form(Form):
     title = StringField(u'title',[validators.DataRequired()])
-    text = TextAreaField(u'text',[validators.DataRequired()])
+    text = CKEditorField(u'text',[validators.DataRequired()])
 
 class LoginForm(Form):
     username = StringField('Username', [validators.DataRequired()])
@@ -362,4 +359,4 @@ if __name__ == '__main__':
     app.debug = True
     app.run()
 
-
+    
