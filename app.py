@@ -351,6 +351,42 @@ def postab():
         return redirect(url_for('login'))
     return render_template('problem_list.html',obj=list)
 
+
+@app.route('/profile')
+def profile():
+    if not ('username' in session):
+        return redirect(url_for('login'))
+
+    class User:
+        def __init__(self, name, username, mail):
+            self.name = name
+            self.username = username
+            self.mail = mail
+
+    user_name = session['username']
+    users = mongo.db.userlist
+    exiting_user = users.find_one({'USERNAME': user_name})
+    user = User(exiting_user['NAMES'], exiting_user['USERNAME'], exiting_user['MAIL'])
+    return render_template('profile.html', user = user)
+
+@app.route('/posts')
+def posts():
+    if not ('username' in session):
+        return redirect(url_for('login'))
+    class post_object:
+        def __init__(self, title, text):
+            self.title = title
+            self.text = text
+
+    post_array = []
+    user_name = session['username']
+    posts = mongo.db.posts.find({})
+    for post in posts:
+        if post['USER'] == user_name:
+            post_array.append(post_object(post['TITLE'], post['TEXT']))
+
+    return render_template('user_post.html',post_array = post_array)
+
 if __name__ == '__main__':
     app.secret_key = 'SUPER SECRET KEY'
     app.config['SESSION_TYPE'] = 'filesystem'

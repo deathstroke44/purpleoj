@@ -16,7 +16,7 @@ def reformatContent(content):
 
 @app.route('/profile')
 def profile():
-    return render_template('profile.html')
+    return render_template('profile_layout.html')
 
 @app.route('/')
 def news():

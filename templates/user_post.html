@@ -1,0 +1,36 @@
+{% extends "profile_layout.html" %}
+{% block content2 %}
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="/static/w3.js"></script>
+</head>
+
+<div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Your Posts</h4>
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel-group">
+                            {% for post in post_array %}
+                            <div class="panel panel-default">
+                              <div class="panel-heading">{{post.title}}</div>
+                              <div class="panel-body" w3-include-html={{post.text}}>
+                                  <script>
+                                        w3.includeHTML();
+                                    </script>
+                              </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>
+{%endblock content2%}
