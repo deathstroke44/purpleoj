@@ -7,7 +7,10 @@
     <body>
     {% include 'layout.html' %}
     {% from "includes/_formhelpers.html" import render_field %}
-    <h1 class="lead" align="center"><font size="10px">Code</font></h1>
+    <h1 class="lead" align="center"><font size="10px">Code and Compile</font></h1>
+    <br>
+    <br>
+
     <div class="container">
     <form method="POST" action="">
         <div>
@@ -66,6 +69,24 @@
                         </td>
                     </tr>
                 {% endfor %}
+            </table>
+    <table class="table table-striped table-hover table-bordered" id="data">
+
+
+                <hr>
+                <thead>
+                <tr>
+                    <th></th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr></tr>
+                </tfoot>
+                    <tr>
+                        <td>
+                            <p> <a href="/submissions">{{ check_submissions }}</a> </p>
+                        </td>
+                    </tr>
             </table>
 
 
