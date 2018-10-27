@@ -1211,6 +1211,103 @@ def get_datetime_to_sec(submission_time,contest_start_date,contest_start_time):
 ############################################
 
 
+class contest:
+    def __init__(self, c_id, title, start_date, start_time, end_time, IDs):
+        self.c_id = c_id
+        self.title = title
+        self.start_date = start_date
+        self.start_time = start_time
+        self.end_time = end_time
+        self.IDs = IDs
+
+
+class contestdata:
+    def __init__(self, c_id, title, time):
+        self.c_id = c_id
+        self.title = title
+        self.time = time
+
+
+@app.route('/contests')
+def contests():
+    contest_db = mongo.db.contests
+    contest_list = []
+    loaded_contests = contest_db.find({})
+    for contest_curr in loaded_contests:
+        time_string = contest_curr['Start Date'] + ' ' + contest_curr['Start Time']
+        time_obj = datetime.strptime(time_string, '%Y-%m-%d %H:%M')
+        new_contest = contestdata(contest_curr['_id'],
+                              contest_curr['Contest Title'],
+                              time_obj)
+        contest_list.append(new_contest)
+    contest_list.sort(key=lambda r:r.time, reverse=True)
+    if not ('username' in session):
+        return redirect(url_for('login'))
+    return render_template('contests.html', obj=contest_list)
+
+class PasswordForm(Form):
+    password = StringField('Password')
+
+
+# Password check for contest
+@app.route('/contest/<id>/verify', methods=['GET', 'POST'])
+def verify_contest(id):
+    form = PasswordForm(request.form)
+    contest_db = mongo.db.contests
+    contest_now = contest_db.find({"_id": ObjectId(id)})[0]
+    c_pass = contest_now.get('Password')
+    c_name = contest_now.get('Contest Title')
+    if request.method == 'POST':
+        password = form.password.data
+        print(password)
+        print(c_pass)
+        if c_pass == password:
+            url = "http://127.0.0.1:5000/currentcontest/" + id
+            return  redirect(url, 302)
+        else:
+            error = "You need to enter the password for this contest"
+            return render_template('contest_verify.html', error=error, form=form)
+    else:
+        return render_template('contest_verify.html', form=form, name=c_name)
+
+
+# Contest Page
+@app.route('/currentcontest/<cc_id>')
+def load_contest(cc_id):
+    contest_db = mongo.db.contests
+    problem_db = mongo.db.problems
+    contest_now = contest_db.find({"_id": ObjectId(cc_id)})[0]
+    starting_datetime = contest_now.get('Start Date') + "T" + contest_now.get('Start Time') + ":00+06:00"
+    ending_datetime = contest_now.get('Start Date') + "T" + contest_now.get('End Time') + ":00+06:00"
+    cc_name = contest_now.get('Contest Title')
+    print(starting_datetime)
+    print(ending_datetime)
+    problems = contest_now.get('Problem ID')
+    problem_list = []
+    for p in problems:
+        for x, y in p.items():
+            i = problem_db.find_one({'myid': y})
+            new_prob = problem(i['sub_task_count'],i['myid'],i['pnt1'],i['pnt2'],i['pnt3'],i['time_limit'],
+                               i['memory_limit'],i['stylee'],x+". "+i['name'],i['acsub'],i['sub'],i['setter'])
+            problem_list.append(new_prob)
+    if not ('username' in session):
+        return redirect(url_for('login'))
+    return render_template('contest.html', obj=problem_list,id=cc_id,name=cc_name,sdto=starting_datetime,edto=ending_datetime)
+
+
+# Problem pages of contest
+@app.route('/currentcontest/<id1>/<id2>')
+def load_contest_problem(id1, id2):
+    pbdb = mongo.db.problems
+    pb = pbdb.find_one({'myid': id2})
+    pbds = prob_struct(pb['name'], pb['time_limit'], pb['memory_limit'], id2)
+    if not ('username' in session):
+        return redirect(url_for('login'))
+    return render_template("problem_viewer.html", pdf_src='/static/uploads/' + id2 + '.pdf', pbds=pbds, cid=id1)
+
+
+######################################################################################################
+
 
 #############################################
 
