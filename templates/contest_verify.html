@@ -1,0 +1,49 @@
+{% block head %}
+    <title>Verify</title>
+{% endblock head %}
+
+{% block content %}
+
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="/static/login.css">
+
+    </head>
+<body>
+
+{%  include 'layout.html' %}
+
+{% if dialogue=='Wrong Password' %}
+    <SCRIPT Language="JavaScript">
+        alert('Wrong Password');
+    </SCRIPT>
+{% endif %}
+{% if dialogue=='No such username exist' %}
+    <SCRIPT Language="JavaScript">
+        alert('No such username exist');
+    </SCRIPT>
+{% endif %}
+{% if error=='correct' %}
+    <SCRIPT Language="JavaScript">
+        var str =  "http://127.0.0.1:5000/" + msg;
+        window.location.href = "http://127.0.0.1:5000/currentcontest/"
+    </SCRIPT>
+{% endif %}
+{%  from  "includes/_formhelpers.html" import render_field %}
+<div class="lohinbox">
+    <h1 class="lead" align="center" > <font color="white" size="8px"><b>{{ name }}</b></font></h1>
+<form method="POST" action="">
+
+
+<div class="form-group" >
+    <font color="white">
+      {{render_field(form.password, class_="form-control")}}
+    </font>
+</div>
+<p align="center"><input type="submit" class="btn btn-primary" value="Submit"></p>
+</form>
+</div>
+</body>
+
+{% endblock content %}
+
