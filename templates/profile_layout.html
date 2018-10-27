@@ -1,0 +1,23 @@
+
+{% include "layout_2.html" %}
+{% block content %}
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-3 ">
+		     <div class="list-group ">
+              <a href="/profile" class="list-group-item list-group-item-action active">Profile</a>
+                 <a href="/submission" class="list-group-item list-group-item-action">Submission</a>
+              <a href="/posts" class="list-group-item list-group-item-action">Post</a>
+              <a href="#" class="list-group-item list-group-item-action">Contest</a>
+              <a href="#" class="list-group-item list-group-item-action">Settings</a>
+
+            </div>
+		</div>
+        <div class="col-md-9">
+            {% block content2 %}{% endblock %}
+        </div>
+	</div>
+</div>
+{% endblock content %}

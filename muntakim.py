@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from flask import request, redirect,url_for,render_template,session,Session
 from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
 from flask_wtf import FlaskForm
 import time
@@ -6,19 +7,31 @@ from flask_codemirror.fields import CodeMirrorField
 from wtforms.fields import SubmitField, TextAreaField
 from flask_codemirror import CodeMirror
 import os
+import uuid
+import datetime
+from flask_pymongo import PyMongo
+
 from flask_testing import TestCase
-dir_path = os.path.dirname(os.path.realpath(__file__))
-languages = ["Java", "C", "Python"]
+
 
 # mandatory
 
-CODEMIRROR_LANGUAGES = ['python']
+
 
 WTF_CSRF_ENABLED = True
 
 SECRET_KEY = 'secret'
 
 # optional
+
+
+
+app = Flask(__name__)
+
+# ***************************************************************************
+dir_path = os.path.dirname(os.path.realpath(__file__))
+languages = ["Java", "C", "Python"]
+CODEMIRROR_LANGUAGES = ['python']
 
 CODEMIRROR_THEME = '3024-day'
 
@@ -29,17 +42,14 @@ CODEMIRROR_ADDONS = (
     ('hint', 'show-hint'),
 
 )
-
-app = Flask(__name__)
+app.config['MONGO_URI']='mongodb://red44:omi123@ds131963.mlab.com:31963/purpleoj'
 app.config.from_object(__name__)
 codemirror = CodeMirror(app)
-
-
+mongo = PyMongo(app)
 class MyForm(FlaskForm):
     source_code = CodeMirrorField(language='python', config={'lineNumbers': 'true'})
     submit = SubmitField('Submit')
     inputs = TextAreaField(u'inputs')
-
 
 def runPython(auxForm):
     form = MyForm(auxForm)
@@ -287,32 +297,39 @@ def submitCode(auxform,problemId):
     selectedLanguage = auxform.get('languages')
     print(selectedLanguage)
     makeSubmissionFolders()
+    submissionInfo=dict()
+    submissionInfo["Language"]=selectedLanguage
+    submissionInfo["Submission Time"]=datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     form = MyForm(auxform)
-    text = form.source_code.data
+    text = form.source_code.data.replace("\t","    ")
+    submissionInfo["Code"] = text
     now=time.time()
     then=time.time()
     fout = open(getProgramFileName(selectedLanguage), "w")
     print(text, file=fout)
     fout.close()
     #compiling
+    if selectedLanguage=="Java":
+        os.system("javac " + getProgramFileName("Java") + " 2>" + getErrorFileName())
+    elif selectedLanguage=="C":
+        os.system(" g++ -o " + getExecutibleFileName("C") + " " + getProgramFileName("C") + " 2>" + getErrorFileName())
+    # reading compile errors
+    if selectedLanguage!="Python":
+        finputs = open(getErrorFileName(), "r")
+        errors = finputs.readlines()
+        finputs.close()
+
+        if (len(errors) != 0):
+            print(errors)
+            submissionInfo["Comilation Status"] = "CE"
+            return submissionInfo
+    # running the program
     if selectedLanguage=="Python":
         now = time.time()
         os.system("python3 " + getProgramFileName("Python") + " < " + getTestCaseFileName(problemId) + " 1>" +
                   getOutputFileName() + " 2>" + getErrorFileName())
         then = time.time()
     elif selectedLanguage=="Java":
-        os.system("javac " + getProgramFileName("Java") + " 2>" + getErrorFileName())
-    else:
-        os.system(" g++ -o " + getExecutibleFileName("C") + " " + getProgramFileName("C") + " 2>" + getErrorFileName())
-    # reading compile errors
-    finputs = open(getErrorFileName(), "r")
-    errors = finputs.readlines()
-    finputs.close()
-
-    if(len(errors)!=0):
-        return "CE"
-    # running the program
-    if selectedLanguage=="Java":
         now = time.time()
         os.system("java -cp " + getExecutibleFileName("Java") + " Main <" + getTestCaseFileName(problemId) +
                   " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
@@ -328,14 +345,18 @@ def submitCode(auxform,problemId):
     errors = finputs.readlines()
     finputs.close()
     if len(errors)!=0:
-        return "RTE"
+        submissionInfo["Run Status"]="RTE"
+        return submissionInfo
     timeElapsed=then-now
-    if timeElapsed>2:
-        return "TLE"
-    elif doesOutputMatch(getExpectedOutputFileName(problemId),getOutputFileName()) == False :
-        return "WA"
+    submissionInfo["Execution Time"]=timeElapsed
+    # if timeElapsed>2:
+    #     return "TLE"
+    if doesOutputMatch(getExpectedOutputFileName(problemId),getOutputFileName()) == False :
+        submissionInfo["Result Verdict"]="WA"
+        return submissionInfo
     else:
-        return "AC"
+        submissionInfo["Result Verdict"] ="Passed"
+        return submissionInfo
 
 
 def cleanup():
@@ -343,7 +364,8 @@ def cleanup():
 
 @app.route('/editor/<problemId>', methods=['GET', 'POST'])
 def editor(problemId):
-
+    problemsDatabase=mongo.db.problems
+    submissionDatabase=mongo.db.submissions
     if request.method == 'POST':
         if "run" in request.form:
             template = runCode(request.form)
@@ -351,12 +373,80 @@ def editor(problemId):
             return template
 
         elif "submit" in request.form:
-            verdict=submitCode(request.form,problemId)
-            print("submit")
+            submissionInfo=submitCode(request.form,problemId)
+            print(submissionInfo)
+            problemTimeLimit=problemsDatabase.find_one({"myid":problemId}).get("time_limit")
+            verdict=dict()
+            verdict["Submission Time"]=submissionInfo.get("Submission Time")
+            verdict["Language"]=submissionInfo.get("Language")
+            if submissionInfo.get("Compilation Status") !=None:
+                verdict["Status"]=submissionInfo.get("Compilation Status")
+            elif submissionInfo.get("Run Status")!=None:
+                verdict["Status"]=submissionInfo.get("Run Status")
+            else:
+                if float(problemTimeLimit)<float(submissionInfo.get("Execution Time")):
+                    verdict["Status"]="TLE"
+                else:
+                    if submissionInfo.get("Result Verdict")=="Passed":
+                        verdict["Status"]="AC"
+                    else:
+                        verdict["Status"]="WA"
+            verdict["Execution Time"]=submissionInfo.get("Execution Time")
+            verdict["Problem Id"]=problemId
+            verdict["User Id"]=session["username"]
+            verdict["Code"]=submissionInfo.get("Code")
+            verdict["Contest Id"]=""
+            verdict["Submission Id"]=uuid.uuid4().__str__()
+            submissionDatabase.insert(verdict)
             print(verdict)
             cleanup()
 
     return render_template('editor.html', form=MyForm(request.form), languages=languages)
+@app.route('/editor/<contestId>/<problemId>', methods=['GET', 'POST'])
+def contestEditor(problemId, contestId):
+    problemsDatabase=mongo.db.problems
+    submissionDatabase=mongo.db.submissions
+    print("for contest")
+    if request.method == 'POST':
+        if "run" in request.form:
+            template = runCode(request.form)
+            cleanup()
+            return template
+
+        elif "submit" in request.form:
+            submissionInfo=submitCode(request.form,problemId)
+            print(submissionInfo)
+            problemTimeLimit=problemsDatabase.find_one({"myid":problemId}).get("time_limit")
+            verdict=dict()
+            verdict["Submission Time"]=submissionInfo.get("Submission Time")
+            verdict["Language"]=submissionInfo.get("Language")
+            if submissionInfo.get("Compilation Status") !=None:
+                verdict["Status"]=submissionInfo.get("Compilation Status")
+            elif submissionInfo.get("Run Status")!=None:
+                verdict["Status"]=submissionInfo.get("Run Status")
+            else:
+                if float(problemTimeLimit)<float(submissionInfo.get("Execution Time")):
+                    verdict["Status"]="TLE"
+                else:
+                    if submissionInfo.get("Result Verdict")=="Passed":
+                        verdict["Status"]="AC"
+                    else:
+                        verdict["Status"]="WA"
+            verdict["Execution Time"]=submissionInfo.get("Execution Time")
+            verdict["Problem Id"]=problemId
+            verdict["User Id"]=session["username"]
+            verdict["Code"]=submissionInfo.get("Code")
+            verdict["Contest Id"]=contestId
+            verdict["Submission Id"]=uuid.uuid4().__str__()
+            submissionDatabase.insert(verdict)
+            print(verdict)
+            cleanup()
+
+    return render_template('editor.html', form=MyForm(request.form), languages=languages)
+
+
+# *****************************************************************************************
+
 
 
 if __name__ == '__main__':
