@@ -1050,7 +1050,169 @@ def userProfile(userName):
 
 # *****************************************************************************************
 
+class lol:
+    def __init__(self,id,name,acc,sc,box):
+        self.id=id
+        self.name=name
+        self.acc=acc
+        self.sc=sc
+        self.box=box
 
+class create_contest_form(Form):
+    contestname=StringField("Contest Name",[validators.DataRequired()])
+
+def forward_letter(letter, positions):
+    if letter.islower():
+        unicode_point = ord('a')
+    else:
+        unicode_point = ord('A')
+    start = ord(letter) - unicode_point
+    offset = ((start + positions)) + unicode_point
+    current_letter = chr(offset)
+    return current_letter
+
+@app.route('/contest',methods=['GET', 'POST'])
+def contest():
+    form = create_contest_form(request.form)
+
+    problemdb=mongo.db.problems
+    list=[]
+    existing_pbs=problemdb.find({})
+    for existing_pb in existing_pbs:
+        list.append(lol(existing_pb['myid'],existing_pb['name'],existing_pb['acsub'],existing_pb['sub'],existing_pb['myid']))
+    if request.method == 'POST':
+        print(request.form[form.contestname.name])
+        cnt=0;
+        selected_problem_id=[]
+        name='A'
+        for prblm in list:
+            if request.form.get(prblm.id):
+                cnt+=1
+                selected_problem_id.append({forward_letter(name,cnt-1):prblm.id});
+                print(prblm.name)
+        if cnt==0:
+            flash('You have to Choose at least 1 problem to set a contest.','failure')
+            return render_template('create_contest.html',obj=list,form=form)
+        else:
+            contests=mongo.db.contests
+            contests.insert({'Contest Title':form.contestname.data,'Start Date':request.form['date'],
+                             'Start Time':request.form['start_time'],'End Time':request.form['end_time'],
+                             'Problem Count':cnt,'Problem ID':selected_problem_id})
+            return redirect(url_for('contests'))
+
+    return render_template('create_contest.html',obj=list,form=form)
+
+@app.route('/currentcontest/<contestID>/ranklist')
+def ranklist(contestID):
+    # #total_problem=['A','B','C','D','E','F']
+    # submission_history=[{'name':'A','status':'AC','total_submission':3}]
+    # submission_history.append({'name':'B','status':'WA','total_submission':2})
+    # submission_history.append({'name': 'E', 'status': 'RTE', 'total_submission': 6})
+    # submission_history.append({'name': 'C', 'status': 'WA', 'total_submission': 2})
+    # submission_history.append({'name': 'D', 'status': 'TLE', 'total_submission': 2})
+    # submission_history.append({'name': 'F', 'status': 'NS', 'total_submission': 0})
+    # contestant1={'name':'SALAM','acc':3,'penalty':120,'submission_history':submission_history}
+    # contestant2 = {'name': 'Borkot', 'acc': 2, 'penalty': 110, 'submission_history': submission_history}
+    # Total_contestant=[contestant1,contestant2]
+    Total_contestant=[]
+    submission=mongo.db.submissions
+    contestant_wise_submission=submission_formatter(submission,contestID)
+    contests=mongo.db.contests
+    contt=contests.find({'_id':ObjectId(contestID)})
+
+    problem_cnt=0
+    contestant_start_date=""
+    contestant_start_time=""
+    for cont in contt:
+        problem_cnt=cont['Problem Count']
+        contestant_start_date=cont['Start Date']
+        contestant_start_time=cont['Start Time']
+    print(problem_cnt)
+    total_problem=problem_subname_generator(problem_cnt)
+
+    for eachcontestant in contestant_wise_submission:
+        Total_contestant.append(contestant_wise_submission_formatter(eachcontestant,total_problem,contestant_start_date,contestant_start_time))
+
+    return render_template('ranklist.html',total_problem=total_problem,Total_contestant=Total_contestant)
+
+def problem_subname_generator(problem_cnt):
+    total=[]
+    for i in range(0,problem_cnt):
+        total.append(forward_letter('A',i))
+    print(total)
+    return total
+
+def submission_formatter(submission,contestID):
+    contestant_wise_submission=[]
+    User=[]
+    total=0
+    all_submission=submission.find({'Contest Id':contestID})
+    for dict in all_submission:
+        submissions=submission.find({'Contest Id':contestID,'User Id':dict["User Id"]})
+        if dict['User Id'] not in User:
+            contestant_wise_submission.append(submissions)
+            User.append(dict['User Id'])
+
+    return contestant_wise_submission
+
+def contestant_wise_submission_formatter(submissions,total_problem,contest_start_date,contest_start_time):
+    submission_history=[]
+    penalty=0
+    acc = 0
+    name=""
+    submission=[]
+    for each in submissions:
+            submission.append(each)
+    for eachproblem in total_problem:
+
+        each_prboblem_sub=[]
+        for each in submission:
+            if each['Problem Number']==eachproblem:
+                each_prboblem_sub.append(each)
+
+        status="NS"
+        submission_time=0
+        cnt=0
+        execution_time=0
+        for eachsub in each_prboblem_sub:
+            name=eachsub['User Id']
+            if eachsub['Status'] =='AC':
+                status='AC'
+                submission_time=eachsub['Submission Time']
+                acc+=1
+                execution_time=eachsub['Execution Time']
+                penalty+=20*cnt+execution_time*100-100
+                cnt+=1
+                break
+            cnt+=1
+            status=eachsub['Status']
+
+        if submission_time!=0:
+            dif=get_datetime_to_sec(submission_time,contest_start_date,contest_start_time)
+
+        submission_history.append({'name': eachproblem, 'status':status , 'total_submission': cnt})
+    contestant = {'name': name, 'acc': acc, 'penalty': int(dif+penalty), 'submission_history': submission_history}
+    return contestant
+
+def get_datetime_to_sec(submission_time,contest_start_date,contest_start_time):
+    dt = submission_time.split()
+
+    subd = dt[0].split('-')
+    subt = dt[1].split(':')
+    startd = contest_start_date.split('-')
+    startt = contest_start_time.split(':')
+    dt1 = datetime.datetime(int(subd[0]), int(subd[1]), int(subd[2]), int(subt[0]), int(subt[1]))
+    dt2 = datetime.datetime(int(startd[0]), int(startd[1]), int(startd[2]), int(startt[0]), int(startt[1]))
+
+    subsec = time.mktime(dt1.timetuple())
+    startsec = time.mktime(dt2.timetuple())
+    return  subsec-startsec
+
+############################################
+
+
+
+#############################################
 
 
 if __name__ == '__main__':

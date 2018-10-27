@@ -397,15 +397,15 @@ def contest():
                 print(prblm.name)
         if cnt==0:
             flash('You have to Choose at least 1 problem to set a contest.','failure')
-            return render_template('contest.html',obj=list,form=form)
+            return render_template('create_contest.html',obj=list,form=form)
         else:
             contests=mongo.db.contests
             contests.insert({'Contest Title':form.contestname.data,'Start Date':request.form['date'],
                              'Start Time':request.form['start_time'],'End Time':request.form['end_time'],
                              'Problem Count':cnt,'Problem ID':selected_problem_id})
-            return 'You have successfully created a contest'
+            return redirect(url_for('contests'))
 
-    return render_template('contest.html',obj=list,form=form)
+    return render_template('create_contest.html',obj=list,form=form)
 
 @app.route('/currentcontest/<contestID>/ranklist')
 def ranklist(contestID):
