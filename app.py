@@ -29,7 +29,8 @@ from flask_codemirror import CodeMirror
 
 import datetime
 import os
-
+import datetime
+import time
 app = Flask(__name__)
 UPLOAD_FOLDER = '/home/aniomi/PycharmProjects/purpleoj/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
@@ -1235,10 +1236,13 @@ def contests():
     loaded_contests = contest_db.find({})
     for contest_curr in loaded_contests:
         time_string = contest_curr['Start Date'] + ' ' + contest_curr['Start Time']
-        time_obj = datetime.strptime(time_string, '%Y-%m-%d %H:%M')
+        #time_obj = datetime.strptime(time_string, '%Y-%m-%d %H:%M')
+        subd = contest_curr['Start Date'].split('-')
+        subt = contest_curr['Start Time'].split(':')
+        dt1 = datetime.datetime(int(subd[0]), int(subd[1]), int(subd[2]), int(subt[0]), int(subt[1]))
         new_contest = contestdata(contest_curr['_id'],
                               contest_curr['Contest Title'],
-                              time_obj)
+                              dt1)
         contest_list.append(new_contest)
     contest_list.sort(key=lambda r:r.time, reverse=True)
     if not ('username' in session):
