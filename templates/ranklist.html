@@ -1,0 +1,168 @@
+
+{% block head %}
+{% endblock head %}
+
+{% block content %}
+    <head>
+        <meta http-equiv="x-ua-compatible" content="IE-edge">
+        <meta name="viewport" content="width-device-width, initial-scale=1">
+        <link href="/static/For%20Table/dataTables.bootstrap.min.css" rel="stylesheet">
+    </head>
+<style>
+    #loll
+    {
+        margin-left: 4%;
+        margin-right: 4%;
+        width: 92%;
+        margin-top: 30px;
+    }
+    #first
+    {
+        float: left;
+        width: 30%;
+    }
+    #second
+    {
+        float: right;
+        width: 30%;
+    }
+    #tot
+    {
+        width: 92%;
+        float: top;
+        margin-left: 4%;
+        margin-right: 4%;
+    }
+</style>
+<body onload="sortTable()">
+
+{%  include 'layout.html' %}
+  <h1 class="lead" align="center"><font size="10px">Contest Ranklist</font></h1>
+{%  from  "includes/_formhelpers.html" import render_field %}
+
+
+<div id="loll">
+    <table class="table table-striped table-bordered table-hover" id="mydata">
+
+    <thead>
+            <tr>
+                <th>Contestant Name</th>
+                <th>Solved</th>
+                <th>Penalty</th>
+                {% for problem_name in total_problem %}
+                    <th style="padding-left: 60px">{{ problem_name }}</th>
+                {% endfor %}
+            </tr>
+    </thead>
+        <tfoot>
+            <tr>
+
+            </tr>
+        </tfoot>
+
+    <tbody>
+    {% for contestant in Total_contestant %}
+        <tr>
+
+            <td>
+                {{ contestant.name }}
+            </td>
+            <td align="center" >
+                {{ contestant.acc }}
+            </td>
+            <td align="center">
+                {{ contestant.penalty }}
+            </td>
+            {% for eachprblm in contestant.submission_history %}
+                {% if eachprblm.status=='AC' %}
+                    <td align="center" bgcolor="#7fff00">
+                        {{ eachprblm.status }}({{ eachprblm.total_submission }})
+                    </td>
+
+                {% elif eachprblm.status=='WA' %}
+                    <td align="center" bgcolor="red">
+                        {{ eachprblm.status }}({{ eachprblm.total_submission }})
+                    </td>
+                {% elif eachprblm.status=='TLE' %}
+                    <td align="center" bgcolor="aqua">
+                        {{ eachprblm.status }}({{ eachprblm.total_submission }})
+                    </td>
+                {% elif eachprblm.status=='RTE' %}
+                    <td align="center" bgcolor="blue">
+                        {{ eachprblm.status }}({{ eachprblm.total_submission }})
+                    </td>
+                {% elif eachprblm.status=='NS' %}
+                    <td align="center">
+                        {{ eachprblm.status }}
+                    </td>
+                {% else%}
+                    <td align="center">
+                        {{ eachprblm.status }}({{ eachprblm.total_submission }})
+                    </td>
+                {% endif %}
+
+            {% endfor %}
+
+        </tr>
+    {% endfor %}
+    </tbody>
+
+    </table>
+</div>
+<script>
+function sortTable() {
+  var table, rows, switching, i, x, y, shouldSwitch;
+  table = document.getElementById("mydata");
+  switching = true;
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[1];
+      y = rows[i + 1].getElementsByTagName("TD")[1];
+      px = rows[i].getElementsByTagName("TD")[2];
+      py = rows[i + 1].getElementsByTagName("TD")[2];
+      //check if the two rows should switch place:
+      if (Number(x.innerHTML) < Number(y.innerHTML)) {
+        //if so, mark as a switch and break the loop:
+        shouldSwitch = true;
+        break;
+      }
+      else if (Number(x.innerHTML) == Number(y.innerHTML) ) {
+          if (Number(px.innerHTML) > Number(py.innerHTML) ) {
+            //if so, mark as a switch and break the loop:
+            shouldSwitch = true;
+            break;
+            }
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+    }
+  }
+}
+</script>
+<script src="/static/For%20Table/jquery.js"></script>
+<script src="/static/For%20Table/jquery.dataTables.min.js"></script>
+<script src="/static/For%20Table/dataTables.bootstrap4.min.js"></script>
+<script>
+
+    $('#mydata').dataTable()
+</script>
+
+
+</body>
+
+{% endblock content %}
