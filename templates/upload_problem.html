@@ -1,147 +1,146 @@
 {% block head %}
 {% endblock head %}
-
+{%  extends 'index.html' %}
 {% block content %}
 <style>
-    body {padding-top:20px;padding: 20px;background-color: powderblue;}
-    h1   {color: blue;}
-    p    {color: red;}
-    .dom {padding-top: 40px}
-
-#header
-{
-    width: 100%;
-    height: 10%;
-    background_color: red;
-    height: 30px;
-}
-#container
-{
-    margin: 2%;
-}
-#first
-{
-    width: 45%;
-
-    margin: 2%;
-
-
-    float: left;
-    border: black;
-}
-#second
-{
-    width: 45%;
-    margin: 2%;
-    float: right;
-    border: #0b2e13;
-}
-#third
-{
-    width: 28%;
-    margin: 2%;
-    float: left;
-    border: #0b2e13;
-
-}
-#fourth
-{
-    width: 28%;
-    margin: 2%;
-    float: right;
-    border: #0b2e13;
-}
-#fifth
-{
-    width: 28%;
-    margin: 2%;
-    float: right;
-    border: black;
-}
-#clear
-{
-    margin: 10%;
+h1 {
+	color: blue;
 }
 
+p {
+	color: red;
+}
 
+.dom {
+	padding-top: 40px
+}
+
+#header {
+	width: 100%;
+	height: 10%;
+	background_color: red;
+	height: 30px;
+}
+
+#container {
+	margin: 2%;
+}
+
+#first {
+	width: 45%;
+	margin: 2%;
+	float: left;
+	border: black;
+}
+
+#second {
+	width: 45%;
+	margin: 2%;
+	float: right;
+	border: #0b2e13;
+}
+
+#third {
+	width: 28%;
+	margin: 2%;
+	float: left;
+	border: #0b2e13;
+}
+
+#fourth {
+	width: 28%;
+	margin: 2%;
+	float: right;
+	border: #0b2e13;
+}
+
+#fifth {
+	width: 28%;
+	margin: 2%;
+	float: right;
+	border: black;
+}
+
+#clear {
+	margin: 10%;
+}
 </style>
-
 <body>
-{%  include 'layout.html' %}
-
-<h4 class="dom">Upload Problem</h4>
-<hr>
-
-
-
-    <form method=post enctype=multipart/form-data>
-        {%  from  "includes/_formhelpers.html" import render_field %}
-        <div class="form-group">
-            <div id="third">
-            {{ render_field(nameform.count,class_="form-control")}}
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-0">
             </div>
-            <div id="fourth">
-            {{ render_field(nameform.name,class_="form-control")}}
-            </div>
-            <div id="fifth">
-                <p>Problem description(pdf)</p>
-                <input type=file name=file>
+            <div class="col-md-12">
+                <h4 class="dom">Upload Problem</h4>
+                <hr>
+                <form method=post enctype=multipart/form-data>
+                    {%  from  "includes/_formhelpers.html" import render_field %}
+                    <div class="form-group">
+                        <div id="third">
+                            {{ render_field(nameform.count,class_="form-control")}}
+                        </div>
+                        <div id="fourth">
+                            {{ render_field(nameform.name,class_="form-control")}}
+                        </div>
+                        <div id="fifth">
+                            <p>Problem description(pdf)</p>
+                            <input type=file name=file>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div id="third">
+                            {{ render_field(nameform.category,class_="form-control")}}
+                        </div>
+                        <div id="fourth">
+                            {{ render_field(nameform.memory_limit,class_="form-control")}}
+                        </div>
+                        <div id="fifth">
+                            {{ render_field(nameform.time_limit,class_="form-control")}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div id="third">
+                            {{ render_field(nameform.point1,class_="form-control")}}
+                        </div>
+                        <div id="fourth">
+                            <p>Input file for subtask 1(txt)</p>
+                            <input type=file name=ifile1>
+                        </div>
+                        <div id="fifth">
+                            <p>Output file for subtask 1(txt)</p>
+                            <input type=file name=ofile1>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div id="third">
+                            {{ render_field(nameform.point2,class_="form-control")}}
+                        </div>
+                        <div id="fourth">
+                            <p>Input file for subtask 2(txt)</p>
+                            <input type=file name=ifile2>
+                        </div>
+                        <div id="fifth">
+                            <p>Output file for subtask 2(txt)</p>
+                            <input type=file name=ofile2>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div id="third">
+                            {{ render_field(nameform.point3,class_="form-control")}}
+                        </div>
+                        <div id="fourth">
+                            <p>Input file for subtask 3(txt)</p>
+                            <input type=file name=ifile3>
+                        </div>
+                        <div id="fifth">
+                            <p>Output file for subtask 3(txt0</p>
+                            <input type=file name=ofile3>
+                        </div>
+                    </div>
+                    <input type=submit id="container" value=Upload>
+                </form>
             </div>
         </div>
-        <div class="form-group">
-            <div id="third">
-            {{ render_field(nameform.category,class_="form-control")}}
-            </div>
-            <div id="fourth">
-            {{ render_field(nameform.memory_limit,class_="form-control")}}
-            </div>
-            <div id="fifth">
-                {{ render_field(nameform.time_limit,class_="form-control")}}
-            </div>
-        </div>
-        <div class="form-group">
-            <div id="third">
-                {{ render_field(nameform.point1,class_="form-control")}}
-            </div>
-            <div id="fourth">
-                <p>Input file for subtask 1(txt)</p>
-                <input type=file name=ifile1>
-            </div>
-            <div id="fifth">
-                <p>Output file for subtask 1(txt)</p>
-                <input type=file name=ofile1>
-            </div>
-        </div>
-        <div class="form-group">
-            <div id="third">
-                {{ render_field(nameform.point2,class_="form-control")}}
-            </div>
-            <div id="fourth">
-                <p>Input file for subtask 2(txt)</p>
-                <input type=file name=ifile2>
-            </div>
-            <div id="fifth">
-                <p>Output file for subtask 2(txt)</p>
-                <input type=file name=ofile2>
-            </div>
-        </div>
-        <div class="form-group">
-            <div id="third">
-                {{ render_field(nameform.point3,class_="form-control")}}
-            </div>
-            <div id="fourth">
-                <p>Input file for subtask 3(txt)</p>
-                <input type=file name=ifile3>
-            </div>
-            <div id="fifth">
-                <p>Output file for subtask 3(txt0</p>
-                <input type=file name=ofile3>
-            </div>
-        </div>
-
-      <input type=submit id="container" value=Upload>
-    </form>
-
-
+    </main>
 </body>
 {% endblock content %}

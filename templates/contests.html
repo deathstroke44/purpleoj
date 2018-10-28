@@ -1,7 +1,7 @@
 {% block head %}
     <title>Contests</title>
 {% endblock head %}
-
+{% extends 'index.html' %}
 {% block content %}
     <head>
         <meta http-equiv="x-ua-compatible" content="IE-edge">
@@ -80,15 +80,14 @@
     {
         background-color: #1b6d85;
     }
-    body
-    {
-        padding: 3%;
-        padding-top: 5%;
-    }
 </style>
 <body>
 
-{% include 'layout.html' %}
+<main role="main" class="container">
+      <div class="row">
+         <div class="col-md-0">
+         </div>
+         <div class="col-md-12">
 <p><font size="12"> <b><i>Contests</i></b></font></p>
 
 <hr>
@@ -114,6 +113,8 @@
     </tbody>
     </table>
 </div>
-
+ </div>
+      </div>
+   </main>
 </body>
 {% endblock content %}

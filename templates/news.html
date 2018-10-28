@@ -1,63 +1,57 @@
+{% extends 'index.html' %}
 {% block head %}
 {% endblock head %}
-
-{% extends "layout_2.html" %}
 {% block content %}
 <head>
-    <script src="/static/w3.js"></script>
-    <style>
-        a {
-            text-decoration: none;
-            display: inline-block;
-            <!--padding: 8px 16px;-->
-        }
-
-        a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-
-        .previous {
-            background-color: #f1f1f1;
-            color: black;
-        }
-
-        .next {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .round {
-            border-radius: 50%;
-        }
-
-    </style>
+   <script src="/static/w3.js"></script>
+   <style>
+      a {
+      text-decoration: none;
+      display: inline-block;
+      <!--padding: 8px 16px;-->
+      }
+      a:hover {
+      }
+      .previous {
+      background-color: #f1f1f1;
+      color: black;
+      }
+      .next {
+      background-color: #4CAF50;
+      color: white;
+      }
+      .round {
+      border-radius: 50%;
+      }
+      .card{
+      bottom-margin: 10px;
+      }
+   </style>
 </head>
-{% for article in article_array %}
-<article class="media content-section">
-    <div class="media-body">
-        <div class="article-metadata">
-           <p class="article-content" w3-include-html={{article.title_filename}}>
-            <script>
-                       w3.includeHTML();
-
-            </script>
-        </p>
-            <!--<small class="text-muted">{{ article.detail }}</small>-->
-        </div>
-        <!--<h2><a class="article-title" href="#">{{ article.title }}</a></h2>-->
-        <!--<p class="article-content">{{ article.detail }}</p>-->
-        <p class="article-content" w3-include-html={{article.content_filename}}>
-            <script>
-                       w3.includeHTML();
-
-            </script>
-        </p>
-    </div>
-</article>
-{% endfor %}
+<main role="main" class="container">
+   <div class="row">
+      <div class="col-md-1">
+           </div>
+      <div class="col-md-9">
+         {% for article in article_array %}
+         <div class="card mt-3">
+            <div class="card-header"  w3-include-html={{article.title_filename}}>
+               <script>
+                        w3.includeHTML();
+               </script>
+            </div>
+            <div class="card-body"  w3-include-html={{article.content_filename}}>
+               <script>
+                        w3.includeHTML();
+               </script>
+            </div>
+         </div>
+         {% endfor %}
+      </div>
+   </div>
+</main>
 <script>
-    w3.includeHTML();
+   w3.includeHTML();
 </script>
 <a href="#" class="previous round">&#8249;</a>
 <a href="#" class="next round">&#8250;</a>

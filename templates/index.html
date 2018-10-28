@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            .sidenav {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0px;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            overflow-x: hidden;
+            padding-top: 0px;
+            list-style: none;
+            }
+            .sidebar-nav-bottom {
+            position: fixed;
+            bottom: 0px;
+            width: 250px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            }
+            .sidenav li {
+            text-indent: 20px;
+            line-height: 40px;
+            }
+            .sidebar-nav-bottom li {
+            text-indent: 20px;
+            line-height: 40px;
+            display: inline;
+            }
+            .sidenav li a {
+            text-decoration: none;
+            color: #999999;
+            display: block;
+            }
+            .sidebar-nav-bottom li a {
+            display: block;
+            text-decoration: none;
+            color: #999999;
+            }
+            .sidenav li a:hover {
+            text-decoration: none;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+            }
+            .sidebar-nav-bottom li a:hover {
+            text-decoration: none;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+            }
+            .main {
+            margin-left: 250px;
+            /* Same as the width of the sidenav */
+            font-size: 15px;
+            /* Increased text to enable scrolling */
+            padding: 0px 10px;
+            }
+            @media screen and (max-height: 450px) {
+            .sidenav {
+            padding-top: 15px;
+            }
+            .sidenav a {
+            font-size: 18px;
+            }
+            }
+            .sidenav>.sidebar-brand {
+            height: 65px;
+            font-size: 20px;
+            line-height: 60px;
+            }
+            .sidenav>.sidebar-brand a {
+            color: #999999;
+            }
+            .sidenav>.sidebar-brand a:hover {
+            color: #fff;
+            background: none;
+            }
+        </style>
+    </head>
+    <body>
+        <ul class="sidenav"  style="list-style-type:none">
+            <li class="sidebar-brand">
+                <a href="/">
+                <b>CodeFlask</b>
+                </a>
+            </li>
+            <li>
+                <a href="/profile">Profile</a>
+            </li>
+            <li>
+                <a href="/about">Problem Set</a>
+            </li>
+            <li>
+                <a href="/contests">Contest</a>
+            </li>
+            <li>
+                <a href="/upload">Upload Problem</a>
+            </li>
+            <li>
+                <a href="contest">Create Contest</a>
+            </li>
+            <li>
+                <a href="/">Blog</a>
+            </li>
+            <li>
+                <a href="/post">Post Something</a>
+            </li>
+            <li>
+                <a href="/news">News</a>
+            </li>
+        </ul>
+        <ul class="sidebar-nav-bottom" style="list-style-type:none" >
+            <li  >
+                <a href="/login">Login</a>
+            </li>
+            <li>
+                <a href="/register">Sign Up</a>
+            </li>
+            <li>
+                <a href="/logout">Sign Out</a>
+            </li>
+            <li>
+                <a href="#">About</a>
+            </li>
+        </ul>
+        <div class="main">
+        {% block content %}{% endblock %}
+        </div>
+    </body>
+</html>
