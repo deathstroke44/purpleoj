@@ -1,237 +1,257 @@
+
 {% block head %}
 {% endblock head %}
-{%  extends 'index.html' %}
+
 {% block content %}
 <style>
-   body
-   {
-   background-size: cover;
-   background-position: center;
-   }
-   p    {color: red;}
-   font-face
-   {
-   font-weight: bolder;
-   }
-   font
-   {
-   font-weight: bolder;
-   }
-   text
-   {
-   font-weight: bolder;
-   }
-   body
-   {
-   font-weight: bolder;
-   }
-   form
-   {
-   font-weight: bolder;
-   }
-   #rede{
-   float: right;
-   }
-   #ss{
-   float: right;
-   }
+    body
+    {
+        background-size: cover;
+        background-position: center;
+    }
+    p    {color: red;}
+        font-face
+        {
+            font-weight: bolder;
+        }
+        font
+        {
+            font-weight: bolder;
+        }
+        text
+        {
+            font-weight: bolder;
+        }
+        body
+        {
+            font-weight: bolder;
+        }
+        form
+        {
+            font-weight: bolder;
+        }
+        #rede{
+            float: right;
+        }
+        #ss{
+            float: right;
+        }
+
 </style>
-<head>
-   <script type="text/javascript"></script>
-</head>
+    <head>
+        <script type="text/javascript">
+        </script>
+    </head>
 <body>
-   <main role="main" class="container">
-      <div class="row mt-5">
-         <div class="col-md-1">
-         </div>
-         <div class="col-md-9">
-            <h1 class="lead"><font size="5px"><strong>Post Something</strong></font></h1>
-            <hr>
-            <br>
-            <br>
-            {%  from  "includes/_formhelpers.html" import render_field %}
-            <form method="POST" action="">
-               <div class="form-group" >
-                  {{render_field(form.title, class_="form-control")}}
-               </div>
-               <br>
-               <br>
-               <div class="form-group" id="lol">
-                  {{render_field(form.text, class_="form-control",id="ck")}}
-                  <script>
-                     //document.getElementById("ck").innerHTML="<b>omi</b>";
-                  </script>
-                  <script type="text/javascript"></script>
-                  <script type="text/javascript">
-                     class Memento
-                     {
-                         constructor(_state)
-                         {
-                             this.state=_state;
-                         }
-                         getMemento()
-                         {
-                             return this.state;
-                         }
-                     }
-                     class Origanator
-                     {
-                         constructor()
-                         {
-                             this.state="";
-                         }
-                         setstate(_state)
-                         {
-                             this.state=_state;
-                         }
-                         save(_state)
-                         {
-                             return new Memento(_state);
-                         }
-                         restore(_Memento)
-                         {
-                             this.state=_Memento.getMemento()
-                         }
-
-                     }
-                     function nos(string) {
-                         var i,cnt=0;
-                         for(i=0;i<string.length;i++)
-                         {
-                             if(string[i]==='')
-                             {
-                                 cnt++;
-                             }
-                         }
-                         return cnt;
-
-                     }
-                     class Caretaker
-                     {
-                         constructor()
-                         {
-                             this.list=new Array(0);
-                             this.lis2=new Array(0);
-                         }
-                         addMemento(_Memento)
-                         {
-                             if(!(this.list.length>0 && this.list[this.list.length-1].state===_Memento.state))
-                             {
-                                 this.list.push(_Memento);
-                             }
+{% include 'index.html' %}
+<main role="main" class="container">
+   <div class="row mt-5">
+      <div class="col-md-1">
+           </div>
+      <div class="col-md-9">
 
 
-                             //alert("Memenro Pushed");
-                             //alert(__Memento.state);
-                         }
-                         addredoMemento(_Memento)
-                         {
-                             this.lis2.push(_Memento);
-                         }
-                         popMemento()
-                         {
-                             this.list.pop();
-                         }
-                         popredomemento()
-                         {
-                             this.lis2.pop();
-                         }
-                         getMemento(id)
-                         {
-                             return this.list[id];
-                         }
-                         getredoMemento(idx)
-                         {
-                             return this.lis2[idx];
-                         }
+<h1 class="lead"><font size="5px"><strong>Post Something</strong></font></h1>
+<hr>
+<br>
+<br>
+{%  from  "includes/_formhelpers.html" import render_field %}
+<form method="POST" action="">
 
-                     }
-
-                     class memento
-                     {
-
-                         constructor(xx)
-                         {
-                             this.lang=xx;
-                             this.list= new Array(1);
-
-                         }
-                         getmoment(id)
-                         {
-                             return this.list[id];
-                         }
-                         pp(val)
-                         {
-                             this.list.push(val);
-
-                         }
+<div class="form-group" >
+      {{render_field(form.title, class_="form-control")}}
+</div>
+    <br>
+    <br>
+<div class="form-group" id="lol">
+      {{render_field(form.text, class_="form-control",id="ck")}}
 
 
+    <script>
+        //document.getElementById("ck").innerHTML="<b>omi</b>";
+    </script>
+    <script type="text/javascript">
 
-                     }
-                     let care_taker=new Caretaker();
-                     let originator=new Origanator();
+    </script>
 
-                     let x=new memento(1);
-                     //alert(x.lang);
-                     x.list[0]="";
-                     //alert(x.getmoment(0));
-                     CKEDITOR.on('instanceCreated', function(e) {
-                     if (e.editor.name === "ck") { //editorId is the id of the textarea
-                         e.editor.on('key', function(evt) {
-                         //Text change cod
 
-                                 //document.getElementById("par").innerHTML= e.editor.getData();
+    <script type="text/javascript">
+        class Memento
+        {
+            constructor(_state)
+            {
+                this.state=_state;
+            }
+            getMemento()
+            {
+                return this.state;
+            }
+        }
+        class Origanator
+        {
+            constructor()
+            {
+                this.state="";
+            }
+            setstate(_state)
+            {
+                this.state=_state;
+            }
+            save(_state)
+            {
+                return new Memento(_state);
+            }
+            restore(_Memento)
+            {
+                this.state=_Memento.getMemento()
+            }
 
-                                 var rr=e.editor.getData();
-                                 care_taker.addMemento(originator.save(rr));
-                                 //alert(rr);
-                                 //alert("pushed");
-                                 //alert(care_taker.list.length);
+        }
+        function nos(string) {
+            var i,cnt=0;
+            for(i=0;i<string.length;i++)
+            {
+                if(string[i]==='')
+                {
+                    cnt++;
+                }
+            }
+            return cnt;
+
+        }
+        class Caretaker
+        {
+            constructor()
+            {
+                this.list=new Array(0);
+                this.lis2=new Array(0);
+            }
+            addMemento(_Memento)
+            {
+                if(!(this.list.length>0 && this.list[this.list.length-1].state===_Memento.state))
+                {
+                    this.list.push(_Memento);
+                }
+
+
+                //alert("Memenro Pushed");
+                //alert(__Memento.state);
+            }
+            addredoMemento(_Memento)
+            {
+                this.lis2.push(_Memento);
+            }
+            popMemento()
+            {
+                this.list.pop();
+            }
+            popredomemento()
+            {
+                this.lis2.pop();
+            }
+            getMemento(id)
+            {
+                return this.list[id];
+            }
+            getredoMemento(idx)
+            {
+                return this.lis2[idx];
+            }
+
+        }
+
+        class memento
+        {
+
+            constructor(xx)
+            {
+                this.lang=xx;
+                this.list= new Array(1);
+
+            }
+            getmoment(id)
+            {
+                return this.list[id];
+            }
+            pp(val)
+            {
+                this.list.push(val);
+
+            }
 
 
 
-                             //alert(rr)
-                     });
+        }
+        let care_taker=new Caretaker();
+        let originator=new Origanator();
 
-                     }
-                     });
+        let x=new memento(1);
+        //alert(x.lang);
+        x.list[0]="";
+        //alert(x.getmoment(0));
+        CKEDITOR.on('instanceCreated', function(e) {
+        if (e.editor.name === "ck") { //editorId is the id of the textarea
+            e.editor.on('key', function(evt) {
+            //Text change cod
 
-                  </script>
-                  <input id="rede" value="Undo" type="button" >
-                  <script>
-                     document.getElementById("rede").onclick=function () {
-                         //alert("ACCESS FUNCTIO");
-                         //document.getElementById("ck").value="omi";//care_taker.getMemento(x.list.length-1);
-                         if(care_taker.list.length>0)
-                         {
-                             var rr=CKEDITOR.instances["ck"].getData();
-                             care_taker.addredoMemento(originator.save(rr));
-                             CKEDITOR.instances["ck"].setData(care_taker.getMemento(care_taker.list.length-1).state);
-                             care_taker.popMemento();
-                         }
-                     }
-                  </script>
-                  <input id="ss" value="Redo" type="button">
-                  <script>
-                     document.getElementById("ss").onclick=function () {
-                         if(care_taker.lis2.length>=1)
-                         {
-                              var rr=CKEDITOR.instances["ck"].getData();
-                              care_taker.addMemento(originator.save(rr));
-                              CKEDITOR.instances["ck"].setData(care_taker.getredoMemento(care_taker.lis2.length-1).state);
-                              care_taker.popredomemento();
-                         }
+                    //document.getElementById("par").innerHTML= e.editor.getData();
 
-                         //alert(rr);
-                     }
-                  </script>
-               </div>
-               <br><br>
-               <p><input type="submit" class="btn btn-primary" value="Submit"></p>
-            </form>
-         </div>
-      </div>
-   </main>
+                    var rr=e.editor.getData();
+                    care_taker.addMemento(originator.save(rr));
+                    //alert(rr);
+                    //alert("pushed");
+                    //alert(care_taker.list.length);
+
+
+
+                //alert(rr)
+        });
+
+    }
+});
+
+    </script>
+
+    <input id="rede" value="Undo" type="button" >
+<script>
+
+document.getElementById("rede").onclick=function () {
+    //alert("ACCESS FUNCTIO");
+    //document.getElementById("ck").value="omi";//care_taker.getMemento(x.list.length-1);
+    if(care_taker.list.length>0)
+    {
+        var rr=CKEDITOR.instances["ck"].getData();
+        care_taker.addredoMemento(originator.save(rr));
+        CKEDITOR.instances["ck"].setData(care_taker.getMemento(care_taker.list.length-1).state);
+        care_taker.popMemento();
+    }
+}
+</script>
+    <input id="ss" value="Redo" type="button">
+    <script>
+        document.getElementById("ss").onclick=function () {
+            if(care_taker.lis2.length>=1)
+            {
+                 var rr=CKEDITOR.instances["ck"].getData();
+                 care_taker.addMemento(originator.save(rr));
+                 CKEDITOR.instances["ck"].setData(care_taker.getredoMemento(care_taker.lis2.length-1).state);
+                 care_taker.popredomemento();
+            }
+
+            //alert(rr);
+        }
+    </script>
+
+
+</div>
+    <br><br>
+<p><input type="submit" class="btn btn-primary" value="Submit"></p>
+</form>
+
+</div>
+   </div>
+</main>
+
 </body>
+
 {% endblock content %}

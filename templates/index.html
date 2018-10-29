@@ -15,6 +15,8 @@
                     document.getElementById(text).style.backgroundColor="#216de0";
                 }
         </script>
+        <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <style>
 
             .sidenav {
@@ -115,7 +117,7 @@
                 <a href="/upload">Upload Problem</a>
             </li>
             <li>
-                <a href="/contest">Create Contest</a>
+                <a href="contest">Create Contest</a>
             </li>
             <li id="blog">
                 <a href="/">Blog</a>
@@ -126,8 +128,8 @@
             <li id="News">
                 <a href="/news">News</a>
             </li>
-            <li>
-                <a href="/issues">Issues</a>
+            <li id="grpah">
+                <a href="/graph">Graph Visualization</a>
             </li>
         </ul>
         <ul class="sidebar-nav-bottom" style="list-style-type:none" >
@@ -147,5 +149,11 @@
         <div class="main">
         {% block content %}{% endblock %}
         </div>
+         <script src="/static/For%20Table/jquery.js"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="//cdn.ckeditor.com/4.6.2/basic/ckeditor.js"></script>
+    <script type="text/javascript">
+      CKEDITOR.replace('editor')
+    </script>
     </body>
 </html>
