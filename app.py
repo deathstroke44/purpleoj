@@ -1488,7 +1488,94 @@ def load_contest_problem(id1, id2):
 
 
 #############################################
+class graph_input(Form):
+    nodes_cnt=IntegerField("Number of Nodes",[validators.DataRequired()])
+    nodes_desc=TextAreaField("Nodes",[validators.DataRequired])
+    ed_cnt=IntegerField("Number of Edgs",[validators.DataRequired()])
+    ed_desc=TextAreaField("Edges",[validators.DataRequired()])
 
+
+def givenode(node_name):
+    node_name = node_name.replace('\n','')
+    print(repr(node_name),end=' ')
+    s='{ data: { id: '+ '\'' +node_name+ '\''+' } },'
+    return s
+
+def f(s):
+    s = s.replace('\n','')
+    return '\''+s+'\''
+
+def giveedge(st,ed,ed_name):
+    st = st.replace('\n','')
+    ed = ed.replace('\n','')
+    s='{\n'+'data: {\n'+'id: '+f(ed_name)+',\n'+'source : '+ f(st) +',\n'+'target: ' + f(ed) + ',\n}\n},\n'
+    return s
+
+def node_list(st,nd_cnt):
+    st = st.replace('\n', ' ')
+    st=st.replace('\r',' ')
+    ar = st.split(' ')
+    filter_list = []
+    for i in range(0, len(ar)):
+        if not (ar[i] == ''):
+            filter_list.append(ar[i].replace('\n',''))
+    filter_list2= []
+    nd_cnt=min(nd_cnt,len(filter_list))
+    for i in range(0, nd_cnt):
+        filter_list2.append(filter_list[i])
+    return filter_list2
+
+def edge_list(st,ed_cnt):
+    st=st.replace('\n',' ')
+    st=st.replace('\r',' ')
+    ar = st.split(' ')
+    filter_list = []
+    for i in range(0, len(ar)):
+        if not (ar[i] == ''):
+            filter_list.append(ar[i].replace('\n',''))
+    ed_cnt*=2
+    edcc=len(filter_list)
+    for i in range(0,len(filter_list)):
+        print(filter_list[i])
+
+    if edcc%2==1:
+        edcc-=1
+
+    ed_cnt=min(edcc,ed_cnt)
+    filter_list2=[]
+    for i in range(0,ed_cnt):
+        filter_list2.append(filter_list[i])
+    return filter_list2
+
+
+
+@app.route('/graph', methods=['GET', 'POST'])
+def graphbuild():
+    #return render_template('graphcheck.html')
+    print(givenode('a'))
+    print(giveedge('a','b','ab'))
+    form=graph_input(request.form)
+    if request.method=='POST':
+        idd=uuid.uuid4().__str__()
+        fst=open('static/graph/samplestart.txt',"r")
+        stst=fst.read()
+        fed=open('static/graph/sampleend.txt',"r")
+        sted=fed.read()
+        f = open('templates/'+idd+'.html', "w+")
+        print(stst,file=f)
+
+        nd_list=node_list(st=form.nodes_desc.data.replace('\n',' '),nd_cnt=form.nodes_cnt.data)
+        ed_list=edge_list(st=form.ed_desc.data.replace('\n',' '),ed_cnt=form.ed_cnt.data)
+
+        for i in range (0,len(nd_list)):
+            print(givenode(nd_list[i]),file=f)
+        for i in range (0,len(ed_list),2):
+            print(giveedge(ed_list[i],ed_list[i+1],ed_list[i]+'#'+ed_list[i+1]),file=f)
+        print(sted,file=f)
+        print(form.nodes_desc.data)
+        f.close()
+        return render_template(idd+'.html')
+    return render_template('input_graph.html',form=form)
 
 if __name__ == '__main__':
     app.secret_key = 'SUPER SECRET KEY'

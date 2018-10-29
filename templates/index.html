@@ -5,6 +5,18 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
+            .mc
+            {
+                color: rgba(255, 255, 255, 0.2);
+            }
+        </style>
+        <script>
+                function highlight(text) {
+                    document.getElementById(text).style.backgroundColor="#216de0";
+                }
+        </script>
+        <style>
+
             .sidenav {
             height: 100%;
             width: 250px;
@@ -93,25 +105,25 @@
             <li>
                 <a href="/profile">Profile</a>
             </li>
-            <li>
-                <a href="/about">Problem Set</a>
+            <li id="Problem Set">
+                <a href="/about"> Problem Set</a>
             </li>
             <li>
                 <a href="/contests">Contest</a>
             </li>
-            <li>
+            <li id="upload">
                 <a href="/upload">Upload Problem</a>
             </li>
             <li>
                 <a href="/contest">Create Contest</a>
             </li>
-            <li>
+            <li id="blog">
                 <a href="/">Blog</a>
             </li>
             <li>
                 <a href="/post">Post Something</a>
             </li>
-            <li>
+            <li id="News">
                 <a href="/news">News</a>
             </li>
             <li>
@@ -119,10 +131,10 @@
             </li>
         </ul>
         <ul class="sidebar-nav-bottom" style="list-style-type:none" >
-            <li  >
+            <li  id="login">
                 <a href="/login">Login</a>
             </li>
-            <li>
+            <li id="register">
                 <a href="/register">Sign Up</a>
             </li>
             <li>
