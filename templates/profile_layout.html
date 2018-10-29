@@ -3,10 +3,34 @@
 {% block content %}
 <!------ Include the above in your HEAD tag ---------->
 
+<head>
+    <style>
+        .list-group.list-group-horizontal{
+	display: flex;
+	flex-direction: row;
+}
+
+.list-group.list-group-horizontal .list-group-item {
+	margin-bottom: 0;
+	margin-right: 0;
+ 	border-right-width: 0;
+}
+.list-group.list-group-horizontal .list-group-item:first-child {
+	border-top-right-radius:0;
+	border-bottom-left-radius:4px;
+}
+.list-group.list-group-horizontal .list-group-item:last-child {
+	border-top-right-radius:4px;
+	border-bottom-left-radius:0;
+	border-right-width: 1px;
+}
+    </style>
+</head>
+
 <div class="container">
 	<div class="row mt-5">
-        <div class="col-md-2" style="margin-top: 0px;">
-		     <div class="list-group" id="links">
+        <div class="col-md-5" style="margin-top: 0px;">
+		     <div class="list-group list-group-horizontal" id="links">
               <a href="/profile" class="list-group-item list-group-item-action" id="prof">Profile</a>
                  <a href="/submission" class="list-group-item list-group-item-action" id="sub">Submission</a>
               <a href="/posts" class="list-group-item list-group-item-action" id="post">Post</a>
@@ -14,12 +38,22 @@
               <a href="/settings" class="list-group-item list-group-item-action" id="settings">Settings</a>
 
             </div>
-		</div>
+        </div>
+    </div>
+        <!--<nav aria-label="breadcrumb">-->
+          <!--<ol class="breadcrumb">-->
+            <!--<li class="breadcrumb-item active" id="prof"><a href="/profile" >Profile</a></li>-->
+            <!--<li class="breadcrumb-item" id="sub"><a href="/submission" >Submission</a></li>-->
+              <!--<li class="breadcrumb-item active"  aria-current="page"><a href="/posts" >Post</a></li>-->
+              <!--<li class="breadcrumb-item" id="contest"><a href="/contests" >Contest</a></li>-->
+              <!--<li class="breadcrumb-item" id="settings"><a href="/settings" >Settings</a></li>-->
+          <!--</ol>-->
+        <!--</nav>-->
+    <div class="row mt-5">
         <div class="col-md-10">
             {% block content2 %}{% endblock %}
         </div>
-
-	</div>
+    </div>
 </div>
 
 <script>
