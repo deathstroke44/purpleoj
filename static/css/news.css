@@ -1,0 +1,12 @@
+.news {
+  width: 100%;
+}
+.carousel-inner{
+  width:500px;
+  max-height: 350px !important;
+}
+
+.carousel{
+  width:500px;
+  max-height: 350px !important;
+}

@@ -1,36 +1,22 @@
-from flask import Flask, flash
-from flask import request, redirect, url_for, render_template, session, Session
-from flask_pymongo import PyMongo
-from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
-from wtforms.widgets import TextArea
-from werkzeug.utils import secure_filename
-from flask_ckeditor import CKEditor, CKEditorField
+import datetime
+import os
+import time
+
 import requests
 from bs4 import BeautifulSoup
-from wtforms.fields.html5 import EmailField
-import datetime
-import os
-from bson import ObjectId
-from flask import Flask, flash
-from flask import request, redirect,url_for,render_template,session,Session
-from flask_pymongo import PyMongo
-from wtforms import Form,IntegerField,StringField, PasswordField, validators, FileField, FloatField,TextAreaField
-from wtforms.widgets import TextArea
-from werkzeug.utils import secure_filename
-from flask_ckeditor import CKEditor, CKEditorField
 from flask import Flask, render_template, request
-from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
-from flask_wtf import FlaskForm
-import time
-from flask_codemirror.fields import CodeMirrorField
-from wtforms.fields import SubmitField, TextAreaField
+from flask import flash
+from flask import redirect, url_for, session, Session
+from flask_ckeditor import CKEditor, CKEditorField
 from flask_codemirror import CodeMirror
+from flask_codemirror.fields import CodeMirrorField
+from flask_pymongo import PyMongo
+from flask_wtf import FlaskForm
+from werkzeug.utils import secure_filename
+from wtforms import Form, IntegerField, StringField, PasswordField, validators
+from wtforms.fields import SubmitField, TextAreaField
+from wtforms.fields.html5 import EmailField
 
-
-import datetime
-import os
-import datetime
-import time
 app = Flask(__name__)
 UPLOAD_FOLDER = '/home/aniomi/PycharmProjects/purpleoj/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
@@ -43,7 +29,6 @@ app.config['CKEDITOR_SERVE_LOCAL'] = True
 app.config['CKEDITOR_HEIGHT'] = 400
 ckeditor = CKEditor(app)
 mongo = PyMongo(app)
-import pymongo as pm
 
 app.secret_key = "super secret key"
 sess = Session()
@@ -432,8 +417,7 @@ def posts():
             post_array.append(post_object(post['TITLE'], post['TEXT']))
 
     return render_template('user_post.html', post_array=post_array)
-
-
+from FeaturedNews import FeaturedNews
 @app.route('/news')
 def news():
     class Article:
@@ -458,7 +442,10 @@ def news():
     div1 = soup1.find_all('div', class_='panel panel-default')
     div2 = soup2.find_all('div', class_='topic')
     div3 = soup3.find_all('div', class_='topic')
-
+    titlestore = ""
+    imgStore=""
+    urlstore=""
+    featuredNewsList=list()
     for i in div2:
         title = i.find('div', class_='title')
         content = i.find('div', class_='ttypography')
@@ -471,7 +458,9 @@ def news():
                                                                                                'http://codeforces.com/' +
                                                                                                title.a['href']))
         f.close()
-
+        print("tile:",title)
+        titlestore = str(title).replace('</', '').replace('<', '').split("p>")[1]
+        urlstore='http://codeforces.com/' +title.a['href']
         print(title.a['href'])
 
         for a in content.find_all('img'):
@@ -480,6 +469,8 @@ def news():
                 st = 'http'
                 if imageSource.find(st) == -1:
                     content = str(content).replace(imageSource, 'http://codeforces.com/' + imageSource)
+                    imgStore='http://codeforces.com/' + imageSource
+                    featuredNewsList.append(FeaturedNews(imgStore,titlestore,urlstore))
 
         for link in content2.find_all('a'):
             if link:
@@ -506,6 +497,8 @@ def news():
         file_name_title = 'static/news/' + str(uid1) + '.html'
         f = open(file_name_title, 'a', encoding='utf8')
         f.write(str(title).replace('<p>', '').replace('</p>', ''))
+        titlestore = str(title).replace('</','').replace('<','').split("p>")[1]
+        urlstore = 'http://codeforces.com/' + title.a['href']
         f.close()
 
         for a in content.find_all('img'):
@@ -514,6 +507,8 @@ def news():
                 st = 'http'
                 if imageSource.find(st) == -1:
                     content = str(content).replace(imageSource, 'http://codeforces.com/' + imageSource)
+                    imgStore = 'http://codeforces.com/' + imageSource
+                    featuredNewsList.append(FeaturedNews(imgStore, titlestore, urlstore))
                     print(a['src'])
 
         uid2 = uuid.uuid1()
@@ -524,8 +519,9 @@ def news():
 
         article_array.append(Article(file_name_title, file_name_content))
         # print(content)
-
-    return render_template('news.html', article_array=article_array)
+    for x in featuredNewsList:
+        print(x.toString())
+    return render_template('news.html', article_array=article_array, featurednewslist=featuredNewsList)
 
 
 @app.route('/submission')
