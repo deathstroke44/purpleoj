@@ -1,0 +1,172 @@
+{% block head %}
+{% endblock head %}
+{%  extends 'index.html' %}
+{% block content %}
+  <head>
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/blog-post.css" rel="stylesheet">
+
+  </head>
+
+  <body >
+
+    <!-- Page Content -->
+    <div class="container">
+
+      <div class="row">
+
+        <!-- Post Content Column -->
+        <div class="col-lg-8">
+
+          <!-- Title -->
+          <h3 class="mt-4">{{issue.title}}</h3>
+
+          <!-- Author -->
+            {% if issue.problemName != 'CodeFlask' %}
+            <p >
+            for
+            <a href="/about/{{issue.problemID}}/">{{issue.problemName}}</a>
+
+            {% endif %}
+          </p>
+
+          <p >
+            by
+            <a href="#">{{issue.username}}</a>
+          </p>
+
+          <hr>
+
+          <!-- Date/Time -->
+          <p>Posted on {{issue.date}}</p>
+
+          <hr>
+
+          <!-- Post Content -->
+            <p class="lead">{{issue.text}}</p>
+          <hr>
+
+          <!-- Comments Form -->
+          <div class="card my-4">
+            <h5 class="card-header">Leave a Comment:</h5>
+            <div class="card-body">
+              <form  method="POST" action="">
+                  {{ form.hidden_tag() }}
+                <div class="form-group">
+                  {{ form.text.label(class="form-control-label") }}
+                   {% if form.text.errors %}
+                   {{ form.text(class="form-control form-control-lg is-invalid") }}
+                   <div class="invalid-feedback">
+                   {% for error in form.text.errors %}
+                   <span>{{ error }}</span>
+                   {% endfor %}</div>
+                   {% else %}
+                   {{ form.text(class="form-control form-control-lg") }}
+                   {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Single Comment -->
+            {% for comment in comment_array %}
+          <div class="media mb-4">
+            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+            <div class="media-body">
+
+              <h5 class="mt-0">{{comment.username}}</h5>
+                {{comment.text}}
+            </div>
+          </div>
+            <hr>
+            {% endfor %}
+
+            <div style="margin-top:200px;">
+
+            </div>
+          <!-- Comment with nested comments -->
+
+
+        </div>
+
+        <!-- Sidebar Widgets Column -->
+        <div class="col-md-4">
+
+          <!-- Search Widget -->
+          <div class="card my-4">
+            <h5 class="card-header">Search</h5>
+            <div class="card-body">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search for...">
+                <span class="input-group-btn">
+                  <button class="btn btn-secondary" type="button">Go!</button>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Categories Widget -->
+          <div class="card my-4">
+            <h5 class="card-header">Categories</h5>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-lg-6">
+                  <ul class="list-unstyled mb-0">
+                    <li>
+                      <a href="#">Web Design</a>
+                    </li>
+                    <li>
+                      <a href="#">HTML</a>
+                    </li>
+                    <li>
+                      <a href="#">Freebies</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-lg-6">
+                  <ul class="list-unstyled mb-0">
+                    <li>
+                      <a href="#">JavaScript</a>
+                    </li>
+                    <li>
+                      <a href="#">CSS</a>
+                    </li>
+                    <li>
+                      <a href="#">Tutorials</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Side Widget -->
+          <div class="card my-4">
+            <h5 class="card-header">Side Widget</h5>
+            <div class="card-body">
+              You can put anything you want inside of these side widgets. They are easy to use, and feature the new Bootstrap 4 card containers!
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+
+    <!-- Footer -->
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script>
+  </script>
+
+  </body>
+{% endblock content %}

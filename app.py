@@ -16,6 +16,7 @@ from werkzeug.utils import secure_filename
 from wtforms import Form, IntegerField, StringField, PasswordField, validators
 from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
+from forms import IssueForm,CommentForm
 
 app = Flask(__name__)
 UPLOAD_FOLDER = '/home/aniomi/PycharmProjects/purpleoj/static/uploads'
@@ -417,6 +418,140 @@ def posts():
             post_array.append(post_object(post['TITLE'], post['TEXT']))
 
     return render_template('user_post.html', post_array=post_array)
+
+
+@app.route('/issues', methods=['GET', 'POST'])
+def issues(existing_post=None):
+
+    class Issue:
+        def __init__(self, id, username, title ,problemID,problemName,text,date):
+            self.id = id
+            self.username = username
+            self.title = title
+            self.problemID = problemID
+            self.text = text
+            self.problemName = problemName
+            self.date = date
+
+    form = IssueForm()
+    if not ('username' in session):
+        return redirect(url_for('login'))
+
+    problemsdb = mongo.db.problems
+    existing_posts = problemsdb.find({}).sort('name')
+    i = 0;
+    list = []
+    problem_id_array = []
+    pair = (i,'None')
+    list.append(pair)
+    problem_id_array.append('CodeFlask')
+    for existing_post in existing_posts:
+        i = i + 1
+        pair1 = (i, existing_post['name'])
+        list.append(pair1)
+        problem_id_array.append(existing_post['myid'])
+
+    form.problemName.choices = list
+
+    if form.validate_on_submit():
+        title = form.title.data
+        problemName = form.problemName.data
+        problemID = problem_id_array[problemName]
+        print(problemID)
+        text = form.text.data
+        user_name = session['username']
+        issueID = uuid.uuid1().__str__()
+
+        issue = mongo.db.Issues
+        issue.insert({'IssueID': issueID,
+                      'UserName': user_name,
+                      'Title': title,
+                      'ProblemID': problemID,
+                      'text': text,
+                      'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M")})
+        return redirect(url_for('issues'))
+
+    issue_array = []
+    i = mongo.db.Issues
+    issuelist = i.find({}).sort('date',-1)
+    for issue in issuelist:
+        if issue['ProblemID'] != 'CodeFlask':
+            pb = problemsdb.find_one({'myid': issue['ProblemID']})
+            issue_array.append(Issue(issue['IssueID'],issue['UserName'],issue['Title'],issue['ProblemID'],pb['name'],issue['text'],issue['date']))
+        else:
+            issue_array.append(
+                Issue(issue['IssueID'], issue['UserName'], issue['Title'], issue['ProblemID'], 'CodeFlask',
+                      issue['text'], issue['date']))
+
+    print(issue_array[0].title)
+    return render_template('issues.html', form=form,issue_array=issue_array)
+
+
+@app.route('/issues/<id>',methods=['GET', 'POST'])
+def singleIssue(id):
+    class Issue:
+        def __init__(self, id, username, title ,problemID,problemName,text,date):
+            self.id = id
+            self.username = username
+            self.title = title
+            self.problemID = problemID
+            self.text = text
+            self.problemName = problemName
+            self.date = date
+
+    class Comment:
+        def __init__(self, id, username, issue ,problemID,text,date):
+            self.id = id
+            self.username = username
+            self.issue = issue
+            self.problemID = problemID
+            self.text = text
+            self.date = date
+
+    form = CommentForm()
+    if not ('username' in session):
+        return redirect(url_for('login'))
+
+    if form.validate_on_submit():
+        text = form.text.data
+        commentID = uuid.uuid1().__str__()
+        issueID = id
+        problemID = mongo.db.Issues.find_one({'IssueID':issueID})['ProblemID']
+        user_name = session['username']
+        date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+
+        comments = mongo.db.Comment
+        comments.insert({'ID':commentID,
+                        'ProblemID':problemID,
+                        'IssueID':issueID,
+                        'UserName':user_name,
+                        'Date':date,
+                         'Text':text})
+        return redirect(url_for('singleIssue', id=issueID))
+
+    issue = mongo.db.Issues.find_one({'IssueID':id})
+    problemsdb = mongo.db.problems
+    problemName = ''
+    if issue['ProblemID'] != 'CodeFlask':
+        problemName = problemsdb.find_one({'myid': issue['ProblemID']})['name']
+    else:
+        problemName = 'CodeFlask'
+
+    comment_array=[]
+    comments = mongo.db.Comment.find({}).sort("Date",-1)
+    for comment in comments:
+        if id == comment['IssueID']:
+            comment_array.append(Comment(comment['ID'],
+                                         comment['UserName'],
+                                         comment['IssueID'],
+                                         comment['ProblemID'],
+                                         comment['Text'],
+                                         comment['Date']))
+
+    return render_template('issue_page.html',form=form,comment_array=comment_array,
+                           issue=Issue(issue['IssueID'],issue['UserName'],issue['Title'],
+                                       issue['ProblemID'],problemName,issue['text'],issue['date'].split(" ")[0]))
+
 from FeaturedNews import FeaturedNews
 @app.route('/news')
 def news():
@@ -519,8 +654,6 @@ def news():
 
         article_array.append(Article(file_name_title, file_name_content))
         # print(content)
-    for x in featuredNewsList:
-        print(x.toString())
     return render_template('news.html', article_array=article_array, featurednewslist=featuredNewsList)
 
 
@@ -549,13 +682,13 @@ def submissions():
     for submission in submissions:
         if submission['User Id'] == user_name:
             problem_set = mongo.db.problems.find_one({'myid': submission['Problem Id']})
-            submission_array.append(submission_object(problem_object(problem_set['name'], problem_set['myid']), submission['Submission Time'],
+            submission_array.append(submission_object(problem_object(problem_set['name'], problem_set['myid']),
+                                                      submission['Submission Time'],
                                                       submission['User Id'], submission['Language'],
                                                       submission['Status'], submission['Execution Time']))
 
     print(submission_array)
     return render_template('user_submission.html', submission_array=submission_array)
-
 
 
 # ***************************************************************************
@@ -1310,7 +1443,94 @@ def load_contest_problem(id1, id2):
 
 
 #############################################
+class graph_input(Form):
+    nodes_cnt=IntegerField("Number of Nodes",[validators.DataRequired()])
+    nodes_desc=TextAreaField("Nodes",[validators.DataRequired])
+    ed_cnt=IntegerField("Number of Edgs",[validators.DataRequired()])
+    ed_desc=TextAreaField("Edges",[validators.DataRequired()])
 
+
+def givenode(node_name):
+    node_name = node_name.replace('\n','')
+    print(repr(node_name),end=' ')
+    s='{ data: { id: '+ '\'' +node_name+ '\''+' } },'
+    return s
+
+def f(s):
+    s = s.replace('\n','')
+    return '\''+s+'\''
+
+def giveedge(st,ed,ed_name):
+    st = st.replace('\n','')
+    ed = ed.replace('\n','')
+    s='{\n'+'data: {\n'+'id: '+f(ed_name)+',\n'+'source : '+ f(st) +',\n'+'target: ' + f(ed) + ',\n}\n},\n'
+    return s
+
+def node_list(st,nd_cnt):
+    st = st.replace('\n', ' ')
+    st=st.replace('\r',' ')
+    ar = st.split(' ')
+    filter_list = []
+    for i in range(0, len(ar)):
+        if not (ar[i] == ''):
+            filter_list.append(ar[i].replace('\n',''))
+    filter_list2= []
+    nd_cnt=min(nd_cnt,len(filter_list))
+    for i in range(0, nd_cnt):
+        filter_list2.append(filter_list[i])
+    return filter_list2
+
+def edge_list(st,ed_cnt):
+    st=st.replace('\n',' ')
+    st=st.replace('\r',' ')
+    ar = st.split(' ')
+    filter_list = []
+    for i in range(0, len(ar)):
+        if not (ar[i] == ''):
+            filter_list.append(ar[i].replace('\n',''))
+    ed_cnt*=2
+    edcc=len(filter_list)
+    for i in range(0,len(filter_list)):
+        print(filter_list[i])
+
+    if edcc%2==1:
+        edcc-=1
+
+    ed_cnt=min(edcc,ed_cnt)
+    filter_list2=[]
+    for i in range(0,ed_cnt):
+        filter_list2.append(filter_list[i])
+    return filter_list2
+
+
+
+@app.route('/graph', methods=['GET', 'POST'])
+def graphbuild():
+    #return render_template('graphcheck.html')
+    print(givenode('a'))
+    print(giveedge('a','b','ab'))
+    form=graph_input(request.form)
+    if request.method=='POST':
+        idd=uuid.uuid4().__str__()
+        fst=open('static/graph/samplestart.txt',"r")
+        stst=fst.read()
+        fed=open('static/graph/sampleend.txt',"r")
+        sted=fed.read()
+        f = open('templates/'+idd+'.html', "w+")
+        print(stst,file=f)
+
+        nd_list=node_list(st=form.nodes_desc.data.replace('\n',' '),nd_cnt=form.nodes_cnt.data)
+        ed_list=edge_list(st=form.ed_desc.data.replace('\n',' '),ed_cnt=form.ed_cnt.data)
+
+        for i in range (0,len(nd_list)):
+            print(givenode(nd_list[i]),file=f)
+        for i in range (0,len(ed_list),2):
+            print(giveedge(ed_list[i],ed_list[i+1],ed_list[i]+'#'+ed_list[i+1]),file=f)
+        print(sted,file=f)
+        print(form.nodes_desc.data)
+        f.close()
+        return render_template(idd+'.html')
+    return render_template('input_graph.html',form=form)
 
 if __name__ == '__main__':
     app.secret_key = 'SUPER SECRET KEY'

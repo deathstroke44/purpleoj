@@ -15,6 +15,7 @@
                     document.getElementById(text).style.backgroundColor="#216de0";
                 }
         </script>
+        <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <style>
 
             .sidenav {
@@ -125,6 +126,12 @@
             </li>
             <li id="News">
                 <a href="/news">News</a>
+            <li id="Issue">
+                <a href="/issues">Issues</a>
+            </li>
+
+            <li id="grpah">
+                <a href="/graph">Graph Visualization</a>
             </li>
         </ul>
         <ul class="sidebar-nav-bottom" style="list-style-type:none" >
@@ -144,5 +151,10 @@
         <div class="main">
         {% block content %}{% endblock %}
         </div>
+         <script src="/static/For%20Table/jquery.js"></script>
+    <script src="//cdn.ckeditor.com/4.6.2/basic/ckeditor.js"></script>
+    <script type="text/javascript">
+      CKEDITOR.replace('editor')
+    </script>
     </body>
 </html>
