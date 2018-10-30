@@ -1,5 +1,3 @@
-import flask_pymongo
-
 class Submission():
     def __init__(self,Dictionary,databaseCollection):
         self.problemId = Dictionary.get('Problem Id')
