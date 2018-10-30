@@ -32,6 +32,8 @@ import os
 import datetime
 import time
 
+from newsScrapping import HackerRankSingleArticle,HackerRankMainPage,CodeForces,LoadRawHtmlFiles,atcoder,topcoder,thecrazyprogrammer,LoadSoup
+
 app = Flask(__name__)
 UPLOAD_FOLDER = '/home/aniomi/PycharmProjects/purpleoj/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
@@ -577,89 +579,49 @@ def news():
             self.content_filename = content_filename
 
     article_array = []
-    source0 = requests.get('https://atcoder.jp/').text
-    source1 = requests.get('https://atcoder.jp/?p=2').text
-    source2 = requests.get('http://codeforces.com/').text
-    source3 = requests.get('http://codeforces.com/page/2').text
-    source4 = requests.get('https://csacademy.com/blog/ceoi-2018/').text
+    #********
+    # LoadRawHtmlFiles()  #Has to call this at a certain time of the day
+    #******
 
-    soup0 = BeautifulSoup(source0, 'lxml')
-    soup1 = BeautifulSoup(source1, 'lxml')
-    soup2 = BeautifulSoup(source2, 'lxml')
-    soup3 = BeautifulSoup(source3, 'lxml')
-    soup4 = BeautifulSoup(source4, 'lxml')
+    soup0, soup1, soup2, soup3, soup4, soup5, soup6 = LoadSoup()
 
-    div0 = soup0.find_all('div', class_='panel panel-default')
-    div1 = soup1.find_all('div', class_='panel panel-default')
-    div2 = soup2.find_all('div', class_='topic')
-    div3 = soup3.find_all('div', class_='topic')
+    atcoderMain = soup0.find_all('div', class_='panel panel-default')
+    atcoderPage2 = soup1.find_all('div', class_='panel panel-default')
+    CodeForceMain = soup2.find_all('div', class_='topic')
+    CodeForcePage2 = soup3.find_all('div', class_='topic')
+    HackerRankMain = soup4.find_all('div', class_='blog-content')
+    TopCoderMain = soup5.find_all('div', class_='story-content')
+    thecrazyprogrammerMain = soup6.find_all('article')
 
-    for i in div2:
-        title = i.find('div', class_='title')
-        content = i.find('div', class_='ttypography')
-        content2 = content
-
-        uid1 = uuid.uuid1()
-        file_name_title = 'static/news/' + str(uid1) + '.html'
-        f = open(file_name_title, 'a', encoding='utf8')
-        f.write(str(title).replace('<p>', '').replace('</p>', '').replace('div', 'h4').replace(title.a['href'],
-                                                                                               'http://codeforces.com/' +
-                                                                                               title.a['href']))
-        f.close()
-
-        print(title.a['href'])
-
-        for a in content.find_all('img'):
-            if a:
-                imageSource = a['src']
-                st = 'http'
-                if imageSource.find(st) == -1:
-                    content = str(content).replace(imageSource, 'http://codeforces.com/' + imageSource)
-
-        for link in content2.find_all('a'):
-            if link:
-                linkSource = link['href']
-                st = 'http'
-                if linkSource.find(st) == -1:
-                    content = str(content).replace(linkSource, 'http://codeforces.com/' + linkSource)
-
-        uid2 = uuid.uuid1()
-        file_name_content = 'static/news/' + str(uid2) + '.html'
-        f = open(file_name_content, 'a', encoding='utf8')
-        f.write(str(content))
-        f.close()
-
+    index = 0
+    for i in HackerRankMain:
+        file_name_title ,file_name_content= HackerRankMainPage(HackerRankMain[index])
         article_array.append(Article(file_name_title, file_name_content))
-        # print(content)
+        index=index+1
 
-    for i in div3:
-        title = i.find('div', class_='title')
-        content = i.find('div', class_='ttypography')
-        # content = reformatContent(content)
+    for i in CodeForceMain:
+        file_name_title, file_name_content = CodeForces(i)
+        article_array.append(Article(file_name_title,file_name_content))
 
-        uid1 = uuid.uuid1()
-        file_name_title = 'static/news/' + str(uid1) + '.html'
-        f = open(file_name_title, 'a', encoding='utf8')
-        f.write(str(title).replace('<p>', '').replace('</p>', ''))
-        f.close()
-
-        for a in content.find_all('img'):
-            if a:
-                imageSource = a['src']
-                st = 'http'
-                if imageSource.find(st) == -1:
-                    content = str(content).replace(imageSource, 'http://codeforces.com/' + imageSource)
-                    print(a['src'])
-
-        uid2 = uuid.uuid1()
-        file_name_content = 'static/news/' + str(uid2) + '.html'
-        f = open(file_name_content, 'a', encoding='utf8')
-        f.write(str(content))
-        f.close()
-
+    for i in TopCoderMain:
+        file_name_title,file_name_content = topcoder(i)
         article_array.append(Article(file_name_title, file_name_content))
-        # print(content)
 
+    for i in CodeForcePage2:
+        file_name_title, file_name_content = CodeForces(i)
+        article_array.append(Article(file_name_title, file_name_content))
+
+    for i in atcoderMain:
+        file_name_title, file_name_content = atcoder(i)
+        article_array.append(Article(file_name_title, file_name_content))
+
+    for i in thecrazyprogrammerMain:
+        file_name_title,file_name_content = thecrazyprogrammer(i)
+        article_array.append(Article(file_name_title, file_name_content))
+
+    import random
+    random.shuffle(article_array)
+    print(article_array.__len__())
     return render_template('news.html', article_array=article_array)
 
 
