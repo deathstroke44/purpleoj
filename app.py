@@ -1,36 +1,22 @@
-from flask import Flask, flash
-from flask import request, redirect, url_for, render_template, session, Session
-from flask_pymongo import PyMongo
-from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
-from wtforms.widgets import TextArea
-from werkzeug.utils import secure_filename
-from flask_ckeditor import CKEditor, CKEditorField
+import datetime
+import os
+import time
+
 import requests
 from bs4 import BeautifulSoup
-from wtforms.fields.html5 import EmailField
-import datetime
-import os
-from bson import ObjectId
-from flask import Flask, flash
-from flask import request, redirect, url_for, render_template, session, Session
-from flask_pymongo import PyMongo
-from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
-from wtforms.widgets import TextArea
-from werkzeug.utils import secure_filename
-from flask_ckeditor import CKEditor, CKEditorField
 from flask import Flask, render_template, request
-from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
-from flask_wtf import FlaskForm
-import time
-from flask_codemirror.fields import CodeMirrorField
-from wtforms.fields import SubmitField, TextAreaField
+from flask import flash
+from flask import redirect, url_for, session, Session
+from flask_ckeditor import CKEditor, CKEditorField
 from flask_codemirror import CodeMirror
+from flask_codemirror.fields import CodeMirrorField
+from flask_pymongo import PyMongo
+from flask_wtf import FlaskForm
+from werkzeug.utils import secure_filename
+from wtforms import Form, IntegerField, StringField, PasswordField, validators
+from wtforms.fields import SubmitField, TextAreaField
+from wtforms.fields.html5 import EmailField
 from forms import IssueForm,CommentForm
-
-import datetime
-import os
-import datetime
-import time
 
 app = Flask(__name__)
 UPLOAD_FOLDER = '/home/aniomi/PycharmProjects/purpleoj/static/uploads'
@@ -44,7 +30,6 @@ app.config['CKEDITOR_SERVE_LOCAL'] = True
 app.config['CKEDITOR_HEIGHT'] = 400
 ckeditor = CKEditor(app)
 mongo = PyMongo(app)
-import pymongo as pm
 
 app.secret_key = "super secret key"
 sess = Session()
@@ -55,8 +40,7 @@ class UploadForm(Form):
     memory_limit = IntegerField("Memory Limit(MB)", [validators.DataRequired()])
     category = StringField("Problem Style(ACM,IOI)", [validators.DataRequired()])
     name = StringField('Problem name', [validators.DataRequired()])
-    count = IntegerField('Number Of subtask(at least 1 at most 3)',
-                         [validators.DataRequired()] and [validators.number_range(1, 3)])
+    count = IntegerField('Number Of subtask(at least 1 at most 3)', [validators.DataRequired()] and [validators.number_range(1, 3)])
     point1 = IntegerField('Point for Subtask 1')
     point2 = IntegerField('Point for Subtask 2')
     point3 = IntegerField('Point for Subtask 3')
@@ -568,7 +552,7 @@ def singleIssue(id):
                            issue=Issue(issue['IssueID'],issue['UserName'],issue['Title'],
                                        issue['ProblemID'],problemName,issue['text'],issue['date'].split(" ")[0]))
 
-
+from FeaturedNews import FeaturedNews
 @app.route('/news')
 def news():
     class Article:
@@ -593,7 +577,10 @@ def news():
     div1 = soup1.find_all('div', class_='panel panel-default')
     div2 = soup2.find_all('div', class_='topic')
     div3 = soup3.find_all('div', class_='topic')
-
+    titlestore = ""
+    imgStore=""
+    urlstore=""
+    featuredNewsList=list()
     for i in div2:
         title = i.find('div', class_='title')
         content = i.find('div', class_='ttypography')
@@ -606,7 +593,9 @@ def news():
                                                                                                'http://codeforces.com/' +
                                                                                                title.a['href']))
         f.close()
-
+        print("tile:",title)
+        titlestore = str(title).replace('</', '').replace('<', '').split("p>")[1]
+        urlstore='http://codeforces.com/' +title.a['href']
         print(title.a['href'])
 
         for a in content.find_all('img'):
@@ -615,6 +604,8 @@ def news():
                 st = 'http'
                 if imageSource.find(st) == -1:
                     content = str(content).replace(imageSource, 'http://codeforces.com/' + imageSource)
+                    imgStore='http://codeforces.com/' + imageSource
+                    featuredNewsList.append(FeaturedNews(imgStore,titlestore,urlstore))
 
         for link in content2.find_all('a'):
             if link:
@@ -641,6 +632,8 @@ def news():
         file_name_title = 'static/news/' + str(uid1) + '.html'
         f = open(file_name_title, 'a', encoding='utf8')
         f.write(str(title).replace('<p>', '').replace('</p>', ''))
+        titlestore = str(title).replace('</','').replace('<','').split("p>")[1]
+        urlstore = 'http://codeforces.com/' + title.a['href']
         f.close()
 
         for a in content.find_all('img'):
@@ -649,6 +642,8 @@ def news():
                 st = 'http'
                 if imageSource.find(st) == -1:
                     content = str(content).replace(imageSource, 'http://codeforces.com/' + imageSource)
+                    imgStore = 'http://codeforces.com/' + imageSource
+                    featuredNewsList.append(FeaturedNews(imgStore, titlestore, urlstore))
                     print(a['src'])
 
         uid2 = uuid.uuid1()
@@ -659,8 +654,7 @@ def news():
 
         article_array.append(Article(file_name_title, file_name_content))
         # print(content)
-
-    return render_template('news.html', article_array=article_array)
+    return render_template('news.html', article_array=article_array, featurednewslist=featuredNewsList)
 
 
 @app.route('/submission')
@@ -713,19 +707,16 @@ CODEMIRROR_ADDONS = (
 )
 app.config.from_object(__name__)
 codemirror = CodeMirror(app)
-
-
 class MyForm(FlaskForm):
     source_code = CodeMirrorField(language='python', config={'lineNumbers': 'true'})
     submit = SubmitField('Submit')
     inputs = TextAreaField(u'inputs')
 
-
 def runPython(auxForm):
     form = MyForm(auxForm)
     text = form.source_code.data
-    now = time.time()
-    then = time.time()
+    now=time.time()
+    then=time.time()
     fout = open(getProgramFileName("Python"), "w")
     print(text, file=fout)
     fout.close()
@@ -737,11 +728,11 @@ def runPython(auxForm):
         finputs = open(getCustomInputsFileName(), "w")
         print(inputs, file=finputs)
         finputs.close()
-        now = time.time()
-        os.system("python3 " + getProgramFileName("Python") + " < " + getCustomInputsFileName() + " 1>" +
-                  getOutputFileName() + " 2>"
-                  + getErrorFileName())
-        then = time.time()
+        now=time.time()
+        os.system("python3 "+ getProgramFileName("Python")+" < "+getCustomInputsFileName()+" 1>"+
+                  getOutputFileName()+ " 2>"
+                  +getErrorFileName())
+        then=time.time()
 
     else:
         now = time.time()
@@ -757,7 +748,7 @@ def runPython(auxForm):
     finputs = open(getErrorFileName(), "r")
     errors = finputs.readlines()
     finputs.close()
-    # os.system("rm -r submissions/" + getUserId())
+    #os.system("rm -r submissions/" + getUserId())
     if len(errors) == 0:
         # print(outputs)
         return render_template('editor.html', form=form, status="Program Output", outputs=outputs, languages=languages)
@@ -776,7 +767,7 @@ def runJava(auxForm):
     print(text, file=fout)
     fout.close()
     # compiling the program
-    os.system("javac " + getProgramFileName("Java") + " 2>" + getErrorFileName())
+    os.system("javac "  + getProgramFileName("Java") + " 2>" + getErrorFileName())
     # reading errors
     finputs = open(getErrorFileName(), "r")
     errors = finputs.readlines()
@@ -788,27 +779,27 @@ def runJava(auxForm):
         finputs = open(getCustomInputsFileName(), "w")
         print(inputs, file=finputs)
         finputs.close()
-        if len(errors) == 0:
+        if len(errors)==0:
             now = time.time()
-            os.system("java -cp " + getExecutibleFileName("Java") + " Main <" + getCustomInputsFileName() +
-                      " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
-            then = time.time()
+            os.system("java -cp "+getExecutibleFileName("Java")+" Main <"+ getCustomInputsFileName() +
+                      " 1> "+getOutputFileName()+ " 2> " +getErrorFileName())
+            then= time.time()
         else:
             print(errors)
-            # os.system("rm -r submissions/" + getUserId())
+            #os.system("rm -r submissions/" + getUserId())
             return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
                                    languages=languages)
     # running without inputs
     else:
-        if len(errors) == 0:
+        if len(errors)==0:
             now = time.time()
-            os.system("java -cp " + getExecutibleFileName("Java") + " Main " + " 1> " +
+            os.system("java -cp " + getExecutibleFileName("Java") + " Main " +" 1> " +
                       getOutputFileName() + " 2> " + getErrorFileName())
             then = time.time()
 
         else:
             print(errors)
-            # os.system("rm -r submissions/" + getUserId())
+            #os.system("rm -r submissions/" + getUserId())
             return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
                                    languages=languages)
     finputs = open(getOutputFileName(), "r")
@@ -821,7 +812,7 @@ def runJava(auxForm):
     # print(finputs)
     errors = finputs.readlines()
     finputs.close()
-    # os.system("rm -r submissions/" + getUserId())
+    #os.system("rm -r submissions/" + getUserId())
     if len(errors) == 0:
         print(outputs)
         return render_template('editor.html', form=form, status="Program Output", outputs=outputs, languages=languages)
@@ -854,23 +845,23 @@ def runC(auxForm):
         finputs.close()
         # checking for compile errors
         if len(errors) == 0:
-            now = time.time()
-            os.system(" ./" + getExecutibleFileName("C") + " < " + getCustomInputsFileName() +
-                      " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
-            then = time.time()
+            now=time.time()
+            os.system(" ./"+ getExecutibleFileName("C") +" < "+getCustomInputsFileName()+
+                      " 1> "+getOutputFileName()+" 2> "+getErrorFileName())
+            then=time.time()
 
         else:
-            # os.system("rm -r submissions/" + getUserId())
+            #os.system("rm -r submissions/" + getUserId())
             return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
                                    languages=languages)
     # running without inputs
     else:
         if len(errors) == 0:
-            now = time.time()
-            os.system(" ./" + getExecutibleFileName("C") + " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
-            then = time.time()
+            now=time.time()
+            os.system(" ./" + getExecutibleFileName("C") +" 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+            then=time.time()
         else:
-            # os.system("rm -r submissions/" + getUserId())
+            #os.system("rm -r submissions/" + getUserId())
             return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
                                    languages=languages)
     # reading program outputs
@@ -883,7 +874,7 @@ def runC(auxForm):
     finputs = open(getErrorFileName(), "r")
     errors = finputs.readlines()
     finputs.close()
-    # os.system("rm -r submissions/" + getUserId())
+    #os.system("rm -r submissions/" + getUserId())
     # checking for RTE
     if len(errors) == 0:
         print(outputs)
@@ -893,65 +884,54 @@ def runC(auxForm):
         return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
                                languages=languages)
 
-
 def getProblemSolution():
     return 12
 
-
 def getProgramFileName(language):
-    if language == "Python":
-        return "submissions/" + getUserId() + "/" + getProblemId() + "/1.py"
-    elif language == "Java":
+    if language=="Python":
+        return "submissions/" + getUserId() + "/" + getProblemId()+"/1.py"
+    elif language=="Java":
         return "submissions/" + getUserId() + "/" + getProblemId() + "/Main.java"
     else:
-        return "submissions/" + getUserId() + "/" + getProblemId() + "/1.cpp"
-
+        return "submissions/" + getUserId() + "/" + getProblemId()+"/1.cpp"
 
 def getExecutibleFileName(language):
-    if language == "Python":
-        return "submissions/" + getUserId() + "/" + getProblemId() + "/a"
-    elif language == "Java":
+    if language=="Python":
+        return "submissions/" + getUserId() + "/" + getProblemId()+"/a"
+    elif language=="Java":
         return "submissions/" + getUserId() + "/" + getProblemId()
     else:
-        return "submissions/" + getUserId() + "/" + getProblemId() + "/a"
-
+        return "submissions/" + getUserId() + "/" + getProblemId()+"/a"
 
 def getOutputFileName():
-    return "submissions/" + getUserId() + "/" + getProblemId() + "/outputs/1.txt"
-
-
+    return "submissions/" + getUserId() + "/" + getProblemId()+"/outputs/1.txt"
 def getErrorFileName():
-    return "submissions/" + getUserId() + "/" + getProblemId() + "/outputs/error.txt"
-
+    return "submissions/" + getUserId() + "/" + getProblemId()+"/outputs/error.txt"
 
 def getCustomInputsFileName():
-    return "submissions/" + getUserId() + "/" + getProblemId() + "/custom_inputs/1.txt"
-
+    return "submissions/" + getUserId() + "/" + getProblemId()+"/custom_inputs/1.txt"
 
 def getUserId():
     return session['username']
 
-
 def getProblemId():
     return "TestProblem"
 
-
 def getExpectedOutputFileName(problemId):
-    return "static/uploads/" + problemId + "out1.txt"
-
+    return "static/uploads/"+problemId+"out1.txt"
 
 def getTestCaseFileName(problemId):
     return "static/uploads/" + problemId + "in1.txt"
 
 
-def doesOutputMatch(userOutputFile, expectedOutputFile):
+def doesOutputMatch(userOutputFile,expectedOutputFile):
     try:
-        userOutput = open(userOutputFile)
+        userOutput=open(userOutputFile)
     except:
         return False
-    expectedOutput = open(expectedOutputFile)
-    for (x, y) in zip(userOutput.readlines(), expectedOutput.readlines()):
-        if x != y:
+    expectedOutput=open(expectedOutputFile)
+    for (x,y) in zip(userOutput.readlines(),expectedOutput.readlines()):
+        if x !=y:
             userOutput.close()
             expectedOutput.close()
             return False
@@ -963,9 +943,8 @@ def doesOutputMatch(userOutputFile, expectedOutputFile):
 def makeSubmissionFolders():
     os.system("mkdir submissions/" + getUserId())
     os.system("mkdir submissions/" + getUserId() + "/" + getProblemId())
-    os.system("mkdir submissions/" + getUserId() + "/" + getProblemId() + "/outputs")
+    os.system("mkdir submissions/" + getUserId() + "/" + getProblemId()+"/outputs")
     os.system("mkdir submissions/" + getUserId() + "/" + getProblemId() + "/custom_inputs")
-
 
 def runCode(form):
     selectedLanguage = form.get('languages')
@@ -978,29 +957,28 @@ def runCode(form):
     elif selectedLanguage == "Java":
         return runJava(form)
 
-
-def submitCode(auxform, problemId):
+def submitCode(auxform,problemId):
     selectedLanguage = auxform.get('languages')
     print(selectedLanguage)
     makeSubmissionFolders()
-    submissionInfo = dict()
-    submissionInfo["Language"] = selectedLanguage
-    submissionInfo["Submission Time"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    submissionInfo=dict()
+    submissionInfo["Language"]=selectedLanguage
+    submissionInfo["Submission Time"]=datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     form = MyForm(auxform)
-    text = form.source_code.data.replace("\t", "    ")
+    text = form.source_code.data.replace("\t","    ")
     submissionInfo["Code"] = text
-    now = time.time()
-    then = time.time()
+    now=time.time()
+    then=time.time()
     fout = open(getProgramFileName(selectedLanguage), "w")
     print(text, file=fout)
     fout.close()
-    # compiling
-    if selectedLanguage == "Java":
+    #compiling
+    if selectedLanguage=="Java":
         os.system("javac " + getProgramFileName("Java") + " 2>" + getErrorFileName())
-    elif selectedLanguage == "C":
+    elif selectedLanguage=="C":
         os.system(" g++ -o " + getExecutibleFileName("C") + " " + getProgramFileName("C") + " 2>" + getErrorFileName())
     # reading compile errors
-    if selectedLanguage != "Python":
+    if selectedLanguage!="Python":
         finputs = open(getErrorFileName(), "r")
         errors = finputs.readlines()
         finputs.close()
@@ -1010,17 +988,17 @@ def submitCode(auxform, problemId):
             submissionInfo["Comilation Status"] = "CE"
             return submissionInfo
     # running the program
-    if selectedLanguage == "Python":
+    if selectedLanguage=="Python":
         now = time.time()
         os.system("python3 " + getProgramFileName("Python") + " < " + getTestCaseFileName(problemId) + " 1>" +
                   getOutputFileName() + " 2>" + getErrorFileName())
         then = time.time()
-    elif selectedLanguage == "Java":
+    elif selectedLanguage=="Java":
         now = time.time()
         os.system("java -cp " + getExecutibleFileName("Java") + " Main <" + getTestCaseFileName(problemId) +
                   " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
         then = time.time()
-    elif selectedLanguage == "C":
+    elif selectedLanguage=="C":
         now = time.time()
         os.system(" ./" + getExecutibleFileName("C") + " < " + getTestCaseFileName(problemId) +
                   " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
@@ -1030,44 +1008,39 @@ def submitCode(auxform, problemId):
     finputs = open(getErrorFileName(), "r")
     errors = finputs.readlines()
     finputs.close()
-    if len(errors) != 0:
-        submissionInfo["Run Status"] = "RTE"
+    if len(errors)!=0:
+        submissionInfo["Run Status"]="RTE"
         return submissionInfo
-    timeElapsed = then - now
-    submissionInfo["Execution Time"] = timeElapsed
+    timeElapsed=then-now
+    submissionInfo["Execution Time"]=timeElapsed
     # if timeElapsed>2:
     #     return "TLE"
-    if doesOutputMatch(getExpectedOutputFileName(problemId), getOutputFileName()) == False:
-        submissionInfo["Result Verdict"] = "WA"
+    if doesOutputMatch(getExpectedOutputFileName(problemId),getOutputFileName()) == False :
+        submissionInfo["Result Verdict"]="WA"
         return submissionInfo
     else:
-        submissionInfo["Result Verdict"] = "Passed"
+        submissionInfo["Result Verdict"] ="Passed"
         return submissionInfo
 
 
 def cleanup():
     os.system("rm -r submissions/" + getUserId())
 
-
 from bson.objectid import ObjectId
-
-
-def getProblemNumber(problemId, contestId):
+def getProblemNumber(problemId,contestId):
     print(ObjectId(contestId))
-    contest = mongo.db.contests.find({"_id": ObjectId(contestId)})[0]
-    problemList = contest.get('Problem ID')
+    contest=mongo.db.contests.find({"_id": ObjectId(contestId)})[0]
+    problemList=contest.get('Problem ID')
     for x in problemList:
-        for y, z in x.items():
-            if z == problemId:
+        for y,z in x.items():
+            if z==problemId:
                 return y
         # return x
     print(problemList)
-
-
 @app.route('/editor/<problemId>', methods=['GET', 'POST'])
 def editor(problemId):
-    problemsDatabase = mongo.db.problems
-    submissionDatabase = mongo.db.submissions
+    problemsDatabase=mongo.db.problems
+    submissionDatabase=mongo.db.submissions
     if request.method == 'POST':
         if "run" in request.form:
             template = runCode(request.form)
@@ -1075,42 +1048,40 @@ def editor(problemId):
             return template
 
         elif "submit" in request.form:
-            submissionInfo = submitCode(request.form, problemId)
+            submissionInfo=submitCode(request.form,problemId)
             print(submissionInfo)
-            problemTimeLimit = problemsDatabase.find_one({"myid": problemId}).get("time_limit")
-            verdict = dict()
-            verdict["Submission Time"] = submissionInfo.get("Submission Time")
-            verdict["Language"] = submissionInfo.get("Language")
-            if submissionInfo.get("Compilation Status") != None:
-                verdict["Status"] = submissionInfo.get("Compilation Status")
-            elif submissionInfo.get("Run Status") != None:
-                verdict["Status"] = submissionInfo.get("Run Status")
+            problemTimeLimit=problemsDatabase.find_one({"myid":problemId}).get("time_limit")
+            verdict=dict()
+            verdict["Submission Time"]=submissionInfo.get("Submission Time")
+            verdict["Language"]=submissionInfo.get("Language")
+            if submissionInfo.get("Compilation Status") !=None:
+                verdict["Status"]=submissionInfo.get("Compilation Status")
+            elif submissionInfo.get("Run Status")!=None:
+                verdict["Status"]=submissionInfo.get("Run Status")
             else:
-                if float(problemTimeLimit) < float(submissionInfo.get("Execution Time")):
-                    verdict["Status"] = "TLE"
+                if float(problemTimeLimit)<float(submissionInfo.get("Execution Time")):
+                    verdict["Status"]="TLE"
                 else:
-                    if submissionInfo.get("Result Verdict") == "Passed":
-                        verdict["Status"] = "AC"
+                    if submissionInfo.get("Result Verdict")=="Passed":
+                        verdict["Status"]="AC"
                     else:
-                        verdict["Status"] = "WA"
-            verdict["Execution Time"] = submissionInfo.get("Execution Time")
-            verdict["Problem Id"] = problemId
-            verdict["User Id"] = session["username"]
-            verdict["Code"] = submissionInfo.get("Code")
-            verdict["Contest Id"] = ""
-            verdict["Submission Id"] = uuid.uuid4().__str__()
+                        verdict["Status"]="WA"
+            verdict["Execution Time"]=submissionInfo.get("Execution Time")
+            verdict["Problem Id"]=problemId
+            verdict["User Id"]=session["username"]
+            verdict["Code"]=submissionInfo.get("Code")
+            verdict["Contest Id"]=""
+            verdict["Submission Id"]=uuid.uuid4().__str__()
             print(submissionDatabase.insert(verdict))
             print(verdict)
             cleanup()
             return render_template('editor.html', form=MyForm(request.form), status=verdict.get("Status"),
-                                   languages=languages, check_submissions="Check Submissions")
+                                   languages=languages,check_submissions="Check Submissions")
     return render_template('editor.html', form=MyForm(request.form), languages=languages)
-
-
 @app.route('/editor/<contestId>/<problemId>', methods=['GET', 'POST'])
 def contestEditor(problemId, contestId):
-    problemsDatabase = mongo.db.problems
-    submissionDatabase = mongo.db.submissions
+    problemsDatabase=mongo.db.problems
+    submissionDatabase=mongo.db.submissions
     print("for contest")
     if request.method == 'POST':
         if "run" in request.form:
@@ -1119,63 +1090,61 @@ def contestEditor(problemId, contestId):
             return template
 
         elif "submit" in request.form:
-            submissionInfo = submitCode(request.form, problemId)
+            submissionInfo=submitCode(request.form,problemId)
             print(submissionInfo)
-            problemTimeLimit = problemsDatabase.find_one({"myid": problemId}).get("time_limit")
-            verdict = dict()
-            verdict["Submission Time"] = submissionInfo.get("Submission Time")
-            verdict["Language"] = submissionInfo.get("Language")
-            if submissionInfo.get("Compilation Status") != None:
-                verdict["Status"] = submissionInfo.get("Compilation Status")
-            elif submissionInfo.get("Run Status") != None:
-                verdict["Status"] = submissionInfo.get("Run Status")
+            problemTimeLimit=problemsDatabase.find_one({"myid":problemId}).get("time_limit")
+            verdict=dict()
+            verdict["Submission Time"]=submissionInfo.get("Submission Time")
+            verdict["Language"]=submissionInfo.get("Language")
+            if submissionInfo.get("Compilation Status") !=None:
+                verdict["Status"]=submissionInfo.get("Compilation Status")
+            elif submissionInfo.get("Run Status")!=None:
+                verdict["Status"]=submissionInfo.get("Run Status")
             else:
-                if float(problemTimeLimit) < float(submissionInfo.get("Execution Time")):
-                    verdict["Status"] = "TLE"
+                if float(problemTimeLimit)<float(submissionInfo.get("Execution Time")):
+                    verdict["Status"]="TLE"
                 else:
-                    if submissionInfo.get("Result Verdict") == "Passed":
-                        verdict["Status"] = "AC"
+                    if submissionInfo.get("Result Verdict")=="Passed":
+                        verdict["Status"]="AC"
                     else:
-                        verdict["Status"] = "WA"
-            verdict["Execution Time"] = submissionInfo.get("Execution Time")
-            verdict["Problem Id"] = problemId
-            verdict["Problem Number"] = getProblemNumber(problemId, contestId)
-            verdict["User Id"] = session["username"]
-            verdict["Code"] = submissionInfo.get("Code")
-            verdict["Contest Id"] = contestId
-            verdict["Submission Id"] = uuid.uuid4().__str__()
+                        verdict["Status"]="WA"
+            verdict["Execution Time"]=submissionInfo.get("Execution Time")
+            verdict["Problem Id"]=problemId
+            verdict["Problem Number"]=getProblemNumber(problemId,contestId)
+            verdict["User Id"]=session["username"]
+            verdict["Code"]=submissionInfo.get("Code")
+            verdict["Contest Id"]=contestId
+            verdict["Submission Id"]=uuid.uuid4().__str__()
             submissionDatabase.insert(verdict)
             return render_template('editor.html', form=MyForm(request.form), status=verdict.get("Status"),
                                    languages=languages, check_submissions="Check Submissions")
-    return render_template('editor.html', form=MyForm(request.form), languages=languages,
-                           check_submissions="Check Submissions")
+    return render_template('editor.html', form=MyForm(request.form), languages=languages,check_submissions="Check Submissions")
+
 
 
 from Submission import Submission
 
-
-@app.route('/submissions', methods=['GET', 'POST'])
+@app.route('/submissions',methods=['GET', 'POST'])
 def view_submissions():
-    submissionsDatabase = mongo.db.submissions
-    problemsDatabase = mongo.db.problems
+    submissionsDatabase=mongo.db.submissions
+    problemsDatabase=mongo.db.problems
     print(submissionsDatabase)
-    submissionsCursor = submissionsDatabase.find({}).limit(50).sort([('Submission Time', 1)])
-    submissions = list()
+    submissionsCursor=submissionsDatabase.find({}).limit(50) .sort([('Submission Time',1)])
+    submissions=list()
     for submission in submissionsCursor:
-        submissions.append(Submission(submission, problemsDatabase))
+        submissions.append(Submission(submission,problemsDatabase))
         print(submissions[0].submissionId)
 
-    return render_template('submissions.html', submissions=submissions)
+    return render_template('submissions.html',submissions=submissions)
 
-
-@app.route('/submissions/<submissionId>', methods=['GET', 'POST'])
+@app.route('/submissions/<submissionId>',methods=['GET', 'POST'])
 def view_submission_details(submissionId):
     submissionsDatabase = mongo.db.submissions
-    submission = Submission(submissionsDatabase.find({"Submission Id": submissionId})[0], mongo.db.problems)
-    Code = submission.Code
-    l = submission.language
+    submission=Submission(submissionsDatabase.find({"Submission Id":submissionId})[0],mongo.db.problems)
+    Code=submission.Code
+    l=submission.language
     makeSubmissionFolders()
-    fileCode = open("submissions/latex/document.tex", "w")
+    fileCode=open("submissions/latex/document.tex","w")
     print("\\documentclass{article}\r\n\\usepackage{xcolor}\r\n\\usepackage{listings}\r\n\r\n"
           "\\definecolor{mGreen}{rgb}{0,0.6,0}\r\n\\definecolor{mGray}{rgb}{0.5,0.5,0.5}\r\n\\definecolor{mPurple}{rgb}{0.58,0,0.82}\r\n"
           "\\definecolor{backgroundColour}{rgb}{0.95,0.95,0.92}\r\n\r\n\\lstdefinestyle{CStyle}{\r\n"
@@ -1186,43 +1155,41 @@ def view_submission_details(submissionId):
           "              \r\n    keepspaces=true,                 \r\n    numbers=left,                    \r\n    numbersep=5pt,      "
           "            \r\n    showspaces=false,             "
           "   \r\n    showstringspaces=false,\r\n    showtabs=false,                  \r\n   "
-          " tabsize=2,\r\n    language=" + l + "\r\n}\r\n\\begin{document}"
-                                               "\r\n"
-          + Code + "\r\n\\end{document}", file=fileCode)
+          " tabsize=2,\r\n    language="+l+"\r\n}\r\n\\begin{document}"
+          "\r\n"
+          +Code+"\r\n\\end{document}",file=fileCode)
     fileCode.close()
     os.system("cd submissions/latex && pdflatex -synctex=1 -interaction=nonstopmode \"document\".tex")
     # submission.Code
     return submissionId
 
-
-@app.route('/user/<userName>', methods=['GET', 'POST'])
+@app.route('/user/<userName>',methods=['GET', 'POST'])
 def userProfile(userName):
     class User:
         def __init__(self, name, username, mail):
             self.name = name
             self.username = username
             self.mail = mail
-
     users = mongo.db.userlist
     existing_user = users.find_one({'USERNAME': userName})
     user = User(existing_user['NAMES'], existing_user['USERNAME'], existing_user['MAIL'])
     return render_template('profile.html', user=user)
+    
+   
 
 
 # *****************************************************************************************
 
 class lol:
-    def __init__(self, id, name, acc, sc, box):
-        self.id = id
-        self.name = name
-        self.acc = acc
-        self.sc = sc
-        self.box = box
-
+    def __init__(self,id,name,acc,sc,box):
+        self.id=id
+        self.name=name
+        self.acc=acc
+        self.sc=sc
+        self.box=box
 
 class create_contest_form(Form):
-    contestname = StringField("Contest Name", [validators.DataRequired()])
-
+    contestname=StringField("Contest Name",[validators.DataRequired()])
 
 def forward_letter(letter, positions):
     if letter.islower():
@@ -1234,39 +1201,36 @@ def forward_letter(letter, positions):
     current_letter = chr(offset)
     return current_letter
 
-
-@app.route('/contest', methods=['GET', 'POST'])
+@app.route('/contest',methods=['GET', 'POST'])
 def contest():
     form = create_contest_form(request.form)
 
-    problemdb = mongo.db.problems
-    list = []
-    existing_pbs = problemdb.find({})
+    problemdb=mongo.db.problems
+    list=[]
+    existing_pbs=problemdb.find({})
     for existing_pb in existing_pbs:
-        list.append(lol(existing_pb['myid'], existing_pb['name'], existing_pb['acsub'], existing_pb['sub'],
-                        existing_pb['myid']))
+        list.append(lol(existing_pb['myid'],existing_pb['name'],existing_pb['acsub'],existing_pb['sub'],existing_pb['myid']))
     if request.method == 'POST':
         print(request.form[form.contestname.name])
-        cnt = 0;
-        selected_problem_id = []
-        name = 'A'
+        cnt=0;
+        selected_problem_id=[]
+        name='A'
         for prblm in list:
             if request.form.get(prblm.id):
-                cnt += 1
-                selected_problem_id.append({forward_letter(name, cnt - 1): prblm.id});
+                cnt+=1
+                selected_problem_id.append({forward_letter(name,cnt-1):prblm.id});
                 print(prblm.name)
-        if cnt == 0:
-            flash('You have to Choose at least 1 problem to set a contest.', 'failure')
-            return render_template('create_contest.html', obj=list, form=form)
+        if cnt==0:
+            flash('You have to Choose at least 1 problem to set a contest.','failure')
+            return render_template('create_contest.html',obj=list,form=form)
         else:
-            contests = mongo.db.contests
-            contests.insert({'Contest Title': form.contestname.data, 'Start Date': request.form['date'],
-                             'Start Time': request.form['start_time'], 'End Time': request.form['end_time'],
-                             'Problem Count': cnt, 'Problem ID': selected_problem_id})
+            contests=mongo.db.contests
+            contests.insert({'Contest Title':form.contestname.data,'Start Date':request.form['date'],
+                             'Start Time':request.form['start_time'],'End Time':request.form['end_time'],
+                             'Problem Count':cnt,'Problem ID':selected_problem_id})
             return redirect(url_for('contests'))
 
-    return render_template('create_contest.html', obj=list, form=form)
-
+    return render_template('create_contest.html',obj=list,form=form)
 
 @app.route('/currentcontest/<contestID>/ranklist')
 def ranklist(contestID):
@@ -1280,93 +1244,87 @@ def ranklist(contestID):
     # contestant1={'name':'SALAM','acc':3,'penalty':120,'submission_history':submission_history}
     # contestant2 = {'name': 'Borkot', 'acc': 2, 'penalty': 110, 'submission_history': submission_history}
     # Total_contestant=[contestant1,contestant2]
-    Total_contestant = []
-    submission = mongo.db.submissions
-    contestant_wise_submission = submission_formatter(submission, contestID)
-    contests = mongo.db.contests
-    contt = contests.find({'_id': ObjectId(contestID)})
+    Total_contestant=[]
+    submission=mongo.db.submissions
+    contestant_wise_submission=submission_formatter(submission,contestID)
+    contests=mongo.db.contests
+    contt=contests.find({'_id':ObjectId(contestID)})
 
-    problem_cnt = 0
-    contestant_start_date = ""
-    contestant_start_time = ""
+    problem_cnt=0
+    contestant_start_date=""
+    contestant_start_time=""
     for cont in contt:
-        problem_cnt = cont['Problem Count']
-        contestant_start_date = cont['Start Date']
-        contestant_start_time = cont['Start Time']
+        problem_cnt=cont['Problem Count']
+        contestant_start_date=cont['Start Date']
+        contestant_start_time=cont['Start Time']
     print(problem_cnt)
-    total_problem = problem_subname_generator(problem_cnt)
+    total_problem=problem_subname_generator(problem_cnt)
 
     for eachcontestant in contestant_wise_submission:
-        Total_contestant.append(
-            contestant_wise_submission_formatter(eachcontestant, total_problem, contestant_start_date,
-                                                 contestant_start_time))
+        Total_contestant.append(contestant_wise_submission_formatter(eachcontestant,total_problem,contestant_start_date,contestant_start_time))
 
-    return render_template('ranklist.html', total_problem=total_problem, Total_contestant=Total_contestant)
-
+    return render_template('ranklist.html',total_problem=total_problem,Total_contestant=Total_contestant)
 
 def problem_subname_generator(problem_cnt):
-    total = []
-    for i in range(0, problem_cnt):
-        total.append(forward_letter('A', i))
+    total=[]
+    for i in range(0,problem_cnt):
+        total.append(forward_letter('A',i))
     print(total)
     return total
 
-
-def submission_formatter(submission, contestID):
-    contestant_wise_submission = []
-    User = []
-    total = 0
-    all_submission = submission.find({'Contest Id': contestID})
+def submission_formatter(submission,contestID):
+    contestant_wise_submission=[]
+    User=[]
+    total=0
+    all_submission=submission.find({'Contest Id':contestID})
     for dict in all_submission:
-        submissions = submission.find({'Contest Id': contestID, 'User Id': dict["User Id"]})
+        submissions=submission.find({'Contest Id':contestID,'User Id':dict["User Id"]})
         if dict['User Id'] not in User:
             contestant_wise_submission.append(submissions)
             User.append(dict['User Id'])
 
     return contestant_wise_submission
 
-
-def contestant_wise_submission_formatter(submissions, total_problem, contest_start_date, contest_start_time):
-    submission_history = []
-    penalty = 0
+def contestant_wise_submission_formatter(submissions,total_problem,contest_start_date,contest_start_time):
+    submission_history=[]
+    penalty=0
     acc = 0
-    name = ""
-    submission = []
+    name=""
+    submission=[]
     for each in submissions:
-        submission.append(each)
+            submission.append(each)
     for eachproblem in total_problem:
 
-        each_prboblem_sub = []
+        each_prboblem_sub=[]
         for each in submission:
-            if each['Problem Number'] == eachproblem:
+            if each['Problem Number']==eachproblem:
                 each_prboblem_sub.append(each)
 
-        status = "NS"
-        submission_time = 0
-        cnt = 0
-        execution_time = 0
+        status="NS"
+        submission_time=0
+        cnt=0
+        execution_time=0
         for eachsub in each_prboblem_sub:
-            name = eachsub['User Id']
-            if eachsub['Status'] == 'AC':
-                status = 'AC'
-                submission_time = eachsub['Submission Time']
-                acc += 1
-                execution_time = eachsub['Execution Time']
-                penalty += 20 * cnt + execution_time * 100 - 100
-                cnt += 1
+            name=eachsub['User Id']
+            if eachsub['Status'] =='AC':
+                status='AC'
+                submission_time=eachsub['Submission Time']
+                acc+=1
+                execution_time=eachsub['Execution Time']
+                penalty+=20*cnt+execution_time*100-100
+                cnt+=1
                 break
-            cnt += 1
-            status = eachsub['Status']
+            cnt+=1
+            status=eachsub['Status']
 
-        if submission_time != 0:
-            dif = get_datetime_to_sec(submission_time, contest_start_date, contest_start_time)
+        if submission_time!=0:
+            dif=get_datetime_to_sec(submission_time,contest_start_date,contest_start_time)
 
-        submission_history.append({'name': eachproblem, 'status': status, 'total_submission': cnt})
-    contestant = {'name': name, 'acc': acc, 'penalty': int(dif + penalty), 'submission_history': submission_history}
+        submission_history.append({'name': eachproblem, 'status':status , 'total_submission': cnt})
+    contestant = {'name': name, 'acc': acc, 'penalty': int(dif+penalty), 'submission_history': submission_history}
     return contestant
 
-
-def get_datetime_to_sec(submission_time, contest_start_date, contest_start_time):
+def get_datetime_to_sec(submission_time,contest_start_date,contest_start_time):
     dt = submission_time.split()
 
     subd = dt[0].split('-')
@@ -1378,8 +1336,7 @@ def get_datetime_to_sec(submission_time, contest_start_date, contest_start_time)
 
     subsec = time.mktime(dt1.timetuple())
     startsec = time.mktime(dt2.timetuple())
-    return subsec - startsec
-
+    return  subsec-startsec
 
 ############################################
 
@@ -1408,19 +1365,18 @@ def contests():
     loaded_contests = contest_db.find({})
     for contest_curr in loaded_contests:
         time_string = contest_curr['Start Date'] + ' ' + contest_curr['Start Time']
-        # time_obj = datetime.strptime(time_string, '%Y-%m-%d %H:%M')
+        #time_obj = datetime.strptime(time_string, '%Y-%m-%d %H:%M')
         subd = contest_curr['Start Date'].split('-')
         subt = contest_curr['Start Time'].split(':')
         dt1 = datetime.datetime(int(subd[0]), int(subd[1]), int(subd[2]), int(subt[0]), int(subt[1]))
         new_contest = contestdata(contest_curr['_id'],
-                                  contest_curr['Contest Title'],
-                                  dt1)
+                              contest_curr['Contest Title'],
+                              dt1)
         contest_list.append(new_contest)
-    contest_list.sort(key=lambda r: r.time, reverse=True)
+    contest_list.sort(key=lambda r:r.time, reverse=True)
     if not ('username' in session):
         return redirect(url_for('login'))
     return render_template('contests.html', obj=contest_list)
-
 
 class PasswordForm(Form):
     password = StringField('Password')
@@ -1440,7 +1396,7 @@ def verify_contest(id):
         print(c_pass)
         if c_pass == password:
             url = "http://127.0.0.1:5000/currentcontest/" + id
-            return redirect(url, 302)
+            return  redirect(url, 302)
         else:
             error = "You need to enter the password for this contest"
             return render_template('contest_verify.html', error=error, form=form)
@@ -1464,13 +1420,12 @@ def load_contest(cc_id):
     for p in problems:
         for x, y in p.items():
             i = problem_db.find_one({'myid': y})
-            new_prob = problem(i['sub_task_count'], i['myid'], i['pnt1'], i['pnt2'], i['pnt3'], i['time_limit'],
-                               i['memory_limit'], i['stylee'], x + ". " + i['name'], i['acsub'], i['sub'], i['setter'])
+            new_prob = problem(i['sub_task_count'],i['myid'],i['pnt1'],i['pnt2'],i['pnt3'],i['time_limit'],
+                               i['memory_limit'],i['stylee'],x+". "+i['name'],i['acsub'],i['sub'],i['setter'])
             problem_list.append(new_prob)
     if not ('username' in session):
         return redirect(url_for('login'))
-    return render_template('contest.html', obj=problem_list, id=cc_id, name=cc_name, sdto=starting_datetime,
-                           edto=ending_datetime)
+    return render_template('contest.html', obj=problem_list,id=cc_id,name=cc_name,sdto=starting_datetime,edto=ending_datetime)
 
 
 # Problem pages of contest
