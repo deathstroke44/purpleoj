@@ -3,8 +3,11 @@
 {%  extends 'index.html' %}
 {% block content %}
     <body>
+    <main role="main" class="container">
     {%  from  "includes/_formhelpers.html" import render_field %}
-        <div class="row mt-5 col-md-9">
+        <div class="row mt-5">
+            <div class="col-md-3"></div>
+        <div class="col-md-3">
             <form method="post" action="">
                 <div class="form-group">
                     {{ render_field(form.nodes_cnt, class_="form-control", id="he")}}
@@ -21,5 +24,6 @@
                 <p id="redd"><input type="submit" class="btn btn-primary" value="Create Graph"></p>
             </form>
         </div>
+    </main>
     </body>
 {%  endblock content %}

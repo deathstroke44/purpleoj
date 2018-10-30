@@ -398,6 +398,10 @@ def postab():
     return render_template('problem_list.html', obj=list)
 
 
+#***************************************************************************************************************
+#      ****Starting Asif's Code*****
+#****************************************************************************************************************
+
 @app.route('/profile')
 def profile():
     if not ('username' in session):
@@ -577,22 +581,59 @@ def news():
             self.content_filename = content_filename
 
     article_array = []
-    source0 = requests.get('https://atcoder.jp/').text
-    source1 = requests.get('https://atcoder.jp/?p=2').text
-    source2 = requests.get('http://codeforces.com/').text
-    source3 = requests.get('http://codeforces.com/page/2').text
-    source4 = requests.get('https://csacademy.com/blog/ceoi-2018/').text
+    # source0 = requests.get('https://atcoder.jp/').text
+    # source1 = requests.get('https://atcoder.jp/?p=2').text
+    # source2 = requests.get('http://codeforces.com/').text
+    # source3 = requests.get('http://codeforces.com/page/2').text
+    # source4 = requests.get('https://blog.hackerrank.com/?h_r=home&h_l=header').text
+    #
+    # f = open('static/WebsiteData/atcoder.html', 'w', encoding='utf8')
+    # f.write(str(source0))
+    # f.close()
+    #
+    # # f = open('static/WebsiteData/codeforces.html', 'w', encoding='utf8')
+    # # f.write(str(source1))
+    # # f.close()
+    #
+    # f = open('static/WebsiteData/codeforces.html', 'w', encoding='utf8')
+    # f.write(str(source2))
+    # f.close()
+    #
+    # f = open('static/WebsiteData/codeforces_page2.html', 'w', encoding='utf8')
+    # f.write(str(source3))
+    # f.close()
+    #
+    # f = open('static/WebsiteData/hackerrank_mainpage.html', 'w', encoding='utf8')
+    # f.write(str(source4))
+    # f.close()
 
-    soup0 = BeautifulSoup(source0, 'lxml')
-    soup1 = BeautifulSoup(source1, 'lxml')
-    soup2 = BeautifulSoup(source2, 'lxml')
-    soup3 = BeautifulSoup(source3, 'lxml')
-    soup4 = BeautifulSoup(source4, 'lxml')
+    f = open('static/WebsiteData/atcoder.html', 'r', encoding='utf8')
+    soup0 = BeautifulSoup(f.read(), 'lxml')
+
+    # f = open('static/WebsiteData/codeforces.html', 'r', encoding='utf8')
+    # soup1 = BeautifulSoup(source1, 'lxml')
+
+    f = open('static/WebsiteData/codeforces.html', 'r', encoding='utf8')
+    soup2 = BeautifulSoup(f.read(), 'lxml')
+
+    f = open('static/WebsiteData/codeforces_page2.html', 'r', encoding='utf8')
+    soup3 = BeautifulSoup(f.read(), 'lxml')
+
+    f = open('static/WebsiteData/hackerrank_mainpage.html', 'r', encoding='utf8')
+    soup4 = BeautifulSoup(f.read(), 'lxml')
 
     div0 = soup0.find_all('div', class_='panel panel-default')
-    div1 = soup1.find_all('div', class_='panel panel-default')
+    # div1 = soup1.find_all('div', class_='panel panel-default')
     div2 = soup2.find_all('div', class_='topic')
     div3 = soup3.find_all('div', class_='topic')
+
+    hackerrankMainPageLinks=[]
+    hackerrankMainPage = soup4.find_all('h3')
+    i = 0
+    for link in hackerrankMainPage:
+        print(hackerrankMainPage[i].find('a')['href'])
+        hackerrankMainPageLinks.append(hackerrankMainPage[i].find('a')['href'])
+        i=i+1
 
     for i in div2:
         title = i.find('div', class_='title')
@@ -607,7 +648,7 @@ def news():
                                                                                                title.a['href']))
         f.close()
 
-        print(title.a['href'])
+        # print(title.a['href'])
 
         for a in content.find_all('img'):
             if a:
@@ -695,6 +736,11 @@ def submissions():
 
     print(submission_array)
     return render_template('user_submission.html', submission_array=submission_array)
+
+
+#***************************************************************************************************************
+#      ****Finishing Asif's Code*****
+#****************************************************************************************************************
 
 
 # ***************************************************************************
