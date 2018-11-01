@@ -1,38 +1,22 @@
-from flask import Flask, flash
-from flask import request, redirect, url_for, render_template, session, Session
-from flask_pymongo import PyMongo
-from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
-from wtforms.widgets import TextArea
-from werkzeug.utils import secure_filename
-from flask_ckeditor import CKEditor, CKEditorField
-import requests
-from bs4 import BeautifulSoup
-from wtforms.fields.html5 import EmailField
 import datetime
 import os
-from bson import ObjectId
-from flask import Flask, flash
-from flask import request, redirect, url_for, render_template, session, Session
-from flask_pymongo import PyMongo
-from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
-from wtforms.widgets import TextArea
-from werkzeug.utils import secure_filename
-from flask_ckeditor import CKEditor, CKEditorField
-from flask import Flask, render_template, request
-from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
-from flask_wtf import FlaskForm
-import time
-from flask_codemirror.fields import CodeMirrorField
-from wtforms.fields import SubmitField, TextAreaField
-from flask_codemirror import CodeMirror
-from forms import IssueForm,CommentForm
-from newsScrapping import HackerRankSingleArticle,HackerRankMainPage,CodeForces,LoadRawHtmlFiles,atcoder,topcoder,thecrazyprogrammer,LoadSoup
-import datetime
-import os
-import datetime
 import time
 
-from newsScrapping import HackerRankSingleArticle,HackerRankMainPage,CodeForces,LoadRawHtmlFiles,atcoder,topcoder,thecrazyprogrammer,LoadSoup
+from flask import Flask, render_template, request
+from flask import flash
+from flask import redirect, url_for, session, Session
+from flask_ckeditor import CKEditor, CKEditorField
+from flask_codemirror import CodeMirror
+from flask_codemirror.fields import CodeMirrorField
+from flask_pymongo import PyMongo
+from flask_wtf import FlaskForm
+from werkzeug.utils import secure_filename
+from wtforms import Form, IntegerField, StringField, PasswordField, validators
+from wtforms.fields import SubmitField, TextAreaField
+from wtforms.fields.html5 import EmailField
+
+from forms import IssueForm, CommentForm
+from newsScrapping import HackerRankMainPage, CodeForces, atcoder, topcoder, thecrazyprogrammer, LoadSoup
 
 app = Flask(__name__)
 UPLOAD_FOLDER = '/home/aniomi/PycharmProjects/purpleoj/static/uploads'
@@ -46,7 +30,6 @@ app.config['CKEDITOR_SERVE_LOCAL'] = True
 app.config['CKEDITOR_HEIGHT'] = 400
 ckeditor = CKEditor(app)
 mongo = PyMongo(app)
-import pymongo as pm
 
 app.secret_key = "super secret key"
 sess = Session()
