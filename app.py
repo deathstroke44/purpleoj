@@ -1,22 +1,38 @@
-import datetime
-import os
-import time
-
+from flask import Flask, flash
+from flask import request, redirect, url_for, render_template, session, Session
+from flask_pymongo import PyMongo
+from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
+from wtforms.widgets import TextArea
+from werkzeug.utils import secure_filename
+from flask_ckeditor import CKEditor, CKEditorField
 import requests
 from bs4 import BeautifulSoup
-from flask import Flask, render_template, request
-from flask import flash
-from flask import redirect, url_for, session, Session
-from flask_ckeditor import CKEditor, CKEditorField
-from flask_codemirror import CodeMirror
-from flask_codemirror.fields import CodeMirrorField
-from flask_pymongo import PyMongo
-from flask_wtf import FlaskForm
-from werkzeug.utils import secure_filename
-from wtforms import Form, IntegerField, StringField, PasswordField, validators
-from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
+import datetime
+import os
+from bson import ObjectId
+from flask import Flask, flash
+from flask import request, redirect, url_for, render_template, session, Session
+from flask_pymongo import PyMongo
+from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
+from wtforms.widgets import TextArea
+from werkzeug.utils import secure_filename
+from flask_ckeditor import CKEditor, CKEditorField
+from flask import Flask, render_template, request
+from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
+from flask_wtf import FlaskForm
+import time
+from flask_codemirror.fields import CodeMirrorField
+from wtforms.fields import SubmitField, TextAreaField
+from flask_codemirror import CodeMirror
 from forms import IssueForm,CommentForm
+from newsScrapping import HackerRankSingleArticle,HackerRankMainPage,CodeForces,LoadRawHtmlFiles,atcoder,topcoder,thecrazyprogrammer,LoadSoup
+import datetime
+import os
+import datetime
+import time
+
+from newsScrapping import HackerRankSingleArticle,HackerRankMainPage,CodeForces,LoadRawHtmlFiles,atcoder,topcoder,thecrazyprogrammer,LoadSoup
 
 app = Flask(__name__)
 UPLOAD_FOLDER = '/home/aniomi/PycharmProjects/purpleoj/static/uploads'
@@ -30,6 +46,7 @@ app.config['CKEDITOR_SERVE_LOCAL'] = True
 app.config['CKEDITOR_HEIGHT'] = 400
 ckeditor = CKEditor(app)
 mongo = PyMongo(app)
+import pymongo as pm
 
 app.secret_key = "super secret key"
 sess = Session()
@@ -40,7 +57,8 @@ class UploadForm(Form):
     memory_limit = IntegerField("Memory Limit(MB)", [validators.DataRequired()])
     category = StringField("Problem Style(ACM,IOI)", [validators.DataRequired()])
     name = StringField('Problem name', [validators.DataRequired()])
-    count = IntegerField('Number Of subtask(at least 1 at most 3)', [validators.DataRequired()] and [validators.number_range(1, 3)])
+    count = IntegerField('Number Of subtask(at least 1 at most 3)',
+                         [validators.DataRequired()] and [validators.number_range(1, 3)])
     point1 = IntegerField('Point for Subtask 1')
     point2 = IntegerField('Point for Subtask 2')
     point3 = IntegerField('Point for Subtask 3')
@@ -552,7 +570,7 @@ def singleIssue(id):
                            issue=Issue(issue['IssueID'],issue['UserName'],issue['Title'],
                                        issue['ProblemID'],problemName,issue['text'],issue['date'].split(" ")[0]))
 
-from FeaturedNews import FeaturedNews
+
 @app.route('/news')
 def news():
     class Article:
@@ -561,100 +579,50 @@ def news():
             self.content_filename = content_filename
 
     article_array = []
-    source0 = requests.get('https://atcoder.jp/').text
-    source1 = requests.get('https://atcoder.jp/?p=2').text
-    source2 = requests.get('http://codeforces.com/').text
-    source3 = requests.get('http://codeforces.com/page/2').text
-    source4 = requests.get('https://csacademy.com/blog/ceoi-2018/').text
+    #********
+    # LoadRawHtmlFiles()  #Has to call this at a certain time of the day
+    #******
 
-    soup0 = BeautifulSoup(source0, 'lxml')
-    soup1 = BeautifulSoup(source1, 'lxml')
-    soup2 = BeautifulSoup(source2, 'lxml')
-    soup3 = BeautifulSoup(source3, 'lxml')
-    soup4 = BeautifulSoup(source4, 'lxml')
+    soup0, soup1, soup2, soup3, soup4, soup5, soup6 = LoadSoup()
 
-    div0 = soup0.find_all('div', class_='panel panel-default')
-    div1 = soup1.find_all('div', class_='panel panel-default')
-    div2 = soup2.find_all('div', class_='topic')
-    div3 = soup3.find_all('div', class_='topic')
-    titlestore = ""
-    imgStore=""
-    urlstore=""
-    featuredNewsList=list()
-    for i in div2:
-        title = i.find('div', class_='title')
-        content = i.find('div', class_='ttypography')
-        content2 = content
+    atcoderMain = soup0.find_all('div', class_='panel panel-default')
+    atcoderPage2 = soup1.find_all('div', class_='panel panel-default')
+    CodeForceMain = soup2.find_all('div', class_='topic')
+    CodeForcePage2 = soup3.find_all('div', class_='topic')
+    HackerRankMain = soup4.find_all('div', class_='blog-content')
+    TopCoderMain = soup5.find_all('div', class_='story-content')
+    thecrazyprogrammerMain = soup6.find_all('article')
 
-        uid1 = uuid.uuid1()
-        file_name_title = 'static/news/' + str(uid1) + '.html'
-        f = open(file_name_title, 'a', encoding='utf8')
-        f.write(str(title).replace('<p>', '').replace('</p>', '').replace('div', 'h4').replace(title.a['href'],
-                                                                                               'http://codeforces.com/' +
-                                                                                               title.a['href']))
-        f.close()
-        print("tile:",title)
-        titlestore = str(title).replace('</', '').replace('<', '').split("p>")[1]
-        urlstore='http://codeforces.com/' +title.a['href']
-        print(title.a['href'])
-
-        for a in content.find_all('img'):
-            if a:
-                imageSource = a['src']
-                st = 'http'
-                if imageSource.find(st) == -1:
-                    content = str(content).replace(imageSource, 'http://codeforces.com/' + imageSource)
-                    imgStore='http://codeforces.com/' + imageSource
-                    featuredNewsList.append(FeaturedNews(imgStore,titlestore,urlstore))
-
-        for link in content2.find_all('a'):
-            if link:
-                linkSource = link['href']
-                st = 'http'
-                if linkSource.find(st) == -1:
-                    content = str(content).replace(linkSource, 'http://codeforces.com/' + linkSource)
-
-        uid2 = uuid.uuid1()
-        file_name_content = 'static/news/' + str(uid2) + '.html'
-        f = open(file_name_content, 'a', encoding='utf8')
-        f.write(str(content))
-        f.close()
-
+    index = 0
+    for i in HackerRankMain:
+        file_name_title ,file_name_content= HackerRankMainPage(HackerRankMain[index])
         article_array.append(Article(file_name_title, file_name_content))
-        # print(content)
+        index=index+1
 
-    for i in div3:
-        title = i.find('div', class_='title')
-        content = i.find('div', class_='ttypography')
-        # content = reformatContent(content)
+    for i in CodeForceMain:
+        file_name_title, file_name_content = CodeForces(i)
+        article_array.append(Article(file_name_title,file_name_content))
 
-        uid1 = uuid.uuid1()
-        file_name_title = 'static/news/' + str(uid1) + '.html'
-        f = open(file_name_title, 'a', encoding='utf8')
-        f.write(str(title).replace('<p>', '').replace('</p>', ''))
-        titlestore = str(title).replace('</','').replace('<','').split("p>")[1]
-        urlstore = 'http://codeforces.com/' + title.a['href']
-        f.close()
-
-        for a in content.find_all('img'):
-            if a:
-                imageSource = a['src']
-                st = 'http'
-                if imageSource.find(st) == -1:
-                    content = str(content).replace(imageSource, 'http://codeforces.com/' + imageSource)
-                    imgStore = 'http://codeforces.com/' + imageSource
-                    featuredNewsList.append(FeaturedNews(imgStore, titlestore, urlstore))
-                    print(a['src'])
-
-        uid2 = uuid.uuid1()
-        file_name_content = 'static/news/' + str(uid2) + '.html'
-        f = open(file_name_content, 'a', encoding='utf8')
-        f.write(str(content))
-        f.close()
-
+    for i in TopCoderMain:
+        file_name_title,file_name_content = topcoder(i)
         article_array.append(Article(file_name_title, file_name_content))
-        # print(content)
-    return render_template('news.html', article_array=article_array, featurednewslist=featuredNewsList)
+
+    for i in CodeForcePage2:
+        file_name_title, file_name_content = CodeForces(i)
+        article_array.append(Article(file_name_title, file_name_content))
+
+    for i in atcoderMain:
+        file_name_title, file_name_content = atcoder(i)
+        article_array.append(Article(file_name_title, file_name_content))
+
+    for i in thecrazyprogrammerMain:
+        file_name_title,file_name_content = thecrazyprogrammer(i)
+        article_array.append(Article(file_name_title, file_name_content))
+
+    import random
+    random.shuffle(article_array)
+    print(article_array.__len__())
+    return render_template('news.html', article_array=article_array)
 
 
 @app.route('/submission')
@@ -708,9 +676,7 @@ CODEMIRROR_ADDONS = (
 app.config.from_object(__name__)
 codemirror = CodeMirror(app)
 class MyForm(FlaskForm):
-    source_code = CodeMirrorField(language='python', config={'lineNumbers': 'true','extraKeys':
-        {"Ctrl-Space": "autocomplete"},'mode':'Python','value':'function myScript(){return 100;}\n'})
-
+    source_code = CodeMirrorField(language='python', config={'lineNumbers': 'true'})
     submit = SubmitField('Submit')
     inputs = TextAreaField(u'inputs')
 
@@ -766,8 +732,6 @@ def runJava(auxForm):
     now = time.time()
     then = time.time()
     fout = open(getProgramFileName("Java"), "w")
-    textlist=text.replace('\'','\\\"').split("\r\n")
-    print(textlist)
     print(text, file=fout)
     fout.close()
     # compiling the program
@@ -1028,8 +992,7 @@ def submitCode(auxform,problemId):
 
 
 def cleanup():
-    # os.system("rm -r submissions/" + getUserId())
-    return ""
+    os.system("rm -r submissions/" + getUserId())
 
 from bson.objectid import ObjectId
 def getProblemNumber(problemId,contestId):
@@ -1432,12 +1395,13 @@ def load_contest(cc_id):
     for p in problems:
         for x, y in p.items():
             i = problem_db.find_one({'myid': y})
-            new_prob = problem(i['sub_task_count'],i['myid'],i['pnt1'],i['pnt2'],i['pnt3'],i['time_limit'],
-                               i['memory_limit'],i['stylee'],x+". "+i['name'],i['acsub'],i['sub'],i['setter'])
+            new_prob = problem(i['sub_task_count'], i['myid'], i['pnt1'], i['pnt2'], i['pnt3'], i['time_limit'],
+                               i['memory_limit'], i['stylee'], x + ". " + i['name'], i['acsub'], i['sub'], i['setter'])
             problem_list.append(new_prob)
     if not ('username' in session):
         return redirect(url_for('login'))
-    return render_template('contest.html', obj=problem_list,id=cc_id,name=cc_name,sdto=starting_datetime,edto=ending_datetime)
+    return render_template('contest.html', obj=problem_list, id=cc_id, name=cc_name, sdto=starting_datetime,
+                           edto=ending_datetime)
 
 
 # Problem pages of contest
