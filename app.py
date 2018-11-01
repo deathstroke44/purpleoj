@@ -708,7 +708,9 @@ CODEMIRROR_ADDONS = (
 app.config.from_object(__name__)
 codemirror = CodeMirror(app)
 class MyForm(FlaskForm):
-    source_code = CodeMirrorField(language='python', config={'lineNumbers': 'true'})
+    source_code = CodeMirrorField(language='python', config={'lineNumbers': 'true','extraKeys':
+        {"Ctrl-Space": "autocomplete"},'mode':'Python','value':'function myScript(){return 100;}\n'})
+
     submit = SubmitField('Submit')
     inputs = TextAreaField(u'inputs')
 
@@ -764,6 +766,8 @@ def runJava(auxForm):
     now = time.time()
     then = time.time()
     fout = open(getProgramFileName("Java"), "w")
+    textlist=text.replace('\'','\\\"').split("\r\n")
+    print(textlist)
     print(text, file=fout)
     fout.close()
     # compiling the program
@@ -1024,7 +1028,8 @@ def submitCode(auxform,problemId):
 
 
 def cleanup():
-    os.system("rm -r submissions/" + getUserId())
+    # os.system("rm -r submissions/" + getUserId())
+    return ""
 
 from bson.objectid import ObjectId
 def getProblemNumber(problemId,contestId):
@@ -1175,7 +1180,14 @@ def userProfile(userName):
     user = User(existing_user['NAMES'], existing_user['USERNAME'], existing_user['MAIL'])
     return render_template('profile.html', user=user)
     
-   
+@app.route('/onlineide', methods=['GET', 'POST'])
+def onlineide():
+    if request.method == 'POST':
+        if "run" in request.form:
+            template = runCode(request.form)
+            cleanup()
+            return template
+    return render_template('editor.html', form=MyForm(request.form), languages=languages)
 
 
 # *****************************************************************************************

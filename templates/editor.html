@@ -3,6 +3,16 @@
 {% block content %}
     <head>
         {{ codemirror.include_codemirror() }}
+        <script src="../static/vendor/codemirror/js/codemirror.js"></script>
+        <link rel="stylesheet" href="../static/vendor/codemirror/css/codemirror.css">
+        <script src="../static/vendor/codemirror/js/css-hint.js"></script>
+        <script src="../static/vendor/codemirror/js/show-hint.js"></script>
+        <script src="../static/Patterns/MediatorForEditor/AddCheckbox.js"></script>
+        <script src="../static/Patterns/MediatorForEditor/Mediator.js"></script>
+        <script src="../static/Patterns/MediatorForEditor/AddInptsTextArea.js"></script>
+        <script src="../static/Patterns/MediatorForEditor/AddEditor.js"></script>
+        <script src="../static/Patterns/MediatorForEditor/AddDropdown.js"></script>
+        <link rel="stylesheet" href="../static/vendor/codemirror/css/show-hint.css">
     </head>
     <body>
     {% include 'layout.html' %}
@@ -12,43 +22,57 @@
     <br>
 
     <div class="container">
-    <form method="POST" action="">
-        <div>
+        <form method="POST" action="">
+            <div>
 
-            <select name=languages method="GET" action="">
-                {% for language in languages %}
-                    <option value="{{ language }}" SELECTED>{{ language }}</option>"
-                {% endfor %}
-            </select>
-        </div>
-{#    <div class="dropdown show">#}
-{##}
-{#  <a class="btn btn-secondary dropdown-toggle" href="" role="button" id="dropdownMenuLink"#}
-{#     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
-{#    Dropdown link#}
-{#  </a>#}
-{##}
-{#  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">#}
-{#    <a class="dropdown-item" href="#">Action</a>#}
-{#    <a class="dropdown-item" href="#">Another action</a>#}
-{#    <a class="dropdown-item" href="#">Something else here</a>#}
-{#  </div>#}
-{#</div>#}
-
-        {{ codemirror.include_codemirror() }}
-
+                <select id="languages" name=languages method="GET" action="">
+                    {% for language in languages %}
+                        <option value="{{ language }}" SELECTED>{{ language }}</option>"
+                    {% endfor %}
+                </select>
+            </div>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/codemirror.js"></script>
+            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/codemirror.css">
+            <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/mode/python/python.js"></script>
+            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/theme/base16-light.css">
+            <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/addon/display/placeholder.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/addon/hint/anyword-hint.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/addon/hint/show-hint.js"></script>
+            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/addon/hint/show-hint.css">
 
             <div class="form-group">
-                {{ render_field(form.source_code,class_="form_control") }}
+
+
+                <label for="source_code"></label>
+                <textarea class="form_control" id="flask-codemirror-source_code" name="source_code"></textarea>
+                <script>
+                    {#var editor_for_source_code = CodeMirror.fromTextArea(#}
+                    {#    document.getElementById('flask-codemirror-source_code'),#}
+                    {#    {#}
+                    {#        "extraKeys": {#}
+                    {#            "Ctrl-Space": "autocomplete"#}
+                    {#        },#}
+                    {#        "mode": "python",#}
+                    {#        "theme": "base16-dark",#}
+                    {#        "value": "function myScript(){return 100;}\n",#}
+                    {#        "lineNumbers": "true"#}
+                    {#    }#}
+                    {#);#}
+                    {#editor_for_source_code.getDoc().setValue('var msg = "Hi";');#}
+                </script>
+
             </div>
 
             <p>
                 <input type="submit" class="btn btn-primary" name="run" value="Run"/>
                 <input type="submit" class="btn btn-primary" name="submit" value="Submit"/>
-                <input type="checkbox" class="checkbox-inline" name="custom_input" value="custom inputs"/>
+                    <input type="checkbox" class="checkbox-inline" id="custom_input" name="custom_input"
+                       value="custom inputs"/>
+                <label for="custom_input">Custom Inputs</label>
+
             </p>
             <div class="form-group">
-                {{ render_field(form.inputs, class_="form-control",id="editor") }}
+                {{ render_field(form.inputs, class_="form-control",id="inputs") }}
             </div>
             <table class="table table-striped table-hover table-bordered" id="mydata">
                 <p><font size="12"> <b><i> {{ status }}</i></b></font></p>
@@ -70,7 +94,7 @@
                     </tr>
                 {% endfor %}
             </table>
-    <table class="table table-striped table-hover table-bordered" id="data">
+            <table class="table table-striped table-hover table-bordered" id="data">
 
 
                 <hr>
@@ -82,17 +106,36 @@
                 <tfoot>
                 <tr></tr>
                 </tfoot>
-                    <tr>
-                        <td>
-                            <p> <a href="/submissions">{{ check_submissions }}</a> </p>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        <p><a href="/submissions">{{ check_submissions }}</a></p>
+                    </td>
+                </tr>
             </table>
 
 
         </form>
     </div>
+  <script>
+                    var mediator;
+                    mediator = new Mediator();
+                    checkbox = new AddCheckbox(mediator, "custom_input").checkbox;
+                    inputTextArea=new AddInputsTextArea(mediator,"inputs").inputTextArea;
+                    editor_for_source_code =new AddEditor(mediator,"flask-codemirror-source_code",{
+                            "extraKeys": {
+                                "Ctrl-Space": "autocomplete"
+                            },
+                            "mode": "python",
+                            "theme": "base16-dark",
+                            "value": "function myScript(){return 100;}\n",
+                            "lineNumbers": "true"
+                        }
+                    ).editor;
+                    dropDown=new AddDropdown(mediator,"languages").select;
+                    mediator.init();
 
+
+                </script>
 
     </body>
 
