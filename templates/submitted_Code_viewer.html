@@ -8,7 +8,7 @@
               crossorigin="anonymous">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet"
-              href="/static/css/styles/{{ preferedTheme }}.css">
+              href="/static/css/styles/atom-one-dark.css">
         <script src="/static/js/highlight.pack.js"></script>
 
         <script> hljs.initHighlightingOnLoad();</script>
@@ -63,38 +63,14 @@
 
             </div>
         </div>
-
         <div class="col-md-9">
-            <p>
-            <form id="form" method="POST" action="">
-                <select id="themes" name=themes method="GET" action="">
-                    {% for theme in themes %}
-                        <option value="{{ theme }}"
-                                {% if theme == preferedTheme %}
-                                SELECTED
-                                {% endif %}
-                        >{{ theme }}
-
-                        </option>"
-                    {% endfor %}
-                </select>
-            </form>
-            <script>
-                var form = document.getElementById("form")
-                var select = document.getElementById("themes")
-                select.addEventListener('change', function () {
-                    form.submit();
-                }, false);
-
-            </script>
-            </p>
 
             <pre><code class={{ language }}>{{ submission.Code }}</code></pre>
         </div>
     </div>
     </div>
     <script>
-
+        highlight("Submission")
     </script>
     </body>
 {% endblock content %}

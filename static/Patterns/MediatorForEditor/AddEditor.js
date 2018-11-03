@@ -5,10 +5,6 @@ class AddEditor{
                         document.getElementById(id),
                         config);
         this.mediator._editor = this.editor;
-        this.editor.on("keyup", function (cm, event) {
-            mediator.editorKeyUp(cm, event);
-        });
-
     }
 
 }
