@@ -2,6 +2,8 @@
 {% block head %}
 {% endblock head %}
 
+{% extends 'index.html' %}
+
 {% block content %}
     <head>
         <meta http-equiv="x-ua-compatible" content="IE-edge">
@@ -36,7 +38,7 @@
 </style>
 <body>
 
-{%  include 'layout.html' %}
+{#{%  include 'layout.html' %}#}
   <h1 class="lead" align="center"><font size="10px">Create Contest</font></h1>
 {%  from  "includes/_formhelpers.html" import render_field %}
 

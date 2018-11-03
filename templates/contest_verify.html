@@ -1,7 +1,8 @@
 {% block head %}
+    <link rel="shortcut icon" href="/static/favicon.ico"/>
     <title>Verify</title>
 {% endblock head %}
-
+{% extends 'index.html' %}
 {% block content %}
 
 
@@ -10,8 +11,10 @@
 
     </head>
 <body>
-
-{%  include 'layout.html' %}
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
 
 {% if dialogue=='Wrong Password' %}
     <SCRIPT Language="JavaScript">
@@ -43,6 +46,8 @@
 <p align="center"><input type="submit" class="btn btn-primary" value="Submit"></p>
 </form>
 </div>
+        </div>
+    </div>
 </body>
 
 {% endblock content %}
