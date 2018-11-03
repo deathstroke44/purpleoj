@@ -1089,11 +1089,21 @@ def view_submissions():
 
 @app.route('/submissions/<submissionId>',methods=['GET', 'POST'])
 def view_submission_details(submissionId):
+    file = open("static/css/styles/styles.txt", "r")
+    themes = list()
+    for line in file:
+        themes.append(line[:-1])
+    file.close()
+    # print(request.form)
+    if request.form.get("themes") != None:
+        preferedTheme = request.form.get("themes")
+    else:
+        preferedTheme = "atom-one-dark"
     submissionsDatabase = mongo.db.submissions
     submission=Submission(submissionsDatabase.find({"Submission Id":submissionId})[0],mongo.db.problems)
-
     language = str(submission.language).lower()
-    return render_template('submitted_Code_viewer.html', submission=submission, language=language)
+    return render_template('submitted_Code_viewer.html', submission=submission, language=language, themes=themes,
+                           preferedTheme=preferedTheme)
 
 @app.route('/user/<userName>',methods=['GET', 'POST'])
 def userProfile(userName):

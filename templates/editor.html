@@ -33,42 +33,27 @@
                     {% endfor %}
                 </select>
             </div>
-            <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/codemirror.js"></script>
-            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/codemirror.css">
-            <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/mode/python/python.js"></script>
-            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/theme/base16-light.css">
-            <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/addon/display/placeholder.js"></script>
-            <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/addon/hint/anyword-hint.js"></script>
-            <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/addon/hint/show-hint.js"></script>
-            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.12.0/addon/hint/show-hint.css">
+            <script src="/static/vendor/codemirror/js/codemirror.js"></script>
+            <link rel="stylesheet" href="/static/vendor/codemirror/css/codemirror.css">
+            <script src="/static/vendor/codemirror/js/python.js"></script>
+            <link rel="stylesheet" href="/static/vendor/codemirror/css/base16-light.css">
+            <script src="/static/vendor/codemirror/js/placeholder.js"></script>
+            <script src="/static/vendor/codemirror/js/anyword-hint.js"></script>
+            <script src="/static/vendor/codemirror/js/show-hint.js"></script>
+            <link rel="stylesheet" href="/static/vendor/codemirror/css/show-hint.css">
 
             <div class="form-group">
 
 
                 <label for="source_code"></label>
                 <textarea class="form_control" id="flask-codemirror-source_code" name="source_code"></textarea>
-                <script>
-                    {#var editor_for_source_code = CodeMirror.fromTextArea(#}
-                    {#    document.getElementById('flask-codemirror-source_code'),#}
-                    {#    {#}
-                    {#        "extraKeys": {#}
-                    {#            "Ctrl-Space": "autocomplete"#}
-                    {#        },#}
-                    {#        "mode": "python",#}
-                    {#        "theme": "base16-dark",#}
-                    {#        "value": "function myScript(){return 100;}\n",#}
-                    {#        "lineNumbers": "true"#}
-                    {#    }#}
-                    {#);#}
-                    {#editor_for_source_code.getDoc().setValue('var msg = "Hi";');#}
-                </script>
 
             </div>
 
             <p>
                 <input type="submit" class="btn btn-primary" name="run" value="Run"/>
                 <input type="submit" class="btn btn-primary" name="submit" value="Submit"/>
-                    <input type="checkbox" class="checkbox-inline" id="custom_input" name="custom_input"
+                <input type="checkbox" class="checkbox-inline" id="custom_input" name="custom_input"
                        value="custom inputs"/>
                 <label for="custom_input">Custom Inputs</label>
 
@@ -118,26 +103,35 @@
 
         </form>
     </div>
-  <script>
-                    var mediator;
-                    mediator = new Mediator();
-                    checkbox = new AddCheckbox(mediator, "custom_input").checkbox;
-                    inputTextArea=new AddInputsTextArea(mediator,"inputs").inputTextArea;
-                    editor_for_source_code =new AddEditor(mediator,"flask-codemirror-source_code",{
-                            "extraKeys": {
-                                "Ctrl-Space": "autocomplete"
-                            },
-                            "mode": "python",
-                            "theme": "base16-dark",
-                            "value": "function myScript(){return 100;}\n",
-                            "lineNumbers": "true"
-                        }
-                    ).editor;
-                    dropDown=new AddDropdown(mediator,"languages").select;
-                    mediator.init();
+    <script>
+        var mediator;
+        mediator = new Mediator();
+        checkbox = new AddCheckbox(mediator, "custom_input").checkbox;
+        inputTextArea = new AddInputsTextArea(mediator, "inputs").inputTextArea;
+        editor_for_source_code = new AddEditor(mediator, "flask-codemirror-source_code", {
+                "extraKeys": {
+                    "Ctrl-Space": "autocomplete",
+
+                },
+                "mode": "python",
+                "theme": "base16-dark",
+                "value": "function myScript(){return 100;}\n",
+                "lineNumbers": "true",
+                "fixedGutter": "true",
+                "gutter": "true",
+                "gutters": ["CodeMirror-lint-markers"],
+                "lint": {
+                    "globalstrict": "true",
+                    "strict": "false"
+                },
+                "matchBrackets": "true"
+            }
+        ).editor;
+        dropDown = new AddDropdown(mediator, "languages").select;
+        mediator.init();
 
 
-                </script>
+    </script>
 
     </body>
 
