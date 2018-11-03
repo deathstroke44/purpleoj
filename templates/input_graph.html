@@ -13,6 +13,11 @@
             <div class="col-md-2"></div>
         <div class="col-md-8">
             <form method="post" action="">
+                <select name="choice" id="choice">
+                    <option value="Directed">Directed Graph</option>
+                    <option value="Undirected">Undirected Graph</option>
+                </select>
+
                 <div class="form-group">
                     {{ render_field(form.nodes_cnt, class_="form-control", id="he")}}
                 </div>

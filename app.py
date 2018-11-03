@@ -1461,8 +1461,8 @@ class adapter:
             jsonstring+=s
         edgelen = len(self.graphh.edgelist)
         for i in range(0, edgelen,2):
-            s = giveedge(self.graphh.edgelist[i],self.graphh.edgelist[i+1],self.graphh.edgelist[i+1]+'#'+
-                         self.graphh.edgelist[i])
+            s = giveedge(self.graphh.edgelist[i],self.graphh.edgelist[i+1],self.graphh.edgelist[i]+'#'+
+                         self.graphh.edgelist[i+1])
             jsonstring += '\n'
             jsonstring += s
         return jsonstring
@@ -1477,34 +1477,70 @@ class jsonstring:
 @app.route('/graph', methods=['GET', 'POST'])
 def graphbuild():
     #return render_template('graphcheck.html')
-    print(givenode('a'))
-    print(giveedge('a','b','ab'))
+    #print(givenode('a'))
+    #print(giveedge('a','b','ab'))
     form=graph_input(request.form)
     if request.method=='POST':
-        idd=uuid.uuid4().__str__()
-        fst=open('static/graph/samplestart.txt',"r")
-        stst=fst.read()
-        fed=open('static/graph/sampleend.txt',"r")
-        sted=fed.read()
-        f = open('templates/'+idd+'.html', "w+")
-        f1 = open('templates/'+'checker.txt', "w+")
-        print(stst,file=f)
+        directed= True
+        if request.form.get('choice')=='Undirected':
+            directed= False
+        if directed == True:
+            idd=uuid.uuid4().__str__()
+            fst=open('static/graph/samplestart.txt',"r")
+            stst=fst.read()
+            fed=open('static/graph/sampleend.txt',"r")
+            sted=fed.read()
+            f = open('templates/'+idd+'.html', "w+")
+            f1 = open('templates/'+'checker.txt', "w+")
+            print(stst,file=f)
 
-        nd_list=node_list(st=form.nodes_desc.data.replace('\n',' '),nd_cnt=form.nodes_cnt.data)
-        ed_list=edge_list(st=form.ed_desc.data.replace('\n',' '),ed_cnt=form.ed_cnt.data)
-        gp=graph(nd_list,ed_list)
-        ad=adapter(gp)
-        js=jsonstring(ad)
-        print(js.getstring(),file=f)
-        #f.close()
-        #for i in range (0,len(nd_list)):
-        #    print(givenode(nd_list[i]),file=f)
-        #for i in range (0,len(ed_list),2):
-        #    print(giveedge(ed_list[i],ed_list[i+1],ed_list[i]+'#'+ed_list[i+1]),file=f)
-        print(sted,file=f)
-        print(form.nodes_desc.data)
-        f.close()
-        return render_template(idd+'.html')
+            nd_list=node_list(st=form.nodes_desc.data.replace('\n',' '),nd_cnt=form.nodes_cnt.data)
+            ed_list=edge_list(st=form.ed_desc.data.replace('\n',' '),ed_cnt=form.ed_cnt.data)
+            gp=graph(nd_list,ed_list)
+            ad=adapter(gp)
+            js=jsonstring(ad)
+            print(js.getstring(),file=f)
+            #f.close()
+            #for i in range (0,len(nd_list)):
+            #    print(givenode(nd_list[i]),file=f)
+            #for i in range (0,len(ed_list),2):
+            #    print(giveedge(ed_list[i],ed_list[i+1],ed_list[i]+'#'+ed_list[i+1]),file=f)
+            print(sted,file=f)
+            print(form.nodes_desc.data)
+            f.close()
+            return render_template(idd+'.html')
+        else:
+            idd = uuid.uuid4().__str__()
+            fst = open('static/graph/undirectedstart.txt', "r")
+            stst = fst.read()
+            fed = open('static/graph/undirectedent.txt', "r")
+            sted = fed.read()
+            f = open('templates/' + idd + '.html', "w+")
+            f1 = open('templates/' + 'checker.txt', "w+")
+            print(stst, file=f)
+
+            nd_list = node_list(st=form.nodes_desc.data.replace('\n', ' '), nd_cnt=form.nodes_cnt.data)
+            ed_list = edge_list(st=form.ed_desc.data.replace('\n', ' '), ed_cnt=form.ed_cnt.data)
+            sz=len(ed_list)
+            for i in range(0,sz,2):
+                if ed_list[i]<=ed_list[i+1]:
+                    xx=ed_list[i]
+                    ed_list[i]=ed_list[i+1]
+                    ed_list[i+1]=xx
+            gp = graph(nd_list, ed_list)
+            ad = adapter(gp)
+            js = jsonstring(ad)
+            print(js.getstring(), file=f)
+            # f.close()
+            # for i in range (0,len(nd_list)):
+            #    print(givenode(nd_list[i]),file=f)
+            # for i in range (0,len(ed_list),2):
+            #    print(giveedge(ed_list[i],ed_list[i+1],ed_list[i]+'#'+ed_list[i+1]),file=f)
+            print(sted, file=f)
+            print(form.nodes_desc.data)
+            f.close()
+            return render_template(idd + '.html')
+
     return render_template('input_graph.html',form=form)
 
 if __name__ == '__main__':
