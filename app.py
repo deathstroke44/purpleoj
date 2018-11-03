@@ -1,36 +1,23 @@
-from flask import Flask, flash
-from flask import request, redirect, url_for, render_template, session, Session
-from flask_pymongo import PyMongo
-from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
-from wtforms.widgets import TextArea
-from werkzeug.utils import secure_filename
-from flask_ckeditor import CKEditor, CKEditorField
-import requests
-from bs4 import BeautifulSoup
-from wtforms.fields.html5 import EmailField
 import datetime
 import os
-from bson import ObjectId
-from flask import Flask, flash
-from flask import request, redirect,url_for,render_template,session,Session
-from flask_pymongo import PyMongo
-from wtforms import Form,IntegerField,StringField, PasswordField, validators, FileField, FloatField,TextAreaField
-from wtforms.widgets import TextArea
-from werkzeug.utils import secure_filename
-from flask_ckeditor import CKEditor, CKEditorField
+import time
+
 from flask import Flask, render_template, request
-from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
-from flask_wtf import FlaskForm
-import time
-from flask_codemirror.fields import CodeMirrorField
-from wtforms.fields import SubmitField, TextAreaField
+from flask import flash
+from flask import redirect, url_for, session, Session
+from flask_ckeditor import CKEditor, CKEditorField
 from flask_codemirror import CodeMirror
+from flask_codemirror.fields import CodeMirrorField
+from flask_pymongo import PyMongo
+from flask_wtf import FlaskForm
+from werkzeug.utils import secure_filename
+from wtforms import Form, IntegerField, StringField, PasswordField, validators
+from wtforms.fields import SubmitField, TextAreaField
+from wtforms.fields.html5 import EmailField
 
+from forms import IssueForm, CommentForm
+from newsScrapping import HackerRankMainPage, CodeForces, atcoder, topcoder, thecrazyprogrammer, LoadSoup
 
-import datetime
-import os
-import datetime
-import time
 app = Flask(__name__)
 UPLOAD_FOLDER = '/home/aniomi/PycharmProjects/purpleoj/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
@@ -43,7 +30,6 @@ app.config['CKEDITOR_SERVE_LOCAL'] = True
 app.config['CKEDITOR_HEIGHT'] = 400
 ckeditor = CKEditor(app)
 mongo = PyMongo(app)
-import pymongo as pm
 
 app.secret_key = "super secret key"
 sess = Session()
@@ -54,7 +40,8 @@ class UploadForm(Form):
     memory_limit = IntegerField("Memory Limit(MB)", [validators.DataRequired()])
     category = StringField("Problem Style(ACM,IOI)", [validators.DataRequired()])
     name = StringField('Problem name', [validators.DataRequired()])
-    count = IntegerField('Number Of subtask(at least 1 at most 3)', [validators.DataRequired()] and [validators.number_range(1, 3)])
+    count = IntegerField('Number Of subtask(at least 1 at most 3)',
+                         [validators.DataRequired()] and [validators.number_range(1, 3)])
     point1 = IntegerField('Point for Subtask 1')
     point2 = IntegerField('Point for Subtask 2')
     point3 = IntegerField('Point for Subtask 3')
@@ -434,6 +421,139 @@ def posts():
     return render_template('user_post.html', post_array=post_array)
 
 
+@app.route('/issues', methods=['GET', 'POST'])
+def issues(existing_post=None):
+
+    class Issue:
+        def __init__(self, id, username, title ,problemID,problemName,text,date):
+            self.id = id
+            self.username = username
+            self.title = title
+            self.problemID = problemID
+            self.text = text
+            self.problemName = problemName
+            self.date = date
+
+    form = IssueForm()
+    if not ('username' in session):
+        return redirect(url_for('login'))
+
+    problemsdb = mongo.db.problems
+    existing_posts = problemsdb.find({}).sort('name')
+    i = 0;
+    list = []
+    problem_id_array = []
+    pair = (i,'None')
+    list.append(pair)
+    problem_id_array.append('CodeFlask')
+    for existing_post in existing_posts:
+        i = i + 1
+        pair1 = (i, existing_post['name'])
+        list.append(pair1)
+        problem_id_array.append(existing_post['myid'])
+
+    form.problemName.choices = list
+
+    if form.validate_on_submit():
+        title = form.title.data
+        problemName = form.problemName.data
+        problemID = problem_id_array[problemName]
+        print(problemID)
+        text = form.text.data
+        user_name = session['username']
+        issueID = uuid.uuid1().__str__()
+
+        issue = mongo.db.Issues
+        issue.insert({'IssueID': issueID,
+                      'UserName': user_name,
+                      'Title': title,
+                      'ProblemID': problemID,
+                      'text': text,
+                      'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M")})
+        return redirect(url_for('issues'))
+
+    issue_array = []
+    i = mongo.db.Issues
+    issuelist = i.find({}).sort('date',-1)
+    for issue in issuelist:
+        if issue['ProblemID'] != 'CodeFlask':
+            pb = problemsdb.find_one({'myid': issue['ProblemID']})
+            issue_array.append(Issue(issue['IssueID'],issue['UserName'],issue['Title'],issue['ProblemID'],pb['name'],issue['text'],issue['date']))
+        else:
+            issue_array.append(
+                Issue(issue['IssueID'], issue['UserName'], issue['Title'], issue['ProblemID'], 'CodeFlask',
+                      issue['text'], issue['date']))
+
+    print(issue_array[0].title)
+    return render_template('issues.html', form=form,issue_array=issue_array)
+
+
+@app.route('/issues/<id>',methods=['GET', 'POST'])
+def singleIssue(id):
+    class Issue:
+        def __init__(self, id, username, title ,problemID,problemName,text,date):
+            self.id = id
+            self.username = username
+            self.title = title
+            self.problemID = problemID
+            self.text = text
+            self.problemName = problemName
+            self.date = date
+
+    class Comment:
+        def __init__(self, id, username, issue ,problemID,text,date):
+            self.id = id
+            self.username = username
+            self.issue = issue
+            self.problemID = problemID
+            self.text = text
+            self.date = date
+
+    form = CommentForm()
+    if not ('username' in session):
+        return redirect(url_for('login'))
+
+    if form.validate_on_submit():
+        text = form.text.data
+        commentID = uuid.uuid1().__str__()
+        issueID = id
+        problemID = mongo.db.Issues.find_one({'IssueID':issueID})['ProblemID']
+        user_name = session['username']
+        date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+
+        comments = mongo.db.Comment
+        comments.insert({'ID':commentID,
+                        'ProblemID':problemID,
+                        'IssueID':issueID,
+                        'UserName':user_name,
+                        'Date':date,
+                         'Text':text})
+        return redirect(url_for('singleIssue', id=issueID))
+
+    issue = mongo.db.Issues.find_one({'IssueID':id})
+    problemsdb = mongo.db.problems
+    problemName = ''
+    if issue['ProblemID'] != 'CodeFlask':
+        problemName = problemsdb.find_one({'myid': issue['ProblemID']})['name']
+    else:
+        problemName = 'CodeFlask'
+
+    comment_array=[]
+    comments = mongo.db.Comment.find({}).sort("Date",-1)
+    for comment in comments:
+        if id == comment['IssueID']:
+            comment_array.append(Comment(comment['ID'],
+                                         comment['UserName'],
+                                         comment['IssueID'],
+                                         comment['ProblemID'],
+                                         comment['Text'],
+                                         comment['Date']))
+
+    return render_template('issue_page.html',form=form,comment_array=comment_array,
+                           issue=Issue(issue['IssueID'],issue['UserName'],issue['Title'],
+                                       issue['ProblemID'],problemName,issue['text'],issue['date'].split(" ")[0]))
+
+
 @app.route('/news')
 def news():
     class Article:
@@ -442,89 +562,49 @@ def news():
             self.content_filename = content_filename
 
     article_array = []
-    source0 = requests.get('https://atcoder.jp/').text
-    source1 = requests.get('https://atcoder.jp/?p=2').text
-    source2 = requests.get('http://codeforces.com/').text
-    source3 = requests.get('http://codeforces.com/page/2').text
-    source4 = requests.get('https://csacademy.com/blog/ceoi-2018/').text
+    #********
+    # LoadRawHtmlFiles()  #Has to call this at a certain time of the day
+    #******
 
-    soup0 = BeautifulSoup(source0, 'lxml')
-    soup1 = BeautifulSoup(source1, 'lxml')
-    soup2 = BeautifulSoup(source2, 'lxml')
-    soup3 = BeautifulSoup(source3, 'lxml')
-    soup4 = BeautifulSoup(source4, 'lxml')
+    soup0, soup1, soup2, soup3, soup4, soup5, soup6 = LoadSoup()
 
-    div0 = soup0.find_all('div', class_='panel panel-default')
-    div1 = soup1.find_all('div', class_='panel panel-default')
-    div2 = soup2.find_all('div', class_='topic')
-    div3 = soup3.find_all('div', class_='topic')
+    atcoderMain = soup0.find_all('div', class_='panel panel-default')
+    atcoderPage2 = soup1.find_all('div', class_='panel panel-default')
+    CodeForceMain = soup2.find_all('div', class_='topic')
+    CodeForcePage2 = soup3.find_all('div', class_='topic')
+    HackerRankMain = soup4.find_all('div', class_='blog-content')
+    TopCoderMain = soup5.find_all('div', class_='story-content')
+    thecrazyprogrammerMain = soup6.find_all('article')
 
-    for i in div2:
-        title = i.find('div', class_='title')
-        content = i.find('div', class_='ttypography')
-        content2 = content
-
-        uid1 = uuid.uuid1()
-        file_name_title = 'static/news/' + str(uid1) + '.html'
-        f = open(file_name_title, 'a', encoding='utf8')
-        f.write(str(title).replace('<p>', '').replace('</p>', '').replace('div', 'h4').replace(title.a['href'],
-                                                                                               'http://codeforces.com/' +
-                                                                                               title.a['href']))
-        f.close()
-
-        print(title.a['href'])
-
-        for a in content.find_all('img'):
-            if a:
-                imageSource = a['src']
-                st = 'http'
-                if imageSource.find(st) == -1:
-                    content = str(content).replace(imageSource, 'http://codeforces.com/' + imageSource)
-
-        for link in content2.find_all('a'):
-            if link:
-                linkSource = link['href']
-                st = 'http'
-                if linkSource.find(st) == -1:
-                    content = str(content).replace(linkSource, 'http://codeforces.com/' + linkSource)
-
-        uid2 = uuid.uuid1()
-        file_name_content = 'static/news/' + str(uid2) + '.html'
-        f = open(file_name_content, 'a', encoding='utf8')
-        f.write(str(content))
-        f.close()
-
+    index = 0
+    for i in HackerRankMain:
+        file_name_title ,file_name_content= HackerRankMainPage(HackerRankMain[index])
         article_array.append(Article(file_name_title, file_name_content))
-        # print(content)
+        index=index+1
 
-    for i in div3:
-        title = i.find('div', class_='title')
-        content = i.find('div', class_='ttypography')
-        # content = reformatContent(content)
+    for i in CodeForceMain:
+        file_name_title, file_name_content = CodeForces(i)
+        article_array.append(Article(file_name_title,file_name_content))
 
-        uid1 = uuid.uuid1()
-        file_name_title = 'static/news/' + str(uid1) + '.html'
-        f = open(file_name_title, 'a', encoding='utf8')
-        f.write(str(title).replace('<p>', '').replace('</p>', ''))
-        f.close()
-
-        for a in content.find_all('img'):
-            if a:
-                imageSource = a['src']
-                st = 'http'
-                if imageSource.find(st) == -1:
-                    content = str(content).replace(imageSource, 'http://codeforces.com/' + imageSource)
-                    print(a['src'])
-
-        uid2 = uuid.uuid1()
-        file_name_content = 'static/news/' + str(uid2) + '.html'
-        f = open(file_name_content, 'a', encoding='utf8')
-        f.write(str(content))
-        f.close()
-
+    for i in TopCoderMain:
+        file_name_title,file_name_content = topcoder(i)
         article_array.append(Article(file_name_title, file_name_content))
-        # print(content)
 
+    for i in CodeForcePage2:
+        file_name_title, file_name_content = CodeForces(i)
+        article_array.append(Article(file_name_title, file_name_content))
+
+    for i in atcoderMain:
+        file_name_title, file_name_content = atcoder(i)
+        article_array.append(Article(file_name_title, file_name_content))
+
+    for i in thecrazyprogrammerMain:
+        file_name_title,file_name_content = thecrazyprogrammer(i)
+        article_array.append(Article(file_name_title, file_name_content))
+
+    import random
+    random.shuffle(article_array)
+    print(article_array.__len__())
     return render_template('news.html', article_array=article_array)
 
 
@@ -553,13 +633,13 @@ def submissions():
     for submission in submissions:
         if submission['User Id'] == user_name:
             problem_set = mongo.db.problems.find_one({'myid': submission['Problem Id']})
-            submission_array.append(submission_object(problem_object(problem_set['name'], problem_set['myid']), submission['Submission Time'],
+            submission_array.append(submission_object(problem_object(problem_set['name'], problem_set['myid']),
+                                                      submission['Submission Time'],
                                                       submission['User Id'], submission['Language'],
                                                       submission['Status'], submission['Execution Time']))
 
     print(submission_array)
     return render_template('user_submission.html', submission_array=submission_array)
-
 
 
 # ***************************************************************************
@@ -1046,7 +1126,14 @@ def userProfile(userName):
     user = User(existing_user['NAMES'], existing_user['USERNAME'], existing_user['MAIL'])
     return render_template('profile.html', user=user)
     
-   
+@app.route('/onlineide', methods=['GET', 'POST'])
+def onlineide():
+    if request.method == 'POST':
+        if "run" in request.form:
+            template = runCode(request.form)
+            cleanup()
+            return template
+    return render_template('editor.html', form=MyForm(request.form), languages=languages)
 
 
 # *****************************************************************************************
@@ -1291,12 +1378,13 @@ def load_contest(cc_id):
     for p in problems:
         for x, y in p.items():
             i = problem_db.find_one({'myid': y})
-            new_prob = problem(i['sub_task_count'],i['myid'],i['pnt1'],i['pnt2'],i['pnt3'],i['time_limit'],
-                               i['memory_limit'],i['stylee'],x+". "+i['name'],i['acsub'],i['sub'],i['setter'])
+            new_prob = problem(i['sub_task_count'], i['myid'], i['pnt1'], i['pnt2'], i['pnt3'], i['time_limit'],
+                               i['memory_limit'], i['stylee'], x + ". " + i['name'], i['acsub'], i['sub'], i['setter'])
             problem_list.append(new_prob)
     if not ('username' in session):
         return redirect(url_for('login'))
-    return render_template('contest.html', obj=problem_list,id=cc_id,name=cc_name,sdto=starting_datetime,edto=ending_datetime)
+    return render_template('contest.html', obj=problem_list, id=cc_id, name=cc_name, sdto=starting_datetime,
+                           edto=ending_datetime)
 
 
 # Problem pages of contest
@@ -1314,7 +1402,94 @@ def load_contest_problem(id1, id2):
 
 
 #############################################
+class graph_input(Form):
+    nodes_cnt=IntegerField("Number of Nodes",[validators.DataRequired()])
+    nodes_desc=TextAreaField("Nodes",[validators.DataRequired])
+    ed_cnt=IntegerField("Number of Edgs",[validators.DataRequired()])
+    ed_desc=TextAreaField("Edges",[validators.DataRequired()])
 
+
+def givenode(node_name):
+    node_name = node_name.replace('\n','')
+    print(repr(node_name),end=' ')
+    s='{ data: { id: '+ '\'' +node_name+ '\''+' } },'
+    return s
+
+def f(s):
+    s = s.replace('\n','')
+    return '\''+s+'\''
+
+def giveedge(st,ed,ed_name):
+    st = st.replace('\n','')
+    ed = ed.replace('\n','')
+    s='{\n'+'data: {\n'+'id: '+f(ed_name)+',\n'+'source : '+ f(st) +',\n'+'target: ' + f(ed) + ',\n}\n},\n'
+    return s
+
+def node_list(st,nd_cnt):
+    st = st.replace('\n', ' ')
+    st=st.replace('\r',' ')
+    ar = st.split(' ')
+    filter_list = []
+    for i in range(0, len(ar)):
+        if not (ar[i] == ''):
+            filter_list.append(ar[i].replace('\n',''))
+    filter_list2= []
+    nd_cnt=min(nd_cnt,len(filter_list))
+    for i in range(0, nd_cnt):
+        filter_list2.append(filter_list[i])
+    return filter_list2
+
+def edge_list(st,ed_cnt):
+    st=st.replace('\n',' ')
+    st=st.replace('\r',' ')
+    ar = st.split(' ')
+    filter_list = []
+    for i in range(0, len(ar)):
+        if not (ar[i] == ''):
+            filter_list.append(ar[i].replace('\n',''))
+    ed_cnt*=2
+    edcc=len(filter_list)
+    for i in range(0,len(filter_list)):
+        print(filter_list[i])
+
+    if edcc%2==1:
+        edcc-=1
+
+    ed_cnt=min(edcc,ed_cnt)
+    filter_list2=[]
+    for i in range(0,ed_cnt):
+        filter_list2.append(filter_list[i])
+    return filter_list2
+
+
+
+@app.route('/graph', methods=['GET', 'POST'])
+def graphbuild():
+    #return render_template('graphcheck.html')
+    print(givenode('a'))
+    print(giveedge('a','b','ab'))
+    form=graph_input(request.form)
+    if request.method=='POST':
+        idd=uuid.uuid4().__str__()
+        fst=open('static/graph/samplestart.txt',"r")
+        stst=fst.read()
+        fed=open('static/graph/sampleend.txt',"r")
+        sted=fed.read()
+        f = open('templates/'+idd+'.html', "w+")
+        print(stst,file=f)
+
+        nd_list=node_list(st=form.nodes_desc.data.replace('\n',' '),nd_cnt=form.nodes_cnt.data)
+        ed_list=edge_list(st=form.ed_desc.data.replace('\n',' '),ed_cnt=form.ed_cnt.data)
+
+        for i in range (0,len(nd_list)):
+            print(givenode(nd_list[i]),file=f)
+        for i in range (0,len(ed_list),2):
+            print(giveedge(ed_list[i],ed_list[i+1],ed_list[i]+'#'+ed_list[i+1]),file=f)
+        print(sted,file=f)
+        print(form.nodes_desc.data)
+        f.close()
+        return render_template(idd+'.html')
+    return render_template('input_graph.html',form=form)
 
 if __name__ == '__main__':
     app.secret_key = 'SUPER SECRET KEY'

@@ -4,7 +4,18 @@
 {% block content %}
 <head>
    <script src="/static/w3.js"></script>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+   <link rel="stylesheet" href="../static/css/news.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <script src="https://unpkg.com/pagination-layout@1.0.3/pagination-layout.js"></script>
+   <!-- prod -->
+   <script src="https://unpkg.com/pagination-layout@1.0.3/pagination-layout.min.js"></script>
    <style>
+      body{
+      background: #112233;
+      margin-bottom:150px;
+      }
       a {
       text-decoration: none;
       display: inline-block;
@@ -28,31 +39,84 @@
       }
    </style>
 </head>
-<main role="main" class="container">
-   <div class="row">
-      <div class="col-md-1">
-           </div>
-      <div class="col-md-9">
-         {% for article in article_array %}
-         <div class="card mt-3">
-            <div class="card-header"  w3-include-html={{article.title_filename}}>
-               <script>
-                        w3.includeHTML();
-               </script>
-            </div>
-            <div class="card-body"  w3-include-html={{article.content_filename}}>
-               <script>
-                        w3.includeHTML();
-               </script>
-            </div>
+<body>
+   <div class="container row" align="center">
+      <h2>Featured News</h2>
+      <div id="myCarousel" class="carousel slide" data-ride="carousel">
+         <!-- Indicators -->
+         {#
+         <ul class="carousel-indicators">#}
+            {#      {% for featurednews in featurednewslist %}#}
+            {#    <li data-target="#demo" data-slide-to="{{ loop.index - 1}}" class="{% if loop.index==1 %} active"{% endif %}></li>#}
+            {#        {% endfor %}#}
+            {#
+         </ul>
+         #}
+         <!-- Wrapper for slides -->
+         <div class="carousel-inner">
+            {% for featurednews in featurednewslist %}
+            <a class="item{% if loop.index == 1 %} active{% endif %}" href="{{ featurednews.url }}">
+               <img src="{{featurednews.imageSource}}" class="img-responsive" alt="{{featurednews.title }}">
+               <div class="carousel-caption">
+                  <p>"{{featurednews.title }}"</p>
+               </div>
+            </a>
+            {% endfor %}
          </div>
-         {% endfor %}
+         <!-- Left and right controls -->
+         <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+         <span class="glyphicon glyphicon-chevron-left"></span>
+         <span class="sr-only">Previous</span>
+         </a>
+         <a class="right carousel-control" href="#myCarousel" data-slide="next">
+         <span class="glyphicon glyphicon-chevron-right"></span>
+         <span class="sr-only">Next</span>
+         </a>
       </div>
    </div>
-</main>
+   <main role="main" class="container">
+      <div class="row">
+         <div class="col-md-1">
+         </div>
+         <div class="col-md-7">
+             <div  id="page">
+            {% for article in article_array %}
+              <div class="card mt-3 list-group">
+                   <div class="card-header"  w3-include-html={{article.title_filename}}>
+                  <script>
+                     w3.includeHTML();
+                  </script>
+               </div>
+               <div class="card-body"  w3-include-html={{article.content_filename}}>
+                  <script>
+                     w3.includeHTML();
+                  </script>
+               </div>
+              </div>
+            {% endfor %}
+             </div>
+         </div>
+      </div>
+       <div class="row">
+           <div class="col-md-3">
+         </div >
+           <div class="col-md-7">
+           <ul class=pagination>
+                <li id="previous-page"><a href="javascript:void(0)" aria-label=Previous><span aria-hidden=true>&laquo;</span></a></li>
+              </ul>
+           </div>
+       </div>
+   </main>
+</body>
 <script>
    w3.includeHTML();
 </script>
-<a href="#" class="previous round">&#8249;</a>
-<a href="#" class="next round">&#8250;</a>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="static/js/scripts.js"></script>
+<script>
+   highlight("News");
+</script>
 {% endblock content %}

@@ -1,0 +1,36 @@
+]
+      });
+    </script>
+    <script>
+        var llp=10;
+        document.getElementById("edgelist").onclick=function () {
+            var x=document.getElementById("src").value;
+            var y=document.getElementById("dst").value;
+
+
+            if(x.length>0 && y.length>0)
+            {
+                cy.add([
+                    { group: "edges", data: { id: x+"#"+y, source: x, target: y}}
+                ])
+            }
+
+        };
+        document.getElementById("nodelist").onclick=function () {
+          var xx=document.getElementById("new_node").value;
+          
+           var xxx=(Math.random()+llp)%700+200;
+            var yyy=(Math.random()+llp)%500+200;
+          if(xx.length>0)
+          {
+              llp+=40;
+              cy.add([
+                {group: "nodes", data: {id: xx }, position: { x: xxx, y: yyy }}
+
+            ])
+          }
+        }
+    </script>
+</main>
+</body>
+{% endblock content %}

@@ -1,14 +1,30 @@
+
+{% extends 'index.html' %}
 {% block head %}
 {% endblock head %}
-{% extends 'index.html' %}
 {% block content %}
- <div class="row">
-        <div class="col-md-1">
-        </div>
-        <div class="col-md-9">
-            <p><font size="12"> <b><i>Problem Set</i></b></font></p>
+    <style>
+        #lskp
+        {
+            margin-top: 3%;
+        }
+        .lol
+        {
+            margin-left: 15%;
+            margin-right: 15%;
+        }
+        .highlight {
+            background-color: #fff;
+            padding: 1%;
+            shape-rendering: geometricPrecision;
+        }
+    </style>
+ <body>
+
+        <div class=lol>
             <hr>
-            <div class="my">
+            <br>
+            <div id="lskp">
                 <table class="table table-striped table-bordered table-hover" id="mydata">
                     <thead>
                         <tr>
@@ -84,6 +100,10 @@
                     </tbody>
                 </table>
             </div>
+
+            <script>
+                highlight("Problem Set");
+            </script>
             <script src="/static/For%20Table/jquery.js"></script>
             <script src="/static/For%20Table/jquery.dataTables.min.js"></script>
             <script src="/static/For%20Table/dataTables.bootstrap4.min.js"></script>
@@ -91,5 +111,5 @@
                 $('#mydata').dataTable()
             </script>
         </div>
-    </div>
+
 {% endblock content %}
