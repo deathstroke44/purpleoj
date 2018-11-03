@@ -1091,27 +1091,9 @@ def view_submissions():
 def view_submission_details(submissionId):
     submissionsDatabase = mongo.db.submissions
     submission=Submission(submissionsDatabase.find({"Submission Id":submissionId})[0],mongo.db.problems)
-    Code=submission.Code
-    l=submission.language
-    makeSubmissionFolders()
-    fileCode=open("submissions/latex/document.tex","w")
-    print("\\documentclass{article}\r\n\\usepackage{xcolor}\r\n\\usepackage{listings}\r\n\r\n"
-          "\\definecolor{mGreen}{rgb}{0,0.6,0}\r\n\\definecolor{mGray}{rgb}{0.5,0.5,0.5}\r\n\\definecolor{mPurple}{rgb}{0.58,0,0.82}\r\n"
-          "\\definecolor{backgroundColour}{rgb}{0.95,0.95,0.92}\r\n\r\n\\lstdefinestyle{CStyle}{\r\n"
-          "    backgroundcolor=\\color{backgroundColour},   \r\n    commentstyle=\\color{mGreen},\r\n    keywordstyle=\\color{magenta},\r\n  "
-          "  numberstyle=\\tiny\\color{mGray},\r\n   "
-          " stringstyle=\\color{mPurple},\r\n    basicstyle=\\footnotesize,\r\n   "
-          " breakatwhitespace=false,         \r\n    breaklines=true,                 \r\n    captionpos=b,      "
-          "              \r\n    keepspaces=true,                 \r\n    numbers=left,                    \r\n    numbersep=5pt,      "
-          "            \r\n    showspaces=false,             "
-          "   \r\n    showstringspaces=false,\r\n    showtabs=false,                  \r\n   "
-          " tabsize=2,\r\n    language="+l+"\r\n}\r\n\\begin{document}"
-          "\r\n"
-          +Code+"\r\n\\end{document}",file=fileCode)
-    fileCode.close()
-    os.system("cd submissions/latex && pdflatex -synctex=1 -interaction=nonstopmode \"document\".tex")
-    # submission.Code
-    return submissionId
+
+    language = str(submission.language).lower()
+    return render_template('submitted_Code_viewer.html', submission=submission, language=language)
 
 @app.route('/user/<userName>',methods=['GET', 'POST'])
 def userProfile(userName):
