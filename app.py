@@ -1460,6 +1460,35 @@ def edge_list(st,ed_cnt):
         filter_list2.append(filter_list[i])
     return filter_list2
 
+class graph:
+    def __init__(self,nodelist,edgelist):
+        self.nodelist=nodelist
+        self.edgelist=edgelist
+class adapter:
+    graphh=None
+    def __init__(self,graphh):
+        self.graphh=graphh
+        print(str(len(self.graphh.nodelist))+" omi")
+    def getjson(self):
+        jsonstring=''
+        nodelen=len(self.graphh.nodelist)
+        for i in range(0,nodelen):
+            s=givenode(self.graphh.nodelist[i])
+            jsonstring+='\n'
+            jsonstring+=s
+        edgelen = len(self.graphh.edgelist)
+        for i in range(0, edgelen,2):
+            s = giveedge(self.graphh.edgelist[i],self.graphh.edgelist[i+1],self.graphh.edgelist[i+1]+'#'+
+                         self.graphh.edgelist[i])
+            jsonstring += '\n'
+            jsonstring += s
+        return jsonstring
+class jsonstring:
+    _adapter=None
+    def __init__(self,_adapter):
+        self._adapter=_adapter
+    def getstring(self):
+        return self._adapter.getjson()
 
 
 @app.route('/graph', methods=['GET', 'POST'])
@@ -1475,15 +1504,20 @@ def graphbuild():
         fed=open('static/graph/sampleend.txt',"r")
         sted=fed.read()
         f = open('templates/'+idd+'.html', "w+")
+        f1 = open('templates/'+'checker.txt', "w+")
         print(stst,file=f)
 
         nd_list=node_list(st=form.nodes_desc.data.replace('\n',' '),nd_cnt=form.nodes_cnt.data)
         ed_list=edge_list(st=form.ed_desc.data.replace('\n',' '),ed_cnt=form.ed_cnt.data)
-
-        for i in range (0,len(nd_list)):
-            print(givenode(nd_list[i]),file=f)
-        for i in range (0,len(ed_list),2):
-            print(giveedge(ed_list[i],ed_list[i+1],ed_list[i]+'#'+ed_list[i+1]),file=f)
+        gp=graph(nd_list,ed_list)
+        ad=adapter(gp)
+        js=jsonstring(ad)
+        print(js.getstring(),file=f)
+        #f.close()
+        #for i in range (0,len(nd_list)):
+        #    print(givenode(nd_list[i]),file=f)
+        #for i in range (0,len(ed_list),2):
+        #    print(giveedge(ed_list[i],ed_list[i+1],ed_list[i]+'#'+ed_list[i+1]),file=f)
         print(sted,file=f)
         print(form.nodes_desc.data)
         f.close()
