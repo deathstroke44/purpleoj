@@ -80,9 +80,19 @@ class Mediator {
 
 
     }
+
+    editorKeyUp(cm, event) {
+        if (!cm.state.completionActive && /*Enables keyboard navigation in autocomplete list*/
+            event.keyCode != 13 && this._editor.getValue().length > 0) {        /*Enter - do not open autocomplete list just after item has been selected in it*/
+            CodeMirror.commands.autocomplete(cm, null, {completeSingle: false});
+
+        }
+    }
     init(){
         this.setEditorBoilerPlateCode(this._boilerPlateCodes["Python"]);
         this.checkboxAction();
+
+
     }
 
 }
