@@ -19,7 +19,7 @@ from forms import IssueForm, CommentForm
 from newsScrapping import HackerRankMainPage, CodeForces, atcoder, topcoder, thecrazyprogrammer, LoadSoup
 
 app = Flask(__name__)
-UPLOAD_FOLDER = '/home/aniomi/PycharmProjects/purpleoj/static/uploads'
+UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
 ALLOWED_CATEGORY = set(['ACM', 'IOI'])
 import uuid
@@ -671,9 +671,7 @@ def runPython(auxForm):
     fout = open(getProgramFileName("Python"), "w")
     print(text, file=fout)
     fout.close()
-    # mongo.db.submissions.insert({'a':text})
-    # print(text)
-    # return "ok"
+
     if auxForm.get("custom_input") != None:
         inputs = form.inputs.data
         finputs = open(getCustomInputsFileName(), "w")
@@ -990,6 +988,7 @@ def getProblemNumber(problemId,contestId):
     print(problemList)
 @app.route('/editor/<problemId>', methods=['GET', 'POST'])
 def editor(problemId):
+    print("not for contest")
     problemsDatabase=mongo.db.problems
     submissionDatabase=mongo.db.submissions
     if request.method == 'POST':

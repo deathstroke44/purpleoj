@@ -3,16 +3,19 @@
 {% block content %}
     <head>
         {{ codemirror.include_codemirror() }}
-        <script src="../static/vendor/codemirror/js/codemirror.js"></script>
-        <link rel="stylesheet" href="../static/vendor/codemirror/css/codemirror.css">
-        <script src="../static/vendor/codemirror/js/css-hint.js"></script>
-        <script src="../static/vendor/codemirror/js/show-hint.js"></script>
-        <script src="../static/Patterns/MediatorForEditor/AddCheckbox.js"></script>
-        <script src="../static/Patterns/MediatorForEditor/Mediator.js"></script>
-        <script src="../static/Patterns/MediatorForEditor/AddInptsTextArea.js"></script>
-        <script src="../static/Patterns/MediatorForEditor/AddEditor.js"></script>
-        <script src="../static/Patterns/MediatorForEditor/AddDropdown.js"></script>
-        <link rel="stylesheet" href="../static/vendor/codemirror/css/show-hint.css">
+        <script src="/static/vendor/codemirror/js/codemirror.js"></script>
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/codemirror.css">
+        <script src="/static/vendor/codemirror/js/css-hint.js"></script>
+        <script src="/static/vendor/codemirror/js/show-hint.js"></script>
+        <script src="/static/Patterns/MediatorForEditor/AddCheckbox.js"></script>
+        <script src="/static/Patterns/MediatorForEditor/Mediator.js"></script>
+        <script src="/static/Patterns/MediatorForEditor/AddInptsTextArea.js"></script>
+        <script src="/static/Patterns/MediatorForEditor/AddEditor.js"></script>
+        <script src="/static/Patterns/MediatorForEditor/AddDropdown.js"></script>
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/show-hint.css">
+
+
+        {
     </head>
     <body>
     {% include 'layout.html' %}
@@ -24,7 +27,6 @@
     <div class="container">
         <form method="POST" action="">
             <div>
-
                 <select id="languages" name=languages method="GET" action="">
                     {% for language in languages %}
                         <option value="{{ language }}" SELECTED>{{ language }}</option>"
