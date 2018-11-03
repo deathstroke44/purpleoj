@@ -3,7 +3,6 @@
 {%  extends 'index.html' %}
 {% block content %}
 <head>
-    <title>Tutorial 1: Getting Started</title>
     <style>
         #cy {
 

@@ -19,8 +19,8 @@
         document.getElementById("nodelist").onclick=function () {
           var xx=document.getElementById("new_node").value;
           
-           var xxx=(Math.random()+llp)%700+200;
-            var yyy=(Math.random()+llp)%500+200;
+           var xxx=(llp)%300+400;
+            var yyy=(llp)%200+300;
           if(xx.length>0)
           {
               llp+=40;
@@ -31,6 +31,10 @@
           }
         }
     </script>
+
 </main>
+ <script>
+       highlight("graph");
+   </script>
 </body>
 {% endblock content %}

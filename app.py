@@ -182,7 +182,7 @@ class postob:
 def index():
     list = []
     postdb = mongo.db.posts
-    existing_post = postdb.find({})
+    existing_post = postdb.find({}).sort('_id')
     i = 0
     for posts in existing_post:
         print(posts)
@@ -195,6 +195,7 @@ def index():
         list.append(ppp)
         print(list[i].dt)
         i = i + 1
+        list.reverse()
     print(len(list))
 
     error = 'You are not logged in'
@@ -211,7 +212,7 @@ class RegisterForm(Form):
     username = StringField('Username', [validators.Length(min=4, max=50)])
     email = EmailField('Email', [validators.Length(min=1, max=50)])
     password = PasswordField('Password', [
-        validators.DataRequired(),
+        validators.Length(min=5,max=10),
         validators.EqualTo('confirm', message='Passwords do not match')
     ])
     confirm = PasswordField('Confirm Password')
