@@ -10,15 +10,24 @@
 
             if(x.length>0 && y.length>0)
             {
+                var xx,yy;
+                var n=x.toLocaleString(y);
+                xx=y;
+                yy=x;
+                if(n>=1)
+                {
+                    xx=x;
+                    yy=y;
+                }
                 cy.add([
-                    { group: "edges", data: { id: x+"#"+y, source: x, target: y}}
+                    { group: "edges", data: { id: xx+"#"+yy, source: xx, target: yy}}
                 ])
             }
 
         };
         document.getElementById("nodelist").onclick=function () {
           var xx=document.getElementById("new_node").value;
-          
+
            var xxx=(llp)%300+400;
             var yyy=(llp)%200+300;
           if(xx.length>0)

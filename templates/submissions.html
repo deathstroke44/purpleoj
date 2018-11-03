@@ -1,6 +1,6 @@
 {% block head %}
 {% endblock head %}
-
+{% extends 'index.html' %}
 {% block content %}
     <head>
         <meta http-equiv="x-ua-compatible" content="IE-edge">
@@ -17,16 +17,10 @@
     {
         background-color: #1b6d85;
     }
-    body
-    {
-        padding: 3%;
-        padding-top: 5%;
 
-    }
 </style>
 <body>
 
-{% include 'layout.html' %}
 <p><font size="12"> <b><i>Submissions</i></b></font></p>
 
 <hr>
@@ -98,7 +92,9 @@
 
     $('#mydata').dataTable()
 </script>
-
+ <script>
+       highlight("subs");
+   </script>
 
 </body>
 {% endblock content %}

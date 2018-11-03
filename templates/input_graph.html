@@ -3,12 +3,21 @@
 {%  extends 'index.html' %}
 {% block content %}
     <body>
+    <br>
+    <h3><strong>Input Graph</strong></h3>
+    <hr>
+    <br>
     <main role="main" class="container">
     {%  from  "includes/_formhelpers.html" import render_field %}
         <div class="row mt-5">
-            <div class="col-md-3"></div>
-        <div class="col-md-3">
+            <div class="col-md-2"></div>
+        <div class="col-md-8">
             <form method="post" action="">
+                <select name="choice" id="choice">
+                    <option value="Directed">Directed Graph</option>
+                    <option value="Undirected">Undirected Graph</option>
+                </select>
+
                 <div class="form-group">
                     {{ render_field(form.nodes_cnt, class_="form-control", id="he")}}
                 </div>
@@ -25,5 +34,8 @@
             </form>
         </div>
     </main>
+     <script>
+       highlight("graph");
+   </script>
     </body>
 {%  endblock content %}

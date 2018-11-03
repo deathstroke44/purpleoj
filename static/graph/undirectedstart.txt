@@ -3,6 +3,7 @@
 {%  extends 'index.html' %}
 {% block content %}
 <head>
+    <title>Tutorial 1: Getting Started</title>
     <style>
         #cy {
 
@@ -67,9 +68,7 @@
         'width': 3,
         'line-color': '#000000',
         'target-arrow-color': '#000000',
-        'target-arrow-shape': 'diamond', // there are far more options for this property here: http://js.cytoscape.org/#style/edge-arrow
-        'curve-style': 'bezier',
-        'arrow_shape':'triangle',
+
     }
     }],
     layout: {
