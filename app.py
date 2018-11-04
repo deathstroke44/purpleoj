@@ -1129,19 +1129,32 @@ def ranklist(contestID):
         contestant_start_date=cont['Start Date']
         contestant_start_time=cont['Start Time']
     print(problem_cnt)
-    total_problem=problem_subname_generator(problem_cnt)
+    total_problem=problem_subname_generator(problem_cnt,submission.find({'Contest Id':contestID}))
 
     for eachcontestant in contestant_wise_submission:
         Total_contestant.append(contestant_wise_submission_formatter(eachcontestant,total_problem,contestant_start_date,contestant_start_time))
 
     return render_template('ranklist.html',total_problem=total_problem,Total_contestant=Total_contestant)
 
-def problem_subname_generator(problem_cnt):
+def problem_subname_generator(problem_cnt,all_submission):
     total=[]
     for i in range(0,problem_cnt):
         total.append(forward_letter('A',i))
-    print(total)
-    return total
+    total_with_cnt=[]
+    submission = []
+    for each in all_submission:
+        submission.append(each)
+    for eachproblem in total:
+        cnt=0
+        ac_cnt=0
+        for each in submission:
+            if each['Problem Number']==eachproblem:
+                cnt+=1
+                if each['Status']=='AC':
+                    ac_cnt+=1
+            print(eachproblem)
+        total_with_cnt.append({'problem_name':eachproblem, 'ac_cnt':ac_cnt,'total_cnt':cnt})
+    return total_with_cnt
 
 def submission_formatter(submission,contestID):
     contestant_wise_submission=[]
@@ -1168,13 +1181,17 @@ def contestant_wise_submission_formatter(submissions,total_problem,contest_start
 
         each_prboblem_sub=[]
         for each in submission:
-            if each['Problem Number']==eachproblem:
+            if each['Problem Number']==eachproblem['problem_name']:
                 each_prboblem_sub.append(each)
 
         status="NS"
         submission_time=0
         cnt=0
         execution_time=0
+        all_submissions=[]
+        for eachsub in each_prboblem_sub:
+            all_submissions.append({'Status':eachsub['Status'], 'Submission_time':eachsub['Submission Time']})
+
         for eachsub in each_prboblem_sub:
             name=eachsub['User Id']
             if eachsub['Status'] =='AC':
@@ -1190,9 +1207,10 @@ def contestant_wise_submission_formatter(submissions,total_problem,contest_start
 
         if submission_time!=0:
             dif=get_datetime_to_sec(submission_time,contest_start_date,contest_start_time)
+            penalty+=dif/60
 
-        submission_history.append({'name': eachproblem, 'status':status , 'total_submission': cnt})
-    contestant = {'name': name, 'acc': acc, 'penalty': int(dif+penalty), 'submission_history': submission_history}
+        submission_history.append({'name': eachproblem['problem_name'], 'status':status , 'total_submission': cnt ,'all_submissions':all_submissions})
+    contestant = {'name': name, 'acc': acc, 'penalty': int(penalty), 'submission_history': submission_history}
     return contestant
 
 def get_datetime_to_sec(submission_time,contest_start_date,contest_start_time):

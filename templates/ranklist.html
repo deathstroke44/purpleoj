@@ -4,9 +4,11 @@
 
 {% block content %}
     <head>
-        <meta http-equiv="x-ua-compatible" content="IE-edge">
+    <meta charset="UTF-8">
         <meta name="viewport" content="width-device-width, initial-scale=1">
-        <link href="/static/For%20Table/dataTables.bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </head>
 <style>
     #loll
@@ -49,8 +51,8 @@
                 <th>Contestant Name</th>
                 <th>Solved</th>
                 <th>Penalty</th>
-                {% for problem_name in total_problem %}
-                    <th style="padding-left: 60px">{{ problem_name }}</th>
+                {% for problem in total_problem %}
+                    <th style="padding-left: 40px">{{ problem.problem_name }}({{ problem.ac_cnt }}/{{ problem.total_cnt }})</th>
                 {% endfor %}
             </tr>
     </thead>
@@ -75,20 +77,22 @@
             </td>
             {% for eachprblm in contestant.submission_history %}
                 {% if eachprblm.status=='AC' %}
-                    <td align="center" bgcolor="#7fff00">
+                    <td data-target="#pop_up{{ contestant.name }}{{ eachprblm.name }}" data-toggle="modal" align="center" bgcolor="#7fff00">
                         {{ eachprblm.status }}({{ eachprblm.total_submission }})
                     </td>
-
                 {% elif eachprblm.status=='WA' %}
-                    <td align="center" bgcolor="red">
+                    <td data-target="#pop_up{{ contestant.name }}{{ eachprblm.name }}" data-toggle="modal" align="center" bgcolor="red">
                         {{ eachprblm.status }}({{ eachprblm.total_submission }})
                     </td>
                 {% elif eachprblm.status=='TLE' %}
-                    <td align="center" bgcolor="aqua">
+                    <td data-target="#pop_up{{ contestant.name }}{{ eachprblm.name }}" data-toggle="modal" align="center" bgcolor="#9932cc">
+                        {{ eachprblm.status }}({{ eachprblm.total_submission }})                  </td>
+                {% elif eachprblm.status=='RTE' %}
+                    <td data-target="#pop_up{{ contestant.name }}{{ eachprblm.name }}" data-toggle="modal" align="center" bgcolor="#6495ed">
                         {{ eachprblm.status }}({{ eachprblm.total_submission }})
                     </td>
-                {% elif eachprblm.status=='RTE' %}
-                    <td align="center" bgcolor="blue">
+                {% elif eachprblm.status=='MLE' %}
+                    <td data-target="#pop_up{{ contestant.name }}{{ eachprblm.name }}" data-toggle="modal" align="center" bgcolor="#b8860b">
                         {{ eachprblm.status }}({{ eachprblm.total_submission }})
                     </td>
                 {% elif eachprblm.status=='NS' %}
@@ -101,14 +105,64 @@
                     </td>
                 {% endif %}
 
+                <div class="modal" id="pop_up{{ contestant.name }}{{ eachprblm.name }}">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h2 class="modal-title">Submissions for problem {{ eachprblm.name }}</h2>
+                    <button class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+
+                    {% for eachsub in eachprblm.all_submissions %}
+                        <div>
+                            {% if eachsub.Status=='AC' %}
+                    <b style="color:#7fff00">
+                        {{eachsub.Status    }}    {{ eachsub.Submission_time }}
+                    </b>
+                {% elif eachsub.Status=='WA' %}
+                    <b style=" color:red">
+                        {{eachsub.Status}}    {{ eachsub.Submission_time }}
+                    </b>
+                {% elif eachsub.Status=='TLE' %}
+                    <b style="color:#9932cc">
+                        {{eachsub.Status}}    {{ eachsub.Submission_time }}
+                    </b>
+                {% elif eachsub.Status=='RTE' %}
+                    <b style=" color:#6495ed">
+                        {{eachsub.Status}}    {{ eachsub.Submission_time }}
+                    </b>
+                {% elif eachsub.Status=='MLE' %}
+                    <b style="color:#b8860b">
+                        {{eachsub.Status}}    {{ eachsub.Submission_time }}
+                    </b>
+                {% else%}
+                    <b>
+                        {{eachsub.Status}}    {{ eachsub.Submission_time }}
+                    </b>
+                {% endif %}
+                        </div>
+                    {% endfor %}
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" class="close" data-dismiss="modal">close</button>
+                </div>
+            </div>
+            </div>
+    </div>
+
             {% endfor %}
 
         </tr>
+
     {% endfor %}
     </tbody>
 
     </table>
+
 </div>
+
 <script>
 function sortTable() {
   var table, rows, switching, i, x, y, shouldSwitch;
@@ -154,14 +208,6 @@ function sortTable() {
   }
 }
 </script>
-<script src="/static/For%20Table/jquery.js"></script>
-<script src="/static/For%20Table/jquery.dataTables.min.js"></script>
-<script src="/static/For%20Table/dataTables.bootstrap4.min.js"></script>
-<script>
-
-    $('#mydata').dataTable()
-</script>
-
 
 </body>
 
