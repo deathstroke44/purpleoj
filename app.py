@@ -16,7 +16,6 @@ from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
 
 from forms import IssueForm, CommentForm
-from newsScrapping import HackerRankMainPage, CodeForces, atcoder, topcoder, thecrazyprogrammer, LoadSoup
 
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/static/uploads'
@@ -383,23 +382,14 @@ def postab():
         return redirect(url_for('login'))
     return render_template('problem_list.html', obj=list)
 
-
+#*******************************************
+#   ASIF AHMED*******************************
 @app.route('/profile')
 def profile():
+    from profile import profileCall
     if not ('username' in session):
-        return redirect(url_for('login'))
-
-    class User:
-        def __init__(self, name, username, mail):
-            self.name = name
-            self.username = username
-            self.mail = mail
-
-    user_name = session['username']
-    users = mongo.db.userlist
-    exiting_user = users.find_one({'USERNAME': user_name})
-    user = User(exiting_user['NAMES'], exiting_user['USERNAME'], exiting_user['MAIL'])
-    return render_template('profile.html', user=user)
+        return redirect(url_for("login"))
+    return render_template('profile.html', user=profileCall())
 
 
 @app.route('/posts')
@@ -407,242 +397,38 @@ def posts():
     if not ('username' in session):
         return redirect(url_for('login'))
 
-    class post_object:
-        def __init__(self, title, text):
-            self.title = title
-            self.text = text
-
-    post_array = []
-    user_name = session['username']
-    posts = mongo.db.posts.find({})
-    for post in posts:
-        if post['USER'] == user_name:
-            post_array.append(post_object(post['TITLE'], post['TEXT']))
-
-    return render_template('user_post.html', post_array=post_array)
+    from profile import profilePostCall
+    return render_template('user_post.html', post_array=profilePostCall())
 
 
 @app.route('/issues', methods=['GET', 'POST'])
-def issues(existing_post=None):
-
-    class Issue:
-        def __init__(self, id, username, title ,problemID,problemName,text,date):
-            self.id = id
-            self.username = username
-            self.title = title
-            self.problemID = problemID
-            self.text = text
-            self.problemName = problemName
-            self.date = date
-
-    form = IssueForm()
-    if not ('username' in session):
-        return redirect(url_for('login'))
-
-    problemsdb = mongo.db.problems
-    existing_posts = problemsdb.find({}).sort('name')
-    i = 0;
-    list = []
-    problem_id_array = []
-    pair = (i,'None')
-    list.append(pair)
-    problem_id_array.append('CodeFlask')
-    for existing_post in existing_posts:
-        i = i + 1
-        pair1 = (i, existing_post['name'])
-        list.append(pair1)
-        problem_id_array.append(existing_post['myid'])
-
-    form.problemName.choices = list
-
-    if form.validate_on_submit():
-        title = form.title.data
-        problemName = form.problemName.data
-        problemID = problem_id_array[problemName]
-        print(problemID)
-        text = form.text.data
-        user_name = session['username']
-        issueID = uuid.uuid1().__str__()
-
-        issue = mongo.db.Issues
-        issue.insert({'IssueID': issueID,
-                      'UserName': user_name,
-                      'Title': title,
-                      'ProblemID': problemID,
-                      'text': text,
-                      'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M")})
-        return redirect(url_for('issues'))
-
-    issue_array = []
-    i = mongo.db.Issues
-    issuelist = i.find({}).sort('date',-1)
-    for issue in issuelist:
-        if issue['ProblemID'] != 'CodeFlask':
-            pb = problemsdb.find_one({'myid': issue['ProblemID']})
-            issue_array.append(Issue(issue['IssueID'],issue['UserName'],issue['Title'],issue['ProblemID'],pb['name'],issue['text'],issue['date']))
-        else:
-            issue_array.append(
-                Issue(issue['IssueID'], issue['UserName'], issue['Title'], issue['ProblemID'], 'CodeFlask',
-                      issue['text'], issue['date']))
-
-    print(issue_array[0].title)
+def issues():
+    from issue import issueCall
+    form,issue_array = issueCall()
     return render_template('issues.html', form=form,issue_array=issue_array)
 
 
 @app.route('/issues/<id>',methods=['GET', 'POST'])
 def singleIssue(id):
-    class Issue:
-        def __init__(self, id, username, title ,problemID,problemName,text,date):
-            self.id = id
-            self.username = username
-            self.title = title
-            self.problemID = problemID
-            self.text = text
-            self.problemName = problemName
-            self.date = date
-
-    class Comment:
-        def __init__(self, id, username, issue ,problemID,text,date):
-            self.id = id
-            self.username = username
-            self.issue = issue
-            self.problemID = problemID
-            self.text = text
-            self.date = date
-
-    form = CommentForm()
-    if not ('username' in session):
-        return redirect(url_for('login'))
-
-    if form.validate_on_submit():
-        text = form.text.data
-        commentID = uuid.uuid1().__str__()
-        issueID = id
-        problemID = mongo.db.Issues.find_one({'IssueID':issueID})['ProblemID']
-        user_name = session['username']
-        date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-
-        comments = mongo.db.Comment
-        comments.insert({'ID':commentID,
-                        'ProblemID':problemID,
-                        'IssueID':issueID,
-                        'UserName':user_name,
-                        'Date':date,
-                         'Text':text})
-        return redirect(url_for('singleIssue', id=issueID))
-
-    issue = mongo.db.Issues.find_one({'IssueID':id})
-    problemsdb = mongo.db.problems
-    problemName = ''
-    if issue['ProblemID'] != 'CodeFlask':
-        problemName = problemsdb.find_one({'myid': issue['ProblemID']})['name']
-    else:
-        problemName = 'CodeFlask'
-
-    comment_array=[]
-    comments = mongo.db.Comment.find({}).sort("Date",-1)
-    for comment in comments:
-        if id == comment['IssueID']:
-            comment_array.append(Comment(comment['ID'],
-                                         comment['UserName'],
-                                         comment['IssueID'],
-                                         comment['ProblemID'],
-                                         comment['Text'],
-                                         comment['Date']))
-
-    return render_template('issue_page.html',form=form,comment_array=comment_array,
-                           issue=Issue(issue['IssueID'],issue['UserName'],issue['Title'],
-                                       issue['ProblemID'],problemName,issue['text'],issue['date'].split(" ")[0]))
+    from issue import singleIssueCall
+    form,comment_array,issue = singleIssueCall(id)
+    return render_template('issue_page.html',form=form,comment_array=comment_array,issue=issue)
 
 
 @app.route('/news')
 def news():
-    class Article:
-        def __init__(self, title_filename, content_filename):
-            self.title_filename = title_filename
-            self.content_filename = content_filename
-
-    article_array = []
-    #********
-    # LoadRawHtmlFiles()  #Has to call this at a certain time of the day
-    #******
-
-    soup0, soup1, soup2, soup3, soup4, soup5, soup6 = LoadSoup()
-
-    atcoderMain = soup0.find_all('div', class_='panel panel-default')
-    atcoderPage2 = soup1.find_all('div', class_='panel panel-default')
-    CodeForceMain = soup2.find_all('div', class_='topic')
-    CodeForcePage2 = soup3.find_all('div', class_='topic')
-    HackerRankMain = soup4.find_all('div', class_='blog-content')
-    TopCoderMain = soup5.find_all('div', class_='story-content')
-    thecrazyprogrammerMain = soup6.find_all('article')
-
-    index = 0
-    for i in HackerRankMain:
-        file_name_title ,file_name_content= HackerRankMainPage(HackerRankMain[index])
-        article_array.append(Article(file_name_title, file_name_content))
-        index=index+1
-
-    for i in CodeForceMain:
-        file_name_title, file_name_content = CodeForces(i)
-        article_array.append(Article(file_name_title,file_name_content))
-
-    for i in TopCoderMain:
-        file_name_title,file_name_content = topcoder(i)
-        article_array.append(Article(file_name_title, file_name_content))
-
-    for i in CodeForcePage2:
-        file_name_title, file_name_content = CodeForces(i)
-        article_array.append(Article(file_name_title, file_name_content))
-
-    for i in atcoderMain:
-        file_name_title, file_name_content = atcoder(i)
-        article_array.append(Article(file_name_title, file_name_content))
-
-    for i in thecrazyprogrammerMain:
-        file_name_title,file_name_content = thecrazyprogrammer(i)
-        article_array.append(Article(file_name_title, file_name_content))
-
-    import random
-    random.shuffle(article_array)
-    print(article_array.__len__())
-    return render_template('news.html', article_array=article_array)
+    from newsScrapping import newsCall
+    return render_template('news.html',article_array=newsCall())
 
 
 @app.route('/submission')
 def submissions():
     if not ('username' in session):
         return redirect(url_for('login'))
+    from profile import profileSubmissionCall
+    return render_template('user_submission.html', submission_array=profileSubmissionCall())
 
-    class problem_object:
-        def __init__(self, name, id):
-            self.name = name
-            self.id = id
-
-    class submission_object:
-        def __init__(self, pID, date, who, lan, verdict, time):
-            self.pID = pID
-            self.date = date
-            self.who = who
-            self.lan = lan
-            self.verdict = verdict
-            self.time = time
-
-    submission_array = []
-    user_name = session['username']
-    submissions = mongo.db.submissions.find({})
-    for submission in submissions:
-        if submission['User Id'] == user_name:
-            problem_set = mongo.db.problems.find_one({'myid': submission['Problem Id']})
-            submission_array.append(submission_object(problem_object(problem_set['name'], problem_set['myid']),
-                                                      submission['Submission Time'],
-                                                      submission['User Id'], submission['Language'],
-                                                      submission['Status'], submission['Execution Time']))
-
-    print(submission_array)
-    return render_template('user_submission.html', submission_array=submission_array)
-
-
+#   ASIF AHMED*******************************
 # ***************************************************************************
 dir_path = os.path.dirname(os.path.realpath(__file__))
 languages = ["Java", "C", "Python"]

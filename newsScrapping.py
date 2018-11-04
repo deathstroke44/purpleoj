@@ -1,171 +1,95 @@
-import uuid
 
 import requests
 from bs4 import BeautifulSoup
+from newsStrategy import LoadCodeForceStrategy, article_array, LoadHackerRankStrategy, LoadCrazyProgrammerStrategy,LoadTopCoderStrategy,LoadAtCoderStrategy
 
 
-def HackerRankSingleArticle(link):
-    source = requests.get(link).text
-    soup = BeautifulSoup(source, 'lxml')
-    FullArticle = soup.find('div', class_='blog-dtl-content')
-    title = FullArticle.find('h1')
-
-    x = str(FullArticle)
-    x1 = str(FullArticle).find("<h1>")
-    x2 = str(FullArticle).find("</h1>")
-
-    content = x[:x1] + x[x2 + 5:]
-
-    uid1 = uuid.uuid1()
-    file_name_title = 'static/news/' + str(uid1) + '.html'
-    f = open(file_name_title, 'w', encoding='utf8')
-    f.write(str(title).replace('h1', 'h4'))
-    f.close()
-
-    uid2 = uuid.uuid1()
-    file_name_content = 'static/news/' + str(uid2) + '.html'
-    f = open(file_name_content, 'w', encoding='utf8')
-    f.write(str(content))
-    f.close()
-
-    return file_name_title, file_name_content
+codeforce = LoadCodeForceStrategy()
+hackerrank = LoadHackerRankStrategy()
+crazyprogrammer = LoadCrazyProgrammerStrategy()
+topcoder = LoadTopCoderStrategy()
+atcoder = LoadAtCoderStrategy()
 
 
-def HackerRankMainPage(soup):
-    title = soup.find('h3')
-    x = str(title)
-    x1 = str(title).find("</h3>")
+class NewsMain(object):
+    def __init__(self, load_strategy):
+        self._load_strategy = load_strategy
 
-    title2 = x[:x1] + '<sub>  HackerRank</sub>' + x[x1:]
-    uid1 = uuid.uuid1()
-    file_name_title = 'static/news/' + str(uid1) + '.html'
-    f = open(file_name_title, 'w', encoding='utf8')
-    f.write(str(title2).replace('h3', 'h4'))
-    f.close()
-
-    content = soup.find('p')
-    uid2 = uuid.uuid1()
-    file_name_content = 'static/news/' + str(uid2) + '.html'
-    f = open(file_name_content, 'w', encoding='utf8')
-    f.write(str(content))
-    f.close()
-
-    return file_name_title, file_name_content
+    def Load(self, soup):
+        self._load_strategy.Load(soup)
 
 
-def CodeForces(soup):
-    title = soup.find('div', class_='title')
-    string = str(title)
-    title = string.replace(title.a['href'], 'http://codeforces.com/' + title.a['href'])
-    content = soup.find('div', class_='ttypography')
-    content2 = content
-
-    x = str(title)
-    x1 = str(title).find("</div>")
-
-    title2 = x[:x1] + '<sub>  Codeforces</sub>' + x[x1:]
-
-    uid1 = uuid.uuid1()
-    file_name_title = 'static/news/' + str(uid1) + '.html'
-    f = open(file_name_title, 'a', encoding='utf8')
-    f.write(str(title2)
-            .replace('<p>', '')
-            .replace('</p>', '')
-            .replace('div', 'h4'))
-    f.close()
-
-    for a in content.find_all('img'):
-        if a:
-            imageSource = a['src']
-            st = 'http'
-            if imageSource.find(st) == -1:
-                content = str(content).replace(imageSource, 'http://codeforces.com/' + imageSource)
-
-    for link in content2.find_all('a'):
-        if link:
-            linkSource = link['href']
-            st = 'http'
-            if linkSource.find(st) == -1:
-                content = str(content).replace(linkSource, 'http://codeforces.com/' + linkSource)
-
-    uid2 = uuid.uuid1()
-    file_name_content = 'static/news/' + str(uid2) + '.html'
-    f = open(file_name_content, 'a', encoding='utf8')
-    f.write(str(content))
-    f.close()
-
-    return file_name_title, file_name_content
+class CodeFroce(NewsMain):
+    def __init__(self):
+        super(CodeFroce, self).__init__(codeforce)
 
 
-def atcoder(soup):
-    FullArticle = soup.find_all('div')
-    title = FullArticle[0].h3
-    string = str(title)
-    title = string.replace(title.a['href'], 'https://atcoder.jp' + title.a['href']).replace('class="panel-title"', '')
-    content = FullArticle[1]
-    # .replace("[", "").replace("]", " ")
-
-    uid1 = uuid.uuid1()
-    file_name_title = 'static/news/' + str(uid1) + '.html'
-    f = open(file_name_title, 'a', encoding='utf8')
-    f.write(str(title).replace('h3', 'h4'))
-    f.close()
-
-    uid2 = uuid.uuid1()
-    file_name_content = 'static/news/' + str(uid2) + '.html'
-    f = open(file_name_content, 'a', encoding='utf8')
-    f.write(str(content).replace('class="panel-body blog-post"', ''))
-    f.close()
-
-    return file_name_title, file_name_content
+class HackerRank(NewsMain):
+    def __init__(self):
+        super(HackerRank, self).__init__(hackerrank)
 
 
-def topcoder(soup):
-    title = soup.find('h3')
-    content = soup.find('div')
-
-    x = str(title)
-    x1 = str(title).find("</h3>")
-    title2 = x[:x1] + '<sub>  topCoder</sub>' + x[x1:]
-
-    uid1 = uuid.uuid1()
-    file_name_title = 'static/news/' + str(uid1) + '.html'
-    f = open(file_name_title, 'a', encoding='utf8')
-    f.write(str(title2)
-            .replace('h3', 'h4'))
-    f.close()
-
-    uid2 = uuid.uuid1()
-    file_name_content = 'static/news/' + str(uid2) + '.html'
-    f = open(file_name_content, 'a', encoding='utf8')
-    f.write(str(content))
-    f.close()
-
-    return file_name_title, file_name_content
+class CrazyProgrammer(NewsMain):
+    def __init__(self):
+        super(CrazyProgrammer, self).__init__(crazyprogrammer)
 
 
-def thecrazyprogrammer(soup):
-    title = soup.find('h2')
-    content = soup.find('div')
+class TopCoder(NewsMain):
+    def __init__(self):
+        super(TopCoder, self).__init__(topcoder)
 
-    x = str(title)
-    x1 = str(title).find("</h2>")
-    title2 = x[:x1] + '<sub>  TheCrazyProgrammer</sub>' + x[x1:]
 
-    uid1 = uuid.uuid1()
-    file_name_title = 'static/news/' + str(uid1) + '.html'
-    f = open(file_name_title, 'a', encoding='utf8')
-    f.write(str(title2)
-            .replace('h2', 'h4'))
-    f.close()
+class AtCoder(NewsMain):
+    def __init__(self):
+        super(AtCoder, self).__init__(atcoder)
 
-    uid2 = uuid.uuid1()
-    file_name_content = 'static/news/' + str(uid2) + '.html'
-    f = open(file_name_content, 'a', encoding='utf8')
-    f.write(str(content))
-    f.close()
 
-    return file_name_title, file_name_content
+def newsCall():
+    # ********
+    # from newsScrapping import LoadRawHtmlFiles
+    # LoadRawHtmlFiles()  #Has to call this at a certain time of the day
+    # ******
+
+    soup0, soup1, soup2, soup3, soup4, soup5, soup6 = LoadSoup()
+
+    atcoderMain = soup0.find_all('div', class_='panel panel-default')
+    atcoderPage2 = soup1.find_all('div', class_='panel panel-default')
+    CodeForceMain = soup2.find_all('div', class_='topic')
+    CodeForcePage2 = soup3.find_all('div', class_='topic')
+    HackerRankMain = soup4.find_all('div', class_='blog-content')
+    TopCoderMain = soup5.find_all('div', class_='story-content')
+    thecrazyprogrammerMain = soup6.find_all('article')
+
+    index = 0
+    for i in CodeForceMain:
+        instance = CodeFroce()
+        instance.Load(i)
+
+    for i in HackerRankMain:
+        instance = HackerRank()
+        instance.Load(i)
+        index = index + 1
+
+    for i in TopCoderMain:
+        instance = TopCoder()
+        instance.Load(i)
+
+    for i in CodeForcePage2:
+        instance = CodeFroce()
+        instance.Load(i)
+
+    for i in thecrazyprogrammerMain:
+        instance = CrazyProgrammer()
+        instance.Load(i)
+
+    # for i in atcoderMain:
+    #     instance = AtCoder()
+    #     instance.Load(i)
+
+    # import random
+    # random.shuffle(article_array)
+    # print(article_array.__len__())
+    return article_array
 
 
 def LoadSoup():
@@ -190,7 +114,7 @@ def LoadSoup():
     f = open('static/WebsiteData/thecrazyprogrammer.html', 'r', encoding='utf-8')
     soup6 = BeautifulSoup(f.read(), 'lxml')
 
-    return  soup0,soup1,soup2,soup3,soup4,soup5,soup6
+    return soup0, soup1, soup2, soup3, soup4, soup5, soup6
 
 
 def LoadRawHtmlFiles():
