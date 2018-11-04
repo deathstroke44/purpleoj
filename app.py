@@ -992,6 +992,7 @@ def editor(problemId):
     print("not for contest")
     problemsDatabase=mongo.db.problems
     submissionDatabase=mongo.db.submissions
+    problemsdb = ProblemsDatabase()
     if request.method == 'POST':
         if "run" in request.form:
             template = runCode(request.form)
@@ -1000,6 +1001,7 @@ def editor(problemId):
 
         elif "submit" in request.form:
             submissionInfo=submitCode(request.form,problemId)
+            problemsdb.incrementSumissionCount(problemsDatabase, problemId)
             print(submissionInfo)
             problemTimeLimit=problemsDatabase.find_one({"myid":problemId}).get("time_limit")
             verdict=dict()
@@ -1015,6 +1017,7 @@ def editor(problemId):
                 else:
                     if submissionInfo.get("Result Verdict")=="Passed":
                         verdict["Status"]="AC"
+                        problemsdb.incrementSumissionCount(problemsDatabase, problemId)
                     else:
                         verdict["Status"]="WA"
             verdict["Execution Time"]=submissionInfo.get("Execution Time")
@@ -1033,6 +1036,7 @@ def editor(problemId):
 def contestEditor(problemId, contestId):
     problemsDatabase=mongo.db.problems
     submissionDatabase=mongo.db.submissions
+    problemsdb=ProblemsDatabase()
     print("for contest")
     if request.method == 'POST':
         if "run" in request.form:
@@ -1042,6 +1046,7 @@ def contestEditor(problemId, contestId):
 
         elif "submit" in request.form:
             submissionInfo=submitCode(request.form,problemId)
+            problemsdb.incrementSumissionCount(problemsDatabase,problemId)
             print(submissionInfo)
             problemTimeLimit=problemsDatabase.find_one({"myid":problemId}).get("time_limit")
             verdict=dict()
@@ -1057,6 +1062,7 @@ def contestEditor(problemId, contestId):
                 else:
                     if submissionInfo.get("Result Verdict")=="Passed":
                         verdict["Status"]="AC"
+                        problemsdb.incrementAcSumissionCount(problemsDatabase, problemId)
                     else:
                         verdict["Status"]="WA"
             verdict["Execution Time"]=submissionInfo.get("Execution Time")
@@ -1552,7 +1558,13 @@ def graphbuild():
             return render_template(idd + '.html')
 
     return render_template('input_graph.html',form=form)
-
+from ProblemsDatabase import ProblemsDatabase
+@app.route('/test')
+def test():
+    problemsDatabase=ProblemsDatabase()
+    problemsDatabase.incrementSumissionCount(mongo.db.problems,'ceed47bd-95a0-4297-bc75-6b46cc2b54c7')
+    print("done")
+    return "done"
 if __name__ == '__main__':
     app.secret_key = 'SUPER SECRET KEY'
     app.config['SESSION_TYPE'] = 'filesystem'
