@@ -19,6 +19,7 @@
     <thead>
             <tr>
                 <th>Problem</th>
+                <th>Submission Id</th>
                 <th>When</th>
                 <th>Who</th>
                 <th>Lan</th>
@@ -34,6 +35,11 @@
                     <td>
                         <a href="about/{{problem.pID.id}}">
                         {{ problem.pID.name }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="submissions/{{problem.sID}}">
+                        {{ problem.sID }}
                         </a>
                     </td>
                     <td>
