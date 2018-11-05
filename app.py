@@ -375,26 +375,26 @@ def submissions():
 # ***************************************************************************
 dir_path = os.path.dirname(os.path.realpath(__file__))
 languages = ["Java", "C", "Python"]
-CODEMIRROR_LANGUAGES = ['python']
-
-CODEMIRROR_THEME = 'base16-dark'
-
-CODEMIRROR_ADDONS = (
-
-    ('display', 'placeholder'),
-    ('hint', 'anyword-hint'),
-    ('hint', 'show-hint'),
-
-)
-app.config.from_object(__name__)
-codemirror = CodeMirror(app)
-class MyForm(FlaskForm):
+# CODEMIRROR_LANGUAGES = ['python','c']
+#
+# CODEMIRROR_THEME = 'base16-dark'
+#
+# CODEMIRROR_ADDONS = (
+#
+#     ('display', 'placeholder'),
+#     ('hint', 'anyword-hint'),
+#     ('hint', 'show-hint'),
+#
+# )
+# app.config.from_object(__name__)
+# codemirror = CodeMirror(app)
+class CodemirrorForm(FlaskForm):
     source_code = CodeMirrorField(language='python', config={'lineNumbers': 'true'})
     submit = SubmitField('Submit')
     inputs = TextAreaField(u'inputs')
 
 def runPython(auxForm):
-    form = MyForm(auxForm)
+    form = CodemirrorForm(auxForm)
     text = form.source_code.data
     now=time.time()
     then=time.time()
@@ -438,7 +438,7 @@ def runPython(auxForm):
 
 
 def runJava(auxForm):
-    form = MyForm(auxForm)
+    form = CodemirrorForm(auxForm)
     text = form.source_code.data
     now = time.time()
     then = time.time()
@@ -502,7 +502,7 @@ def runJava(auxForm):
 
 
 def runC(auxForm):
-    form = MyForm(auxForm)
+    form = CodemirrorForm(auxForm)
     text = form.source_code.data
     now = time.time()
     then = time.time()
@@ -643,7 +643,7 @@ def submitCode(auxform,problemId):
     submissionInfo=dict()
     submissionInfo["Language"]=selectedLanguage
     submissionInfo["Submission Time"]=datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-    form = MyForm(auxform)
+    form = CodemirrorForm(auxform)
     text = form.source_code.data.replace("\t","    ")
     submissionInfo["Code"] = text
     now=time.time()
@@ -758,9 +758,9 @@ def editor(problemId):
             print(submissionDatabase.insert(verdict))
             print(verdict)
             cleanup()
-            return render_template('editor.html', form=MyForm(request.form), status=verdict.get("Status"),
+            return render_template('editor.html', form=CodemirrorForm(request.form), status=verdict.get("Status"),
                                    languages=languages,check_submissions="Check Submissions")
-    return render_template('editor.html', form=MyForm(request.form), languages=languages)
+    return render_template('editor.html', form=CodemirrorForm(request.form), languages=languages)
 @app.route('/editor/<contestId>/<problemId>', methods=['GET', 'POST'])
 def contestEditor(problemId, contestId):
     problemsDatabase=mongo.db.problems
@@ -802,9 +802,9 @@ def contestEditor(problemId, contestId):
             verdict["Contest Id"]=contestId
             verdict["Submission Id"]=uuid.uuid4().__str__()
             submissionDatabase.insert(verdict)
-            return render_template('editor.html', form=MyForm(request.form), status=verdict.get("Status"),
+            return render_template('editor.html', form=CodemirrorForm(request.form), status=verdict.get("Status"),
                                    languages=languages, check_submissions="Check Submissions")
-    return render_template('editor.html', form=MyForm(request.form), languages=languages,check_submissions="Check Submissions")
+    return render_template('editor.html', form=CodemirrorForm(request.form), languages=languages,check_submissions="Check Submissions")
 
 
 
@@ -859,8 +859,9 @@ def onlineide():
         if "run" in request.form:
             template = runCode(request.form)
             cleanup()
+            print(CodemirrorForm(request.form).source_code.data)
             return template
-    return render_template('editor.html', form=MyForm(request.form), languages=languages)
+    return render_template('editor.html', form=CodemirrorForm(request.form), languages=languages)
 
 
 # *****************************************************************************************

@@ -1,6 +1,5 @@
 class AddCheckbox {
 
-
     constructor(mediator, id) {
         this.mediator = mediator;
         this.checkbox = document.querySelector("input[name=" + id + "]");

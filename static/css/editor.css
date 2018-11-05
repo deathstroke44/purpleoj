@@ -1,33 +1,12 @@
-body
-{
-    margin: 0;
-    padding: 0;
-    background: url("login_back.jpeg");
-    background-size: cover;
-    background-position: center;
-    font-family: sans-serif;
-}
-.registerbox
-{
-    width: 50%;
-    height: 720px;
-    background-color: #1d2124;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    box-sizing: border-box;
-    transform: translate(-50%,-50%);
-    padding: 5%;
 
+
+.container{
+    display: flex;
+    padding-bottom: 2%;
 }
-.coderavatar
-{
-    height: 100px;
-    width: 100px;
-    border-radius: 50%;
-    position: absolute;
-    top: -50px;
-    left: calc(50% - 50px);
+.fixed{
+    width: 200px;
 }
-h1   {color: white}
-p    {color: red;}
+.flex-item{
+    flex-grow: 1;
+}
