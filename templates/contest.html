@@ -1,6 +1,9 @@
 {% block head %}
+    <link rel="shortcut icon" href="/static/favicon.ico"/>
     <title> {{ name }} </title>
 {% endblock head %}
+
+{% extends 'index.html' %}
 
 {% block content %}
     <head>
@@ -80,14 +83,15 @@
     {
         background-color: #1b6d85;
     }
-    body
+    {#body#}
+    {#{#}
+    {#    padding: 3%;#}
+    {#    padding-top: 5%;#}
     {
-        padding: 3%;
-        padding-top: 5%;
-    }
+    #}#}
 </style>
 <body>
-{% include 'layout.html' %}
+{#{% include 'layout.html' %}#}
 
 <p><font size="12"> <b><i>{{ name }}</i></b></font></p>
 

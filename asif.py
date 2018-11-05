@@ -31,12 +31,16 @@ def news():
     source2 = requests.get('http://codeforces.com/').text
     source3 = requests.get('http://codeforces.com/page/2').text
     source4 = requests.get('https://csacademy.com/blog/ceoi-2018/').text
+    source5 = requests.get('https://blog.hackerrank.com/full-stack-developer/').text
 
     soup0 = BeautifulSoup(source0, 'lxml')
     soup1 = BeautifulSoup(source1, 'lxml')
     soup2 = BeautifulSoup(source2, 'lxml')
     soup3 = BeautifulSoup(source3, 'lxml')
     soup4 = BeautifulSoup(source4, 'lxml')
+    soup5 = BeautifulSoup(source5, 'lxml')
+
+    print(soup5)
 
     div0 = soup0.find_all('div', class_='panel panel-default')
     div1 = soup1.find_all('div', class_='panel panel-default')

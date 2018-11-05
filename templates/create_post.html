@@ -6,12 +6,9 @@
 <style>
     body
     {
-        padding: 120px;
-        margin: 120px;
         background-size: cover;
         background-position: center;
     }
-    h1   {color: blue;}
     p    {color: red;}
         font-face
         {
@@ -46,11 +43,15 @@
         </script>
     </head>
 <body>
+{% include 'index.html' %}
+<main role="main" class="container">
+   <div class="row mt-5">
+      <div class="col-md-1">
+           </div>
+      <div class="col-md-9">
 
 
-
-{%  include 'layout.html' %}
-<h1 class="lead"><font size="10px"><strong>Create Post</strong></font></h1>
+<h1 class="lead"><font size="5px"><strong>Post Something</strong></font></h1>
 <hr>
 <br>
 <br>
@@ -247,7 +248,9 @@ document.getElementById("rede").onclick=function () {
 <p><input type="submit" class="btn btn-primary" value="Submit"></p>
 </form>
 
-
+</div>
+   </div>
+</main>
 
 </body>
 

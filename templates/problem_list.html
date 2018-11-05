@@ -1,128 +1,115 @@
+
+{% extends 'index.html' %}
 {% block head %}
 {% endblock head %}
-
 {% block content %}
-    <head>
-        <meta http-equiv="x-ua-compatible" content="IE-edge">
-        <meta name="viewport" content="width-device-width, initial-scale=1">
-        <link href="/static/For%20Table/dataTables.bootstrap.min.css" rel="stylesheet">
-    </head>
     <style>
-    .my
-    {
-        margin-left: 5%;
-        margin-right: 5%;
-    }
-    #lol
-    {
-        background-color: #1b6d85;
-    }
-    body
-    {
-        padding: 3%;
-        padding-top: 5%;
+        #lskp
+        {
+            margin-top: 3%;
+        }
+        .lol
+        {
+            margin-left: 15%;
+            margin-right: 15%;
+        }
+        .highlight {
+            background-color: #fff;
+            padding: 1%;
+            shape-rendering: geometricPrecision;
+        }
+    </style>
+ <body>
 
-    }
-</style>
-<body>
+        <div class=lol>
+            <hr>
+            <br>
+            <div id="lskp">
+                <table class="table table-striped table-bordered table-hover" id="mydata">
+                    <thead>
+                        <tr>
+                            <th>Problem Name</th>
+                            <th>Problem Setter</th>
+                            <th>Category</th>
+                            <th>Accepted Submission</th>
+                            <th>Total Submission</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        {% for problem in obj %}
+                        <tr>
+                            <td>
+                                <a href="about/{{problem.id}}">
+                                {{ problem.name }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ problem.setter }}
+                            </td>
+                            <td>
+                                {{ problem.stylee }}
+                            </td>
+                            <td>
+                                {{ problem.acsub }}
+                            </td>
+                            <td>
+                                {{ problem.sub }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <!---   <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                            <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr> -->
+                    </tbody>
+                </table>
+            </div>
 
-{% include 'layout.html' %}
-<p><font size="12"> <b><i>Problem Set</i></b></font></p>
+            <script>
+                highlight("Problem Set");
+            </script>
+            <script src="/static/For%20Table/jquery.js"></script>
+            <script src="/static/For%20Table/jquery.dataTables.min.js"></script>
+            <script src="/static/For%20Table/dataTables.bootstrap4.min.js"></script>
+            <script>
+                $('#mydata').dataTable()
+            </script>
+        </div>
 
-<hr>
-<div class="my">
-
-    <table class="table table-striped table-bordered table-hover" id="mydata">
-
-
-
-    <thead>
-            <tr>
-                <th>Problem Name</th>
-                <th>Problem Setter</th>
-                <th>Category</th>
-                <th>Accepted Submission</th>
-                <th>Total Submission</th>
-
-            </tr>
-    </thead>
-        <tfoot>
-            <tr>
-
-            </tr>
-    </tfoot>
-
-    <tbody>
-    {% for problem in obj %}
-        <tr>
-            <td>
-                <a href="about/{{problem.id}}">
-                {{ problem.name }}
-                </a>
-            </td>
-            <td>
-                {{ problem.setter }}
-            </td>
-            <td>
-                {{ problem.stylee }}
-            </td>
-            <td>
-                {{ problem.acsub }}
-            </td>
-            <td>
-                {{ problem.sub }}
-            </td>
-        </tr>
-    {% endfor %}
-     <!---   <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
-        <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr> -->
-    </tbody>
-
-
-    </table>
-</div>
-<script src="/static/For%20Table/jquery.js"></script>
-<script src="/static/For%20Table/jquery.dataTables.min.js"></script>
-<script src="/static/For%20Table/dataTables.bootstrap4.min.js"></script>
-<script>
-
-    $('#mydata').dataTable()
-</script>
-
-
-</body>
 {% endblock content %}

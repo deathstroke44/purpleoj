@@ -1,48 +1,47 @@
-
 {% block head %}
 {% endblock head %}
-
+{%  extends 'index.html' %}
 {% block content %}
-
-
-    <head>
-        <link rel="stylesheet" type="text/css" href="/static/login.css">
-
-    </head>
-<body>
-
-{%  include 'layout.html' %}
-
-{% if dialogue=='Wrong Password' %}
-    <SCRIPT Language="JavaScript">
-        alert('Wrong Password');
-    </SCRIPT>
-{% endif %}
-{% if dialogue=='No such username exist' %}
-    <SCRIPT Language="JavaScript">
-        alert('No such username exist');
-    </SCRIPT>
-{% endif %}
-{%  from  "includes/_formhelpers.html" import render_field %}
-<div class="lohinbox">
-    <img src="/static/coder_avatar.jpeg" class="coderavatar">
-    <h1 class="lead" align="center" > <font color="white" size="8px"><b>Sign in</b></font></h1>
-<form method="POST" action="">
-
-<div class="form-group" >
-        <font color="white">
-      {{render_field(form.username, class_="form-control")}}
-        </font>
-</div>
-<div class="form-group" >
-    <font color="white">
-      {{render_field(form.password, class_="form-control")}}
-    </font>
-</div>
-<p align="center"><input type="submit" class="btn btn-primary" value="Submit"></p>
-</form>
-</div>
-</body>
-
+<head>
+   <link rel="stylesheet" type="text/css" href="/static/login.css">
+</head>
+   <main role="main" class="container">
+      <div class="row">
+           <div class="col-md-2">
+           </div>
+         <div class="col-md-10">
+            {% if dialogue=='Wrong Password' %}
+            <SCRIPT Language="JavaScript">
+               alert('Wrong Password');
+            </SCRIPT>
+            {% endif %}
+            {% if dialogue=='No such username exist' %}
+            <SCRIPT Language="JavaScript">
+               alert('No such username exist');
+            </SCRIPT>
+            {% endif %}
+            {%  from  "includes/_formhelpers.html" import render_field %}
+            <div class="lohinbox">
+               <img src="/static/coder_avatar.jpeg" class="coderavatar">
+               <h1 class="lead" align="center" > <font color="white" size="8px"><b>Sign in</b></font></h1>
+               <form method="POST" action="">
+                  <div class="form-group" >
+                     <font color="white">
+                     {{render_field(form.username, class_="form-control")}}
+                     </font>
+                  </div>
+                  <div class="form-group" >
+                     <font color="white">
+                     {{render_field(form.password, class_="form-control")}}
+                     </font>
+                  </div>
+                  <p align="center"><input type="submit" class="btn btn-primary" value="Submit"></p>
+               </form>
+            </div>
+         </div>
+      </div>
+   </main>
+    <script>
+        highlight("login");
+    </script>
 {% endblock content %}
-  

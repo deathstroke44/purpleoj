@@ -1,38 +1,24 @@
-from flask import Flask, flash
-from flask import request, redirect, url_for, render_template, session, Session
-from flask_pymongo import PyMongo
-from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
-from wtforms.widgets import TextArea
-from werkzeug.utils import secure_filename
-from flask_ckeditor import CKEditor, CKEditorField
-import requests
-from bs4 import BeautifulSoup
-from wtforms.fields.html5 import EmailField
 import datetime
 import os
-from bson import ObjectId
-from flask import Flask, flash
-from flask import request, redirect,url_for,render_template,session,Session
-from flask_pymongo import PyMongo
-from wtforms import Form,IntegerField,StringField, PasswordField, validators, FileField, FloatField,TextAreaField
-from wtforms.widgets import TextArea
-from werkzeug.utils import secure_filename
-from flask_ckeditor import CKEditor, CKEditorField
+import time
+
 from flask import Flask, render_template, request
-from wtforms import Form, IntegerField, StringField, PasswordField, validators, FileField, FloatField, TextAreaField
-from flask_wtf import FlaskForm
-import time
-from flask_codemirror.fields import CodeMirrorField
-from wtforms.fields import SubmitField, TextAreaField
+from flask import flash
+from flask import redirect, url_for, session, Session
+from flask_ckeditor import CKEditor, CKEditorField
 from flask_codemirror import CodeMirror
+from flask_codemirror.fields import CodeMirrorField
+from flask_pymongo import PyMongo
+from flask_wtf import FlaskForm
+from werkzeug.utils import secure_filename
+from wtforms import Form, IntegerField, StringField, PasswordField, validators
+from wtforms.fields import SubmitField, TextAreaField
+from wtforms.fields.html5 import EmailField
 
+from forms import IssueForm, CommentForm
 
-import datetime
-import os
-import datetime
-import time
 app = Flask(__name__)
-UPLOAD_FOLDER = '/home/aniomi/PycharmProjects/purpleoj/static/uploads'
+UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
 ALLOWED_CATEGORY = set(['ACM', 'IOI'])
 import uuid
@@ -43,7 +29,6 @@ app.config['CKEDITOR_SERVE_LOCAL'] = True
 app.config['CKEDITOR_HEIGHT'] = 400
 ckeditor = CKEditor(app)
 mongo = PyMongo(app)
-import pymongo as pm
 
 app.secret_key = "super secret key"
 sess = Session()
@@ -54,7 +39,8 @@ class UploadForm(Form):
     memory_limit = IntegerField("Memory Limit(MB)", [validators.DataRequired()])
     category = StringField("Problem Style(ACM,IOI)", [validators.DataRequired()])
     name = StringField('Problem name', [validators.DataRequired()])
-    count = IntegerField('Number Of subtask(at least 1 at most 3)', [validators.DataRequired()] and [validators.number_range(1, 3)])
+    count = IntegerField('Number Of subtask(at least 1 at most 3)',
+                         [validators.DataRequired()] and [validators.number_range(1, 3)])
     point1 = IntegerField('Point for Subtask 1')
     point2 = IntegerField('Point for Subtask 2')
     point3 = IntegerField('Point for Subtask 3')
@@ -195,7 +181,7 @@ class postob:
 def index():
     list = []
     postdb = mongo.db.posts
-    existing_post = postdb.find({})
+    existing_post = postdb.find({}).sort('_id')
     i = 0
     for posts in existing_post:
         print(posts)
@@ -208,6 +194,7 @@ def index():
         list.append(ppp)
         print(list[i].dt)
         i = i + 1
+        list.reverse()
     print(len(list))
 
     error = 'You are not logged in'
@@ -224,7 +211,7 @@ class RegisterForm(Form):
     username = StringField('Username', [validators.Length(min=4, max=50)])
     email = EmailField('Email', [validators.Length(min=1, max=50)])
     password = PasswordField('Password', [
-        validators.DataRequired(),
+        validators.Length(min=5,max=10),
         validators.EqualTo('confirm', message='Passwords do not match')
     ])
     confirm = PasswordField('Confirm Password')
@@ -395,23 +382,14 @@ def postab():
         return redirect(url_for('login'))
     return render_template('problem_list.html', obj=list)
 
-
+#*******************************************
+#   ASIF AHMED*******************************
 @app.route('/profile')
 def profile():
+    from profile import profileCall
     if not ('username' in session):
-        return redirect(url_for('login'))
-
-    class User:
-        def __init__(self, name, username, mail):
-            self.name = name
-            self.username = username
-            self.mail = mail
-
-    user_name = session['username']
-    users = mongo.db.userlist
-    exiting_user = users.find_one({'USERNAME': user_name})
-    user = User(exiting_user['NAMES'], exiting_user['USERNAME'], exiting_user['MAIL'])
-    return render_template('profile.html', user=user)
+        return redirect(url_for("login"))
+    return render_template('profile.html', user=profileCall())
 
 
 @app.route('/posts')
@@ -419,149 +397,38 @@ def posts():
     if not ('username' in session):
         return redirect(url_for('login'))
 
-    class post_object:
-        def __init__(self, title, text):
-            self.title = title
-            self.text = text
+    from profile import profilePostCall
+    return render_template('user_post.html', post_array=profilePostCall())
 
-    post_array = []
-    user_name = session['username']
-    posts = mongo.db.posts.find({})
-    for post in posts:
-        if post['USER'] == user_name:
-            post_array.append(post_object(post['TITLE'], post['TEXT']))
 
-    return render_template('user_post.html', post_array=post_array)
+@app.route('/issues', methods=['GET', 'POST'])
+def issues():
+    from issue import issueCall
+    form,issue_array = issueCall()
+    return render_template('issues.html', form=form,issue_array=issue_array)
+
+
+@app.route('/issues/<id>',methods=['GET', 'POST'])
+def singleIssue(id):
+    from issue import singleIssueCall
+    form,comment_array,issue = singleIssueCall(id)
+    return render_template('issue_page.html',form=form,comment_array=comment_array,issue=issue)
 
 
 @app.route('/news')
 def news():
-    class Article:
-        def __init__(self, title_filename, content_filename):
-            self.title_filename = title_filename
-            self.content_filename = content_filename
-
-    article_array = []
-    source0 = requests.get('https://atcoder.jp/').text
-    source1 = requests.get('https://atcoder.jp/?p=2').text
-    source2 = requests.get('http://codeforces.com/').text
-    source3 = requests.get('http://codeforces.com/page/2').text
-    source4 = requests.get('https://csacademy.com/blog/ceoi-2018/').text
-
-    soup0 = BeautifulSoup(source0, 'lxml')
-    soup1 = BeautifulSoup(source1, 'lxml')
-    soup2 = BeautifulSoup(source2, 'lxml')
-    soup3 = BeautifulSoup(source3, 'lxml')
-    soup4 = BeautifulSoup(source4, 'lxml')
-
-    div0 = soup0.find_all('div', class_='panel panel-default')
-    div1 = soup1.find_all('div', class_='panel panel-default')
-    div2 = soup2.find_all('div', class_='topic')
-    div3 = soup3.find_all('div', class_='topic')
-
-    for i in div2:
-        title = i.find('div', class_='title')
-        content = i.find('div', class_='ttypography')
-        content2 = content
-
-        uid1 = uuid.uuid1()
-        file_name_title = 'static/news/' + str(uid1) + '.html'
-        f = open(file_name_title, 'a', encoding='utf8')
-        f.write(str(title).replace('<p>', '').replace('</p>', '').replace('div', 'h4').replace(title.a['href'],
-                                                                                               'http://codeforces.com/' +
-                                                                                               title.a['href']))
-        f.close()
-
-        print(title.a['href'])
-
-        for a in content.find_all('img'):
-            if a:
-                imageSource = a['src']
-                st = 'http'
-                if imageSource.find(st) == -1:
-                    content = str(content).replace(imageSource, 'http://codeforces.com/' + imageSource)
-
-        for link in content2.find_all('a'):
-            if link:
-                linkSource = link['href']
-                st = 'http'
-                if linkSource.find(st) == -1:
-                    content = str(content).replace(linkSource, 'http://codeforces.com/' + linkSource)
-
-        uid2 = uuid.uuid1()
-        file_name_content = 'static/news/' + str(uid2) + '.html'
-        f = open(file_name_content, 'a', encoding='utf8')
-        f.write(str(content))
-        f.close()
-
-        article_array.append(Article(file_name_title, file_name_content))
-        # print(content)
-
-    for i in div3:
-        title = i.find('div', class_='title')
-        content = i.find('div', class_='ttypography')
-        # content = reformatContent(content)
-
-        uid1 = uuid.uuid1()
-        file_name_title = 'static/news/' + str(uid1) + '.html'
-        f = open(file_name_title, 'a', encoding='utf8')
-        f.write(str(title).replace('<p>', '').replace('</p>', ''))
-        f.close()
-
-        for a in content.find_all('img'):
-            if a:
-                imageSource = a['src']
-                st = 'http'
-                if imageSource.find(st) == -1:
-                    content = str(content).replace(imageSource, 'http://codeforces.com/' + imageSource)
-                    print(a['src'])
-
-        uid2 = uuid.uuid1()
-        file_name_content = 'static/news/' + str(uid2) + '.html'
-        f = open(file_name_content, 'a', encoding='utf8')
-        f.write(str(content))
-        f.close()
-
-        article_array.append(Article(file_name_title, file_name_content))
-        # print(content)
-
-    return render_template('news.html', article_array=article_array)
+    from newsScrapping import newsCall
+    return render_template('news.html',article_array=newsCall())
 
 
 @app.route('/submission')
 def submissions():
     if not ('username' in session):
         return redirect(url_for('login'))
+    from profile import profileSubmissionCall
+    return render_template('user_submission.html', submission_array=profileSubmissionCall())
 
-    class problem_object:
-        def __init__(self, name, id):
-            self.name = name
-            self.id = id
-
-    class submission_object:
-        def __init__(self, pID, date, who, lan, verdict, time):
-            self.pID = pID
-            self.date = date
-            self.who = who
-            self.lan = lan
-            self.verdict = verdict
-            self.time = time
-
-    submission_array = []
-    user_name = session['username']
-    submissions = mongo.db.submissions.find({})
-    for submission in submissions:
-        if submission['User Id'] == user_name:
-            problem_set = mongo.db.problems.find_one({'myid': submission['Problem Id']})
-            submission_array.append(submission_object(problem_object(problem_set['name'], problem_set['myid']), submission['Submission Time'],
-                                                      submission['User Id'], submission['Language'],
-                                                      submission['Status'], submission['Execution Time']))
-
-    print(submission_array)
-    return render_template('user_submission.html', submission_array=submission_array)
-
-
-
+#   ASIF AHMED*******************************
 # ***************************************************************************
 dir_path = os.path.dirname(os.path.realpath(__file__))
 languages = ["Java", "C", "Python"]
@@ -591,9 +458,7 @@ def runPython(auxForm):
     fout = open(getProgramFileName("Python"), "w")
     print(text, file=fout)
     fout.close()
-    # mongo.db.submissions.insert({'a':text})
-    # print(text)
-    # return "ok"
+
     if auxForm.get("custom_input") != None:
         inputs = form.inputs.data
         finputs = open(getCustomInputsFileName(), "w")
@@ -910,8 +775,10 @@ def getProblemNumber(problemId,contestId):
     print(problemList)
 @app.route('/editor/<problemId>', methods=['GET', 'POST'])
 def editor(problemId):
+    print("not for contest")
     problemsDatabase=mongo.db.problems
     submissionDatabase=mongo.db.submissions
+    problemsdb = ProblemsDatabase()
     if request.method == 'POST':
         if "run" in request.form:
             template = runCode(request.form)
@@ -920,6 +787,7 @@ def editor(problemId):
 
         elif "submit" in request.form:
             submissionInfo=submitCode(request.form,problemId)
+            problemsdb.incrementSumissionCount(problemsDatabase, problemId)
             print(submissionInfo)
             problemTimeLimit=problemsDatabase.find_one({"myid":problemId}).get("time_limit")
             verdict=dict()
@@ -935,6 +803,7 @@ def editor(problemId):
                 else:
                     if submissionInfo.get("Result Verdict")=="Passed":
                         verdict["Status"]="AC"
+                        problemsdb.incrementSumissionCount(problemsDatabase, problemId)
                     else:
                         verdict["Status"]="WA"
             verdict["Execution Time"]=submissionInfo.get("Execution Time")
@@ -953,6 +822,7 @@ def editor(problemId):
 def contestEditor(problemId, contestId):
     problemsDatabase=mongo.db.problems
     submissionDatabase=mongo.db.submissions
+    problemsdb=ProblemsDatabase()
     print("for contest")
     if request.method == 'POST':
         if "run" in request.form:
@@ -962,6 +832,7 @@ def contestEditor(problemId, contestId):
 
         elif "submit" in request.form:
             submissionInfo=submitCode(request.form,problemId)
+            problemsdb.incrementSumissionCount(problemsDatabase,problemId)
             print(submissionInfo)
             problemTimeLimit=problemsDatabase.find_one({"myid":problemId}).get("time_limit")
             verdict=dict()
@@ -977,6 +848,7 @@ def contestEditor(problemId, contestId):
                 else:
                     if submissionInfo.get("Result Verdict")=="Passed":
                         verdict["Status"]="AC"
+                        problemsdb.incrementAcSumissionCount(problemsDatabase, problemId)
                     else:
                         verdict["Status"]="WA"
             verdict["Execution Time"]=submissionInfo.get("Execution Time")
@@ -1010,29 +882,21 @@ def view_submissions():
 
 @app.route('/submissions/<submissionId>',methods=['GET', 'POST'])
 def view_submission_details(submissionId):
+    file = open("static/css/styles/styles.txt", "r")
+    themes = list()
+    for line in file:
+        themes.append(line[:-1])
+    file.close()
+    # print(request.form)
+    if request.form.get("themes") != None:
+        preferedTheme = request.form.get("themes")
+    else:
+        preferedTheme = "atom-one-dark"
     submissionsDatabase = mongo.db.submissions
     submission=Submission(submissionsDatabase.find({"Submission Id":submissionId})[0],mongo.db.problems)
-    Code=submission.Code
-    l=submission.language
-    makeSubmissionFolders()
-    fileCode=open("submissions/latex/document.tex","w")
-    print("\\documentclass{article}\r\n\\usepackage{xcolor}\r\n\\usepackage{listings}\r\n\r\n"
-          "\\definecolor{mGreen}{rgb}{0,0.6,0}\r\n\\definecolor{mGray}{rgb}{0.5,0.5,0.5}\r\n\\definecolor{mPurple}{rgb}{0.58,0,0.82}\r\n"
-          "\\definecolor{backgroundColour}{rgb}{0.95,0.95,0.92}\r\n\r\n\\lstdefinestyle{CStyle}{\r\n"
-          "    backgroundcolor=\\color{backgroundColour},   \r\n    commentstyle=\\color{mGreen},\r\n    keywordstyle=\\color{magenta},\r\n  "
-          "  numberstyle=\\tiny\\color{mGray},\r\n   "
-          " stringstyle=\\color{mPurple},\r\n    basicstyle=\\footnotesize,\r\n   "
-          " breakatwhitespace=false,         \r\n    breaklines=true,                 \r\n    captionpos=b,      "
-          "              \r\n    keepspaces=true,                 \r\n    numbers=left,                    \r\n    numbersep=5pt,      "
-          "            \r\n    showspaces=false,             "
-          "   \r\n    showstringspaces=false,\r\n    showtabs=false,                  \r\n   "
-          " tabsize=2,\r\n    language="+l+"\r\n}\r\n\\begin{document}"
-          "\r\n"
-          +Code+"\r\n\\end{document}",file=fileCode)
-    fileCode.close()
-    os.system("cd submissions/latex && pdflatex -synctex=1 -interaction=nonstopmode \"document\".tex")
-    # submission.Code
-    return submissionId
+    language = str(submission.language).lower()
+    return render_template('submitted_Code_viewer.html', submission=submission, language=language, themes=themes,
+                           preferedTheme=preferedTheme)
 
 @app.route('/user/<userName>',methods=['GET', 'POST'])
 def userProfile(userName):
@@ -1046,7 +910,14 @@ def userProfile(userName):
     user = User(existing_user['NAMES'], existing_user['USERNAME'], existing_user['MAIL'])
     return render_template('profile.html', user=user)
     
-   
+@app.route('/onlineide', methods=['GET', 'POST'])
+def onlineide():
+    if request.method == 'POST':
+        if "run" in request.form:
+            template = runCode(request.form)
+            cleanup()
+            return template
+    return render_template('editor.html', form=MyForm(request.form), languages=languages)
 
 
 # *****************************************************************************************
@@ -1309,12 +1180,13 @@ def load_contest(cc_id):
     for p in problems:
         for x, y in p.items():
             i = problem_db.find_one({'myid': y})
-            new_prob = problem(i['sub_task_count'],i['myid'],i['pnt1'],i['pnt2'],i['pnt3'],i['time_limit'],
-                               i['memory_limit'],i['stylee'],x+". "+i['name'],i['acsub'],i['sub'],i['setter'])
+            new_prob = problem(i['sub_task_count'], i['myid'], i['pnt1'], i['pnt2'], i['pnt3'], i['time_limit'],
+                               i['memory_limit'], i['stylee'], x + ". " + i['name'], i['acsub'], i['sub'], i['setter'])
             problem_list.append(new_prob)
     if not ('username' in session):
         return redirect(url_for('login'))
-    return render_template('contest.html', obj=problem_list,id=cc_id,name=cc_name,sdto=starting_datetime,edto=ending_datetime)
+    return render_template('contest.html', obj=problem_list, id=cc_id, name=cc_name, sdto=starting_datetime,
+                           edto=ending_datetime)
 
 
 # Problem pages of contest
@@ -1332,8 +1204,171 @@ def load_contest_problem(id1, id2):
 
 
 #############################################
+class graph_input(Form):
+    nodes_cnt=IntegerField("Number of Nodes",[validators.DataRequired()])
+    nodes_desc=TextAreaField("Nodes",[validators.DataRequired])
+    ed_cnt=IntegerField("Number of Edgs",[validators.DataRequired()])
+    ed_desc=TextAreaField("Edges",[validators.DataRequired()])
 
 
+def givenode(node_name):
+    node_name = node_name.replace('\n','')
+    print(repr(node_name),end=' ')
+    s='{ data: { id: '+ '\'' +node_name+ '\''+' } },'
+    return s
+
+def f(s):
+    s = s.replace('\n','')
+    return '\''+s+'\''
+
+def giveedge(st,ed,ed_name):
+    st = st.replace('\n','')
+    ed = ed.replace('\n','')
+    s='{\n'+'data: {\n'+'id: '+f(ed_name)+',\n'+'source : '+ f(st) +',\n'+'target: ' + f(ed) + ',\n}\n},\n'
+    return s
+
+def node_list(st,nd_cnt):
+    st = st.replace('\n', ' ')
+    st=st.replace('\r',' ')
+    ar = st.split(' ')
+    filter_list = []
+    for i in range(0, len(ar)):
+        if not (ar[i] == ''):
+            filter_list.append(ar[i].replace('\n',''))
+    filter_list2= []
+    nd_cnt=min(nd_cnt,len(filter_list))
+    for i in range(0, nd_cnt):
+        filter_list2.append(filter_list[i])
+    return filter_list2
+
+def edge_list(st,ed_cnt):
+    st=st.replace('\n',' ')
+    st=st.replace('\r',' ')
+    ar = st.split(' ')
+    filter_list = []
+    for i in range(0, len(ar)):
+        if not (ar[i] == ''):
+            filter_list.append(ar[i].replace('\n',''))
+    ed_cnt*=2
+    edcc=len(filter_list)
+    for i in range(0,len(filter_list)):
+        print(filter_list[i])
+
+    if edcc%2==1:
+        edcc-=1
+
+    ed_cnt=min(edcc,ed_cnt)
+    filter_list2=[]
+    for i in range(0,ed_cnt):
+        filter_list2.append(filter_list[i])
+    return filter_list2
+
+class graph:
+    def __init__(self,nodelist,edgelist):
+        self.nodelist=nodelist
+        self.edgelist=edgelist
+class adapter:
+    graphh=None
+    def __init__(self,graphh):
+        self.graphh=graphh
+        print(str(len(self.graphh.nodelist))+" omi")
+    def getjson(self):
+        jsonstring=''
+        nodelen=len(self.graphh.nodelist)
+        for i in range(0,nodelen):
+            s=givenode(self.graphh.nodelist[i])
+            jsonstring+='\n'
+            jsonstring+=s
+        edgelen = len(self.graphh.edgelist)
+        for i in range(0, edgelen,2):
+            s = giveedge(self.graphh.edgelist[i],self.graphh.edgelist[i+1],self.graphh.edgelist[i]+'#'+
+                         self.graphh.edgelist[i+1])
+            jsonstring += '\n'
+            jsonstring += s
+        return jsonstring
+class jsonstring:
+    _adapter=None
+    def __init__(self,_adapter):
+        self._adapter=_adapter
+    def getstring(self):
+        return self._adapter.getjson()
+
+
+@app.route('/graph', methods=['GET', 'POST'])
+def graphbuild():
+    #return render_template('graphcheck.html')
+    #print(givenode('a'))
+    #print(giveedge('a','b','ab'))
+    form=graph_input(request.form)
+    if request.method=='POST':
+        directed= True
+        if request.form.get('choice')=='Undirected':
+            directed= False
+        if directed == True:
+            idd=uuid.uuid4().__str__()
+            fst=open('static/graph/samplestart.txt',"r")
+            stst=fst.read()
+            fed=open('static/graph/sampleend.txt',"r")
+            sted=fed.read()
+            f = open('templates/'+idd+'.html', "w+")
+            f1 = open('templates/'+'checker.txt', "w+")
+            print(stst,file=f)
+
+            nd_list=node_list(st=form.nodes_desc.data.replace('\n',' '),nd_cnt=form.nodes_cnt.data)
+            ed_list=edge_list(st=form.ed_desc.data.replace('\n',' '),ed_cnt=form.ed_cnt.data)
+            gp=graph(nd_list,ed_list)
+            ad=adapter(gp)
+            js=jsonstring(ad)
+            print(js.getstring(),file=f)
+            #f.close()
+            #for i in range (0,len(nd_list)):
+            #    print(givenode(nd_list[i]),file=f)
+            #for i in range (0,len(ed_list),2):
+            #    print(giveedge(ed_list[i],ed_list[i+1],ed_list[i]+'#'+ed_list[i+1]),file=f)
+            print(sted,file=f)
+            print(form.nodes_desc.data)
+            f.close()
+            return render_template(idd+'.html')
+        else:
+            idd = uuid.uuid4().__str__()
+            fst = open('static/graph/undirectedstart.txt', "r")
+            stst = fst.read()
+            fed = open('static/graph/undirectedent.txt', "r")
+            sted = fed.read()
+            f = open('templates/' + idd + '.html', "w+")
+            f1 = open('templates/' + 'checker.txt', "w+")
+            print(stst, file=f)
+
+            nd_list = node_list(st=form.nodes_desc.data.replace('\n', ' '), nd_cnt=form.nodes_cnt.data)
+            ed_list = edge_list(st=form.ed_desc.data.replace('\n', ' '), ed_cnt=form.ed_cnt.data)
+            sz=len(ed_list)
+            for i in range(0,sz,2):
+                if ed_list[i]<=ed_list[i+1]:
+                    xx=ed_list[i]
+                    ed_list[i]=ed_list[i+1]
+                    ed_list[i+1]=xx
+            gp = graph(nd_list, ed_list)
+            ad = adapter(gp)
+            js = jsonstring(ad)
+            print(js.getstring(), file=f)
+            # f.close()
+            # for i in range (0,len(nd_list)):
+            #    print(givenode(nd_list[i]),file=f)
+            # for i in range (0,len(ed_list),2):
+            #    print(giveedge(ed_list[i],ed_list[i+1],ed_list[i]+'#'+ed_list[i+1]),file=f)
+            print(sted, file=f)
+            print(form.nodes_desc.data)
+            f.close()
+            return render_template(idd + '.html')
+
+    return render_template('input_graph.html',form=form)
+from ProblemsDatabase import ProblemsDatabase
+@app.route('/test')
+def test():
+    problemsDatabase=ProblemsDatabase()
+    problemsDatabase.incrementSumissionCount(mongo.db.problems,'ceed47bd-95a0-4297-bc75-6b46cc2b54c7')
+    print("done")
+    return "done"
 if __name__ == '__main__':
     app.secret_key = 'SUPER SECRET KEY'
     app.config['SESSION_TYPE'] = 'filesystem'

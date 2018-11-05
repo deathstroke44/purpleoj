@@ -1,105 +1,88 @@
-
 {% block head %}
+<title>CodeFlask</title>
 {% endblock head %}
-
+{%  extends 'index.html' %}
 {% block content %}
-     <head>
-        <meta http-equiv="x-ua-compatible" content="IE-edge">
-        <meta name="viewport" content="width-device-width, initial-scale=1">
-        <link href="/static/For%20Table/dataTables.bootstrap.min.css" rel="stylesheet">
-        <script src="/static/For%20Table/jquery.js"></script>
-     <script src="/static/w3.js"></script>
-    </head>
-    <style>
-    body {padding-top:20px;padding: 20px;background-color: powderblue;}
-    h1   {color: blue;}
-    .seethis
-    {
-
-    }
-    #lt
-    {
-        width: 80%;
-        background-color: white;
-    }
-    #block
-    {
-
-        margin: 16px;
-        padding: 2px;
-
-    }
-    #hh
-    {
-        padding: 2px;
-        background-color: #ffeeef;
-        margin: 8px;
-        box-shadow: 5px 5px;
-    }
-    #logo {
-    color: white;
-    text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
-}
-</style>
-
+<head>
+   <!--<meta http-equiv="x-ua-compatible" content="IE-edge">-->
+   <!--<meta name="viewport" content="width-device-width, initial-scale=1">-->
+   <script src="/static/w3.js"></script>
+</head>
+<!--<style>-->
+<!--&lt;!&ndash;body {background-color: powderblue;}&ndash;&gt;-->
+<!--&lt;!&ndash;h1   {color: blue;}&ndash;&gt;-->
+<!--&lt;!&ndash;.seethis&ndash;&gt;-->
+<!--&lt;!&ndash;{&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+<!--&lt;!&ndash;#lt&ndash;&gt;-->
+<!--&lt;!&ndash;{&ndash;&gt;-->
+<!--&lt;!&ndash;width: 80%;&ndash;&gt;-->
+<!--&lt;!&ndash;background-color: white;&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+<!--#block-->
+<!--&lt;!&ndash;{&ndash;&gt;-->
+<!--&lt;!&ndash;margin: 16px;&ndash;&gt;-->
+<!--&lt;!&ndash;padding: 2px;&ndash;&gt;-->
+<!--&lt;!&ndash;box-shadow: 10px 10px;&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+<!--&lt;!&ndash;#hh&ndash;&gt;-->
+<!--&lt;!&ndash;{&ndash;&gt;-->
+<!--&lt;!&ndash;padding: 2px;&ndash;&gt;-->
+<!--&lt;!&ndash;background-color: #00ffff;&ndash;&gt;-->
+<!--&lt;!&ndash;margin: 8px;&ndash;&gt;-->
+<!--&lt;!&ndash;box-shadow: 5px 5px;&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+<!--&lt;!&ndash;#logo {&ndash;&gt;-->
+<!--&lt;!&ndash;color: white;&ndash;&gt;-->
+<!--&lt;!&ndash;text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+<!--</style>-->
 <body>
-
-{%  include 'layout.html' %}
-<div>
-
-<div id="lt">
-
-
-        {%  for post in posts %}
-            <div id="block">
-                <p id="hh"> <b><font size="6px" color="blue">{{ post.title }} </font></b>{{ post.user_ }}
-
-                    {{ post.dt }}
-                </p>
-
-
-
-
-                        <div w3-include-html={{ post.text }}>
-
-
-
-                            <script>
-                                w3.includeHTML();
-                            </script>
-
-                    </div>
-
+   <main role="main" class="container">
+      <div class="row">
+         <div class="col-md-1">
+           </div>
+         <div class="col-md-9">
+            {%  for post in posts %}
+            <div class="card mt-3">
+               <div class="card-header" id="block">
+                  <p id="hh"> <b> {{ post.title }} </b><sub>{{ post.user_ }}
+                      {{ post.dt }}</sub>
+                  </p>
+               </div>
+               <div class="card-body" w3-include-html={{ post.text }}>
+                  <script>
+                     w3.includeHTML();
+                  </script>
+               </div>
             </div>
-
-
-        {% endfor %}
-
-</div>
-
-<script src="/static/For%20Table/jquery.js"></script>
-<script src="/static/For%20Table/jquery.dataTables.min.js"></script>
-<script src="/static/For%20Table/dataTables.bootstrap4.min.js"></script>
-<script>
-w3.includeHTML();
-</script>
-
-
-<!--
-    <div>
-        <ul class="list-group">
-             {% for post in posts %}
-                <li class="list-group-item">
-                    <div>
-                        <div>
-                            <p><font size="4px"><b>{{ post.title }}</b></font>&nbsp;<font size="2px">posted by</font><font size="2px>"> {{ post.user_ }}</font><font size="2px"> {{ post.dt }}</font></p>
-                        </div>
-                    </div>
-                </li>
-            {% endfor %}
-</ul>
-    </div>
-    -->
+             {% endfor %}
+         </div>
+      </div>
+   </main>
+   <script src="/static/For%20Table/jquery.js"></script>
+   <script src="/static/For%20Table/jquery.dataTables.min.js"></script>
+   <script src="/static/For%20Table/dataTables.bootstrap4.min.js"></script>
+   <script>
+      w3.includeHTML();
+   </script>
+   <script>
+       highlight("blog");
+   </script>
+   <!--
+      <div>
+          <ul class="list-group">
+               {% for post in posts %}
+                  <li class="list-group-item">
+                      <div>
+                          <div>
+                              <p><font size="4px"><b>{{ post.title }}</b></font>&nbsp;<font size="2px">posted by</font><font size="2px>"> {{ post.user_ }}</font><font size="2px"> {{ post.dt }}</font></p>
+                          </div>
+                      </div>
+                  </li>
+              {% endfor %}
+      </ul>
+      </div>
+      -->
 </body>
 {% endblock content %}
-
