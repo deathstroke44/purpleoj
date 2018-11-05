@@ -7,22 +7,53 @@
         #lskp
         {
             margin-top: 3%;
+            margin-left: 3%;
+            margin-right: 3%;
         }
         .lol
         {
-            margin-left: 15%;
-            margin-right: 15%;
+            margin-left: 10%;
+            margin-right: 10%;
         }
         .highlight {
             background-color: #fff;
             padding: 1%;
             shape-rendering: geometricPrecision;
         }
+        #upcard
+        {
+            width: 100%;
+            background-color: #bee5eb;
+        }
+        #fr{
+            float: right;
+        }
+        #fl{
+            float: left;
+        }
+        #bs
+        {
+            margin: 2px;
+            align-content: center;
+            background-color: blue;
+            float: right;
+        }
     </style>
  <body>
 
         <div class=lol>
-            <hr>
+        <br>
+        <br>
+        <br>
+        <section>
+
+            <div id="upcard">
+                <P id="fl"><strong><font size="5px">Problem Set</font></strong></P>
+                <a class="btn btn-default pull-right" id='bs' href="/upload"><font color="white">Upload Problem</font></a>
+                <a class="btn btn-default pull-right" id='bs' href="/graph"><font color="white">Graph Visualization</font></a>
+                <a class="btn btn-default pull-right" id='bs' href="/onlineide"><font color="white">Code & Compile</font></a>
+            </div>
+        </section>
             <br>
             <div id="lskp">
                 <table class="table table-striped table-bordered table-hover" id="mydata">
