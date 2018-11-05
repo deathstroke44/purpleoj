@@ -21,12 +21,17 @@
     #first
     {
         float: left;
-        width: 30%;
+        width: 25%;
     }
     #second
     {
         float: right;
-        width: 30%;
+        width: 25%;
+    }
+    #password
+    {
+        float: right;
+        width: 25%;
     }
     #tot
     {
@@ -45,6 +50,11 @@
 <form method="POST">
 <div id="tot">
     <p><b>Contest Details</b></p>
+    <select id="cb">
+        <option value="public" id="public" name="public">Public</option>
+        <option value="private" id="private" name="private">Private</option>
+
+    </select>
     <hr>
     <div class="form-group">
         {{ render_field(form.contestname, class_="form-control")}}
@@ -60,9 +70,14 @@
             <P>Contest Start Time</P>
             <input type=time name="start_time">
         </div>
-        <div id="second">
+        <div id="first">
             <p>Contest End Time</p>
         <input type="time" name="end_time">
+        </div>
+
+        <div id="password">
+            <p>Contest Password</p>
+        <input type="password" name="password">
         </div>
     </div>
 
@@ -112,8 +127,9 @@
 
     </table>
 </div>
-<div class="form-group">
-<input type="submit" class="btn btn-primary" value="Submit">
+<div id="tot" class="form-group">
+
+    <input type="submit" class="btn btn-primary" value="Create">
 </div>
 </form>
 
@@ -123,6 +139,25 @@
 <script>
 
     $('#mydata').dataTable()
+</script>
+<script type="text/javascript">
+    var x=document.getElementById("password");
+    x.style.display='none';
+
+</script>
+<script type="text/javascript">
+    document.getElementById("cb").onchange=function () {
+        var x=document.getElementById("cb").value;
+        var xx=document.getElementById("password");
+        //alert(x);
+        if(x.toLocaleString()=="public")
+        {
+            xx.style.display='none';
+
+        }
+        else xx.style.display='block';
+    }
+    
 </script>
 
 

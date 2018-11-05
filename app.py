@@ -969,7 +969,7 @@ def contest():
             contests=mongo.db.contests
             contests.insert({'Contest Title':form.contestname.data,'Start Date':request.form['date'],
                              'Start Time':request.form['start_time'],'End Time':request.form['end_time'],
-                             'Problem Count':cnt,'Problem ID':selected_problem_id})
+                             'Password':request.form['password'],'Problem Count':cnt,'Problem ID':selected_problem_id})
             return redirect(url_for('contests'))
 
     return render_template('create_contest.html',obj=list,form=form)
