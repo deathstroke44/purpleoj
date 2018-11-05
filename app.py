@@ -14,7 +14,7 @@ from werkzeug.utils import secure_filename
 from wtforms import Form, IntegerField, StringField, PasswordField, validators
 from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
-from FunctionList import giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring
+from FunctionList import giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair
 from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
 from ClassesList import problem,postob
 app = Flask(__name__)
@@ -295,7 +295,12 @@ def pdfviewers(id):
     pbds = prob_struct(pb['name'], pb['time_limit'], pb['memory_limit'], id)
     if not ('username' in session):
         return redirect(url_for('login'))
-    return render_template("pdfviewer.html", pdf_src='/static/uploads/' + id + '.pdf', pbds=pbds)
+    Previous = problem_user_submissions(mongo,session['username'],id)
+    for i in range(0,len(Previous)):
+        print(Previous[i].first)
+    #Previous=[]
+    Previous.reverse()
+    return render_template("pdfviewer.html", pdf_src='/static/uploads/' + id + '.pdf', pbds=pbds,Previous=Previous)
 
 
 @app.route('/about')

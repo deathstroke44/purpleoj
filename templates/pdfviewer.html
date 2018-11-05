@@ -14,13 +14,29 @@
     align-content: center;
     background-color: blue;
 }
+#first
+{
+    width: 50%;
+    float: left;
+
+}
+#second
+{
+    width: 20%;
+    float: right;
+}
+#third
+{
+    height: 10px;
+    background-color: black;
+}
 
         </style>
 <body>
     </head>
             <div class="row mt-5">
                 <div class="col-md-3">
-                    <div id="first" class="jumbotron" >
+                    <div class="jumbotron" >
                         <p>
                             <b>{{ pbds.pn }}</b>
                         </p>
@@ -41,10 +57,26 @@
                         Submit
                         </font>
                         </a>
+                        <br><br>
+                        <p class="lead" align="center">Previous Submissions</p>
+                        <hr>
+                        {% for previous in Previous %}
+
+                        <div>
+
+                            <div class="border-dark">
+
+                                <a href="/submissions/{{previous.first}}"><p align="center">{{ previous.third }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ previous.second }}</p></a>
+                                <hr>
+                            </div>
+
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
+
                 <div class="col-md-9">
-                    <div id="second" class="embed-responsive embed-responsive-1by1">
+                    <div class="embed-responsive embed-responsive-1by1">
                         <iframe src="{{ pdf_src }}" type="application/pdf"></iframe>
                     </div>
                 </div>
