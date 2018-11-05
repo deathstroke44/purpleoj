@@ -27,7 +27,7 @@ p {
 }
 
 #first {
-	width: 45%;
+	width: 90%;
 	margin: 2%;
 	float: left;
 	border: black;
@@ -35,28 +35,28 @@ p {
 
 #second {
 	width: 45%;
-	margin: 2%;
+	margin: 1%;
 	float: right;
 	border: #0b2e13;
 }
 
 #third {
 	width: 28%;
-	margin: 2%;
+	margin: 1%;
 	float: left;
 	border: #0b2e13;
 }
 
 #fourth {
 	width: 28%;
-	margin: 2%;
+	margin: 1%;
 	float: right;
 	border: #0b2e13;
 }
 
 #fifth {
 	width: 28%;
-	margin: 2%;
+	margin: 1%;
 	float: right;
 	border: black;
 }
@@ -64,6 +64,7 @@ p {
 #clear {
 	margin: 10%;
 }
+
 </style>
 <body>
     <main role="main" class="container">
@@ -76,65 +77,75 @@ p {
                 <form method=post enctype=multipart/form-data>
                     {%  from  "includes/_formhelpers.html" import render_field %}
                     <div class="form-group">
-                        <div id="third">
-                            {{ render_field(nameform.count,class_="form-control")}}
+
+                        <div id="first">
+                            <p>Number Of Subtasks</p>
+                            <select name="cnt" id="cnt">
+                                <option value=3>3</option>
+                                <option value=2>2</option>
+                                <option value=1>1</option>
+                            </select>
                         </div>
-                        <div id="fourth">
+                        <div id="first">
                             {{ render_field(nameform.name,class_="form-control")}}
                         </div>
-                        <div id="fifth">
+                        <div id="first">
                             <p>Problem description(pdf)</p>
                             <input type=file name=file>
                         </div>
                     </div>
+                    <hr>
                     <div class="form-group">
-                        <div id="third">
+                        <div id="first">
                             {{ render_field(nameform.category,class_="form-control")}}
                         </div>
-                        <div id="fourth">
+                        <div id="first">
                             {{ render_field(nameform.memory_limit,class_="form-control")}}
                         </div>
-                        <div id="fifth">
+                        <div id="first">
                             {{ render_field(nameform.time_limit,class_="form-control")}}
                         </div>
+
                     </div>
-                    <div class="form-group">
-                        <div id="third">
+                    <div class="form-group" id="division1">
+                        <div id="first">
                             {{ render_field(nameform.point1,class_="form-control")}}
                         </div>
-                        <div id="fourth">
+                        <div id="second">
                             <p>Input file for subtask 1(txt)</p>
                             <input type=file name=ifile1>
                         </div>
-                        <div id="fifth">
+                        <div id="second">
                             <p>Output file for subtask 1(txt)</p>
                             <input type=file name=ofile1>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div id="third">
+
+                    <div class="form-group" id="division2">
+                        <div id="first">
                             {{ render_field(nameform.point2,class_="form-control")}}
                         </div>
-                        <div id="fourth">
+                        <div id="second">
                             <p>Input file for subtask 2(txt)</p>
                             <input type=file name=ifile2>
                         </div>
-                        <div id="fifth">
+                        <div id="second">
                             <p>Output file for subtask 2(txt)</p>
                             <input type=file name=ofile2>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div id="third">
+
+                    <div class="form-group" id="division3">
+                        <div id="first">
                             {{ render_field(nameform.point3,class_="form-control")}}
                         </div>
-                        <div id="fourth">
+                        <div id="second">
                             <p>Input file for subtask 3(txt)</p>
-                            <input type=file name=ifile3>
+                            <input type=file name="ifile3">
                         </div>
-                        <div id="fifth">
-                            <p>Output file for subtask 3(txt0</p>
-                            <input type=file name=ofile3>
+                        <div id="second">
+                            <p>Output file for subtask 3(txt)</p>
+                            <input type=file name="ofile3">
                         </div>
                     </div>
                     <input type=submit id="container" value=Upload>
@@ -145,5 +156,223 @@ p {
     <script>
         highlight("upload");
     </script>
+
+
+
+
+
+
+    <script type="text/javascript">
+
+
+        function f(nameid) {
+            var e1=document.getElementById(nameid);
+            var e2=e1.getElementsByTagName('input');
+            var e3=e1.getElementsByTagName('p');
+            //alert(e2.length);
+            e1.style.display = 'none';
+            var i=0;
+            for (i=0;i<e2.length;i++)
+            {
+                //alert(e2[i].name);
+                var cc=e2[i];
+                cc.style.display = 'none';
+                //cc.style.visibility = 'hidden';
+                //cc.disabled=true;
+                //cc.disabled=false;
+
+            }
+            for (i=0;i<e3.length;i++)
+            {
+                //alert(e2[i].name);
+                var cc=e3[i];
+                cc.style.display = 'none';
+                //cc.style.visibility = 'hidden';
+                //cc.disabled=true;
+                //cc.disabled=false;
+
+            }
+            //alert("reacher");
+
+
+        }
+        function f1(nameid) {
+            var e1=document.getElementById(nameid);
+            var e2=e1.getElementsByTagName('input');
+            e1.style.display = 'block';
+            var e3=e1.getElementsByTagName('p');
+            var i=0;
+            for (i=0;i<e2.length;i++)
+            {
+                //alert(e2[i].name);
+                var cc=e2[i];
+                //cc.style.visibility = 'visible';
+                cc.style.display = 'block';
+                //cc.disabled=false;
+                //cc.disabled=false;
+
+            }
+            //alert("reacher");
+            for (i=0;i<e3.length;i++)
+            {
+                //alert(e2[i].name);
+                var cc=e3[i];
+                //cc.style.visibility = 'visible';
+                cc.style.display = 'block';
+                //cc.disabled=false;
+                //cc.disabled=false;
+
+            }
+
+
+        }
+        class SubjectAbastract
+        {
+            constructor()
+            {
+                this.states=3;
+                this.list=new Array(0);
+            }
+            addObserver()
+            {
+                throw new Error("Needs to implements in subclass");
+            }
+            notifyall()
+            {
+                throw new Error("Needs to implements in subclass");
+            }
+            setState(xx)
+            {
+                //this.states=xx;
+                //this.notifyall();
+            }
+        }
+        class Subject extends SubjectAbastract
+        {
+            constructor()
+            {
+                super();
+            }
+            addObserver(obs)
+            {
+                this.list.push(obs);
+                //alert("observer added");
+            }
+            setState(xx)
+            {
+                this.states=xx;
+                //alert(this.states);
+                this.notifyall();
+                //this.notifyall();
+            }
+            notifyall()
+            {
+                var i=0;
+                //alert(this.list.length);
+                for(i=0;i<this.list.length;i++)
+                {
+                    var xx=this.list[i];
+                    xx.update();
+                }
+            }
+        }
+        class Obsever
+        {
+            constructor(subject)
+            {
+                this.subject=subject;
+                this.subject.addObserver(this);
+            }
+            update()
+            {
+                throw new Error("Needs to implements in subclass");
+            }
+        }
+        class First extends Obsever
+        {
+            constructor(subject)
+            {
+                super(subject);
+            }
+            update()
+            {
+
+                //alert("Update first observer");
+                //alert(subject.states);
+                var xx=this.subject.states;
+                //alert(xx);
+                if(xx<1)
+                {
+                    f("division1");
+                }
+                else f1("division1");
+            }
+        }
+        class Second extends Obsever
+        {
+            constructor(subject)
+            {
+                super(subject);
+            }
+            update()
+            {
+
+                //alert("Update Second observer");
+                //alert(subject.states);
+                var xx=subject.states;
+                if(xx<2)
+                {
+                    f("division2");
+                }
+                else f1("division2");
+            }
+        }
+        class Third extends Obsever
+        {
+            constructor(subject)
+            {
+                super(subject);
+            }
+            update()
+            {
+
+                //alert("Update Third observer");
+                //alert(subject.states);
+                var xx=subject.states;
+                if(xx<3)
+                {
+                    f("division3");
+                }
+                else f1("division3");
+
+                //alert("big problem");
+            }
+        }
+        let subject=new Subject();
+        let first=new First(subject);
+        let second=new Second(subject);
+        let third=new Third(subject);
+        //first.update();
+        //subject.setState(2);
+        //alert("reach");
+        //f("division1");
+        document.getElementById("cnt").onchange=function () {
+            var x=document.getElementById("cnt").value;
+            var y=parseInt(x);
+            //alert(y);
+            subject.setState(y);
+        }
+
+
+    </script>
+
+
+
+
+
+
+
+
+
 </body>
 {% endblock content %}

@@ -14,9 +14,9 @@ from werkzeug.utils import secure_filename
 from wtforms import Form, IntegerField, StringField, PasswordField, validators
 from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
-
-from forms import IssueForm, CommentForm
-
+from FunctionList import giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring
+from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
+from ClassesList import problem,postob
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
@@ -32,41 +32,6 @@ mongo = PyMongo(app)
 
 app.secret_key = "super secret key"
 sess = Session()
-
-
-class UploadForm(Form):
-    time_limit = IntegerField("Time limit(ms)", [validators.DataRequired()])
-    memory_limit = IntegerField("Memory Limit(MB)", [validators.DataRequired()])
-    category = StringField("Problem Style(ACM,IOI)", [validators.DataRequired()])
-    name = StringField('Problem name', [validators.DataRequired()])
-    count = IntegerField('Number Of subtask(at least 1 at most 3)',
-                         [validators.DataRequired()] and [validators.number_range(1, 3)])
-    point1 = IntegerField('Point for Subtask 1')
-    point2 = IntegerField('Point for Subtask 2')
-    point3 = IntegerField('Point for Subtask 3')
-
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-class problem:
-    def __init__(self, sub_task_count, id, pnt1, pnt2, pnt3, time_limit, memory_limit, stylee, name, acsub, sub,
-                 setter):
-        self.sub_task_count = sub_task_count
-        self.pnt1 = pnt1
-        self.pnt2 = pnt2
-        self.pnt3 = pnt3
-        self.id = id
-        self.time_limit = time_limit
-        self.memory_limit = memory_limit
-        self.stylee = stylee
-        self.name = name
-        self.acsub = acsub
-        self.sub = sub
-        self.setter = setter
-
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -168,13 +133,6 @@ def upload_prev():
     return render_template('upload_problem.html', nameform=nameform)
 
 
-class postob:
-    def __init__(self, xtitle, xtext, xdt, xuser_, xid_):
-        self.title = xtitle
-        self.text = xtext
-        self.dt = xdt
-        self.user_ = xuser_
-        self.id_ = xid_
 
 
 @app.route('/')
@@ -206,15 +164,7 @@ def index():
     return 'Hello World!'
 
 
-class RegisterForm(Form):
-    name = StringField('Name', [validators.Length(min=1, max=50)])
-    username = StringField('Username', [validators.Length(min=4, max=50)])
-    email = EmailField('Email', [validators.Length(min=1, max=50)])
-    password = PasswordField('Password', [
-        validators.Length(min=5,max=10),
-        validators.EqualTo('confirm', message='Passwords do not match')
-    ])
-    confirm = PasswordField('Confirm Password')
+
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -243,14 +193,7 @@ def register():
     return render_template('register.html', form=form)
 
 
-class create_article_form(Form):
-    title = StringField('Post Title', [validators.DataRequired()])
-    text = CKEditorField('Post Body', [validators.DataRequired()])
 
-
-class LoginForm(Form):
-    username = StringField('Username', [validators.DataRequired()])
-    password = PasswordField('Password', [validators.DataRequired()])
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -1202,103 +1145,8 @@ def load_contest_problem(id1, id2):
 
 ######################################################################################################
 
-
-#############################################
-class graph_input(Form):
-    nodes_cnt=IntegerField("Number of Nodes",[validators.DataRequired()])
-    nodes_desc=TextAreaField("Nodes",[validators.DataRequired])
-    ed_cnt=IntegerField("Number of Edgs",[validators.DataRequired()])
-    ed_desc=TextAreaField("Edges",[validators.DataRequired()])
-
-
-def givenode(node_name):
-    node_name = node_name.replace('\n','')
-    print(repr(node_name),end=' ')
-    s='{ data: { id: '+ '\'' +node_name+ '\''+' } },'
-    return s
-
-def f(s):
-    s = s.replace('\n','')
-    return '\''+s+'\''
-
-def giveedge(st,ed,ed_name):
-    st = st.replace('\n','')
-    ed = ed.replace('\n','')
-    s='{\n'+'data: {\n'+'id: '+f(ed_name)+',\n'+'source : '+ f(st) +',\n'+'target: ' + f(ed) + ',\n}\n},\n'
-    return s
-
-def node_list(st,nd_cnt):
-    st = st.replace('\n', ' ')
-    st=st.replace('\r',' ')
-    ar = st.split(' ')
-    filter_list = []
-    for i in range(0, len(ar)):
-        if not (ar[i] == ''):
-            filter_list.append(ar[i].replace('\n',''))
-    filter_list2= []
-    nd_cnt=min(nd_cnt,len(filter_list))
-    for i in range(0, nd_cnt):
-        filter_list2.append(filter_list[i])
-    return filter_list2
-
-def edge_list(st,ed_cnt):
-    st=st.replace('\n',' ')
-    st=st.replace('\r',' ')
-    ar = st.split(' ')
-    filter_list = []
-    for i in range(0, len(ar)):
-        if not (ar[i] == ''):
-            filter_list.append(ar[i].replace('\n',''))
-    ed_cnt*=2
-    edcc=len(filter_list)
-    for i in range(0,len(filter_list)):
-        print(filter_list[i])
-
-    if edcc%2==1:
-        edcc-=1
-
-    ed_cnt=min(edcc,ed_cnt)
-    filter_list2=[]
-    for i in range(0,ed_cnt):
-        filter_list2.append(filter_list[i])
-    return filter_list2
-
-class graph:
-    def __init__(self,nodelist,edgelist):
-        self.nodelist=nodelist
-        self.edgelist=edgelist
-class adapter:
-    graphh=None
-    def __init__(self,graphh):
-        self.graphh=graphh
-        print(str(len(self.graphh.nodelist))+" omi")
-    def getjson(self):
-        jsonstring=''
-        nodelen=len(self.graphh.nodelist)
-        for i in range(0,nodelen):
-            s=givenode(self.graphh.nodelist[i])
-            jsonstring+='\n'
-            jsonstring+=s
-        edgelen = len(self.graphh.edgelist)
-        for i in range(0, edgelen,2):
-            s = giveedge(self.graphh.edgelist[i],self.graphh.edgelist[i+1],self.graphh.edgelist[i]+'#'+
-                         self.graphh.edgelist[i+1])
-            jsonstring += '\n'
-            jsonstring += s
-        return jsonstring
-class jsonstring:
-    _adapter=None
-    def __init__(self,_adapter):
-        self._adapter=_adapter
-    def getstring(self):
-        return self._adapter.getjson()
-
-
 @app.route('/graph', methods=['GET', 'POST'])
 def graphbuild():
-    #return render_template('graphcheck.html')
-    #print(givenode('a'))
-    #print(giveedge('a','b','ab'))
     form=graph_input(request.form)
     if request.method=='POST':
         directed= True
@@ -1320,11 +1168,7 @@ def graphbuild():
             ad=adapter(gp)
             js=jsonstring(ad)
             print(js.getstring(),file=f)
-            #f.close()
-            #for i in range (0,len(nd_list)):
-            #    print(givenode(nd_list[i]),file=f)
-            #for i in range (0,len(ed_list),2):
-            #    print(giveedge(ed_list[i],ed_list[i+1],ed_list[i]+'#'+ed_list[i+1]),file=f)
+
             print(sted,file=f)
             print(form.nodes_desc.data)
             f.close()
@@ -1351,11 +1195,7 @@ def graphbuild():
             ad = adapter(gp)
             js = jsonstring(ad)
             print(js.getstring(), file=f)
-            # f.close()
-            # for i in range (0,len(nd_list)):
-            #    print(givenode(nd_list[i]),file=f)
-            # for i in range (0,len(ed_list),2):
-            #    print(giveedge(ed_list[i],ed_list[i+1],ed_list[i]+'#'+ed_list[i+1]),file=f)
+
             print(sted, file=f)
             print(form.nodes_desc.data)
             f.close()
