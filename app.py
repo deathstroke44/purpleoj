@@ -1099,8 +1099,13 @@ def verify_contest(id):
     contest_now = contest_db.find({"_id": ObjectId(id)})[0]
     c_pass = contest_now.get('Password')
     c_name = contest_now.get('Contest Title')
+    print("p : " + c_pass)
+    if not c_pass:
+        print("no password")
+        url = "http://127.0.0.1:5000/currentcontest/" + id
+        return redirect(url, 302)
     if request.method == 'POST':
-        password = form.password.data
+        password = request.form['password']
         print(password)
         print(c_pass)
         if c_pass == password:
@@ -1139,14 +1144,19 @@ def load_contest(cc_id):
 
 
 # Problem pages of contest
-@app.route('/currentcontest/<id1>/<id2>')
-def load_contest_problem(id1, id2):
+@app.route('/currentcontest/<contest_id>/<id2>')
+def load_contest_problem(contest_id, id2):
     pbdb = mongo.db.problems
     pb = pbdb.find_one({'myid': id2})
     pbds = prob_struct(pb['name'], pb['time_limit'], pb['memory_limit'], id2)
+
+    contest_db = mongo.db.contests
+    contest_now = contest_db.find({"_id": ObjectId(contest_id)})[0]
+    end_time = contest_now.get('Start Date') + "T" + contest_now.get('End Time') + ":00+06:00"
     if not ('username' in session):
         return redirect(url_for('login'))
-    return render_template("problem_viewer.html", pdf_src='/static/uploads/' + id2 + '.pdf', pbds=pbds, cid=id1)
+    return render_template("problem_viewer.html", pdf_src='/static/uploads/' + id2 + '.pdf', pbds=pbds, cid=contest_id,
+                           et=end_time)
 
 
 ######################################################################################################
