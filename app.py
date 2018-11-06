@@ -5,15 +5,18 @@ import time
 from flask import Flask, render_template, request
 from flask import flash
 from flask import redirect, url_for, session, Session
-from flask_ckeditor import CKEditor
+from flask_ckeditor import CKEditor, CKEditorField
+from flask_codemirror import CodeMirror
+from flask_codemirror.fields import CodeMirrorField
 from flask_pymongo import PyMongo
+from flask_wtf import FlaskForm
 from werkzeug.utils import secure_filename
-from wtforms import Form, StringField, validators
-
-from ClassesList import problem, postob
-from FunctionList import edge_list, node_list, allowed_file, graph, adapter, jsonstring, problem_user_submissions
-from forms import UploadForm, graph_input, create_article_form, LoginForm, RegisterForm
-
+from wtforms import Form, IntegerField, StringField, PasswordField, validators
+from wtforms.fields import SubmitField, TextAreaField
+from wtforms.fields.html5 import EmailField
+from FunctionList import giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair
+from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
+from ClassesList import *
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
@@ -134,9 +137,38 @@ def upload_prev():
 
 @app.route('/')
 def index():
+    contest_db = mongo.db.contests
+    problem_db = mongo.db.problems
     list = []
     postdb = mongo.db.posts
     existing_post = postdb.find({}).sort('_id')
+    contest_db = mongo.db.contests
+    contest_cursor=contest_db.find({}).sort('Start Date')
+    pclist=[]
+    for pc in contest_cursor:
+        starting_datetime = pc['Start Date']+"T"+pc['Start Time']+":00+06:00"
+        ending_date = pc['Start Date']+"T"+pc['End Time']+":00+06:00"
+        id = pc['_id']
+        name=pc['Contest Title']
+        dt=datetime.datetime.now()
+        pcet=pc['End Time']
+        rep=''
+        flag=0
+        for i in range(0,len(pcet)):
+            if flag==1:
+                rep+=pcet[i]
+            if pcet[i]=='.':
+                flag=1
+        pcet.replace(rep,'')
+        ds=datetime.datetime.strptime(pc['Start Date']+' '+pcet,"%Y-%m-%d %H:%M")
+        xx=dt.strftime("%Y-%m-%d %H:%M")
+
+        cd = datetime.datetime.strptime(xx,"%Y-%m-%d %H:%M")
+        print(ending_date)
+        print(ds)
+        print(cd)
+        if ds>=dt:
+            pclist.append(tripled(starting_datetime,ending_date,id,name))
     i = 0
     for posts in existing_post:
         print(posts)
@@ -149,20 +181,15 @@ def index():
         list.append(ppp)
         print(list[i].dt)
         i = i + 1
-        list.reverse()
+    list.reverse()
     print(len(list))
 
     error = 'You are not logged in'
     dumb = 'dumb'
     if 'username' in session:
         msg = 'You are Logged in as ' + session['username']
-        return render_template('home.html', msg=msg, posts=list)
-    return render_template('home.html', error=error, dumb=dumb, posts=list)
-    return 'Hello World!'
-
-
-
-
+        return render_template('home.html', msg=msg, posts=list,PC=pclist)
+    return render_template('home.html', error=error, dumb=dumb, posts=list,PC=pclist)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -173,9 +200,6 @@ def register():
         usernames = form.username.data
         passwords = form.password.data
         user = mongo.db.userlist
-
-        # db = connection['purpleoj']
-        # db.authenticate('red44', 'red123456789')
         existing_user = user.find_one({'USERNAME': usernames})
         dialoge = 'Your Account Is created Successfully'
         if existing_user:
@@ -188,10 +212,6 @@ def register():
                          'PASSWORDS': passwords})
         return redirect(url_for('index'))
     return render_template('register.html', form=form)
-
-
-
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -270,15 +290,6 @@ def post():
     if not ('username' in session):
         return redirect(url_for('login'))
     return render_template('create_post.html', form=form)
-
-
-class prob_struct:
-    def __init__(self, pn, tl, ml, id):
-        self.pn = pn
-        self.tl = 'Time Limit : ' + str(tl) + 'ms'
-        self.ml = 'Memory Limit: ' + str(ml) + 'mb'
-        self.id = id
-
 
 @app.route('/about/<id>/submit/')
 def prob_submit(id):
@@ -1268,8 +1279,13 @@ def verify_contest(id):
     contest_now = contest_db.find({"_id": ObjectId(id)})[0]
     c_pass = contest_now.get('Password')
     c_name = contest_now.get('Contest Title')
+    print("p : " + c_pass)
+    if not c_pass:
+        print("no password")
+        url = "http://127.0.0.1:5000/currentcontest/" + id
+        return redirect(url, 302)
     if request.method == 'POST':
-        password = form.password.data
+        password = request.form['password']
         print(password)
         print(c_pass)
         if c_pass == password:
@@ -1308,14 +1324,19 @@ def load_contest(cc_id):
 
 
 # Problem pages of contest
-@app.route('/currentcontest/<id1>/<id2>')
-def load_contest_problem(id1, id2):
+@app.route('/currentcontest/<contest_id>/<id2>')
+def load_contest_problem(contest_id, id2):
     pbdb = mongo.db.problems
     pb = pbdb.find_one({'myid': id2})
     pbds = prob_struct(pb['name'], pb['time_limit'], pb['memory_limit'], id2)
+
+    contest_db = mongo.db.contests
+    contest_now = contest_db.find({"_id": ObjectId(contest_id)})[0]
+    end_time = contest_now.get('Start Date') + "T" + contest_now.get('End Time') + ":00+06:00"
     if not ('username' in session):
         return redirect(url_for('login'))
-    return render_template("problem_viewer.html", pdf_src='/static/uploads/' + id2 + '.pdf', pbds=pbds, cid=id1)
+    return render_template("problem_viewer.html", pdf_src='/static/uploads/' + id2 + '.pdf', pbds=pbds, cid=contest_id,
+                           et=end_time)
 
 
 ######################################################################################################

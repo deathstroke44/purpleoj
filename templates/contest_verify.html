@@ -37,13 +37,15 @@
     <h1 class="lead" align="center" > <font color="white" size="8px"><b>{{ name }}</b></font></h1>
 <form method="POST" action="">
 
-
-<div class="form-group" >
-    <font color="white">
-      {{render_field(form.password, class_="form-control")}}
-    </font>
-</div>
-<p align="center"><input type="submit" class="btn btn-primary" value="Submit"></p>
+<center>
+    <div id="password">
+        <p>Contest Password</p>
+        <input type="password" name="password">
+    </div>
+    <div class="row mt-5">
+    </div>
+        <p align="center"><input type="submit" class="btn btn-primary" value="Submit"></p>
+</center>
 </form>
 </div>
         </div>

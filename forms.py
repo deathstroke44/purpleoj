@@ -60,11 +60,11 @@ class LoginForm(Form):
     password = PasswordField('Password', [validators.DataRequired()])
 
 class RegisterForm(Form):
-    name = StringField('Name', [validators.Length(min=1, max=50)])
-    username = StringField('Username', [validators.Length(min=4, max=50)])
-    email = EmailField('Email', [validators.Length(min=1, max=50)])
+    name = StringField('Name', [validators.DataRequired()])
+    username = StringField('Username', [validators.DataRequired()])
+    email = EmailField('Email', [validators.DataRequired()])
     password = PasswordField('Password', [
-        validators.Length(min=5,max=10),
+        validators.DataRequired(),
         validators.EqualTo('confirm', message='Passwords do not match')
     ])
     confirm = PasswordField('Confirm Password')

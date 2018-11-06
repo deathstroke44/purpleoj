@@ -27,7 +27,8 @@
 
 
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/2.7.10/cytoscape.js"></script>
+
+    <script src="/static/graph/cytoscape.js"></script>
 </head>
 
 <body>
@@ -43,7 +44,7 @@
             <button id="edgelist">Add Edge</button>
             <hr>
         </div>
-        <div id="cy" class="col-md-7"></div>
+        <div id="cy" class="col-md-7 shadow"></div>
 
     </div>
     <script>

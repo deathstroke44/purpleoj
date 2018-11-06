@@ -21,3 +21,17 @@ class postob:
         self.dt = xdt
         self.user_ = xuser_
         self.id_ = xid_
+
+class tripled:
+    def __init__(self,st,ed,id,name):
+        self.name=name
+        self.st=st
+        self.ed=ed
+        self.id=id
+
+class prob_struct:
+    def __init__(self, pn, tl, ml, id):
+        self.pn = pn
+        self.tl = 'Time Limit : ' + str(tl) + 'ms'
+        self.ml = 'Memory Limit: ' + str(ml) + 'mb'
+        self.id = id
