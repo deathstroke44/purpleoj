@@ -5,18 +5,15 @@ import time
 from flask import Flask, render_template, request
 from flask import flash
 from flask import redirect, url_for, session, Session
-from flask_ckeditor import CKEditor, CKEditorField
-from flask_codemirror import CodeMirror
-from flask_codemirror.fields import CodeMirrorField
+from flask_ckeditor import CKEditor
 from flask_pymongo import PyMongo
-from flask_wtf import FlaskForm
 from werkzeug.utils import secure_filename
-from wtforms import Form, IntegerField, StringField, PasswordField, validators
-from wtforms.fields import SubmitField, TextAreaField
-from wtforms.fields.html5 import EmailField
-from FunctionList import giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair
-from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
-from ClassesList import problem,postob
+from wtforms import Form, StringField, validators
+
+from ClassesList import problem, postob
+from FunctionList import edge_list, node_list, allowed_file, graph, adapter, jsonstring, problem_user_submissions
+from forms import UploadForm, graph_input, create_article_form, LoginForm, RegisterForm
+
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
@@ -378,7 +375,6 @@ def submissions():
 
 #   ASIF AHMED*******************************
 # ***************************************************************************
-dir_path = os.path.dirname(os.path.realpath(__file__))
 languages = ["Java", "C", "Python"]
 # CODEMIRROR_LANGUAGES = ['python','c']
 #
@@ -393,10 +389,7 @@ languages = ["Java", "C", "Python"]
 # )
 # app.config.from_object(__name__)
 # codemirror = CodeMirror(app)
-class CodemirrorForm(FlaskForm):
-    source_code = CodeMirrorField(language='python', config={'lineNumbers': 'true'})
-    submit = SubmitField('Submit')
-    inputs = TextAreaField(u'inputs')
+from codemirrorform import CodemirrorForm
 
 def runPython(auxForm):
     form = CodemirrorForm(auxForm)
@@ -867,6 +860,182 @@ def onlineide():
             print(CodemirrorForm(request.form).source_code.data)
             return template
     return render_template('editor.html', form=CodemirrorForm(request.form), languages=languages)
+
+
+@app.route('/udebug', methods=['GET', 'POST'])
+def problemList():
+    problemsdb = mongo.db.problems
+    list = []
+    existing_posts = problemsdb.find({})
+    i = 0
+    for existing_post in existing_posts:
+        ppp = problem(existing_post['sub_task_count'],
+                      existing_post['myid'],
+                      existing_post['pnt1'],
+                      existing_post['pnt2'],
+                      existing_post['pnt3'],
+                      existing_post['time_limit'],
+                      existing_post['memory_limit'],
+                      existing_post['stylee'],
+                      existing_post['name'],
+                      existing_post['acsub'],
+                      existing_post['sub'],
+                      existing_post['setter'])
+        list.append(ppp)
+        i = i + 1
+    print(len(list))
+    # lol
+    if not ('username' in session):
+        return redirect(url_for('login'))
+    return render_template('problem_list_for_udebug.html', obj=list)
+
+
+def runForUbebug(inputs, text):
+    makeSubmissionFolders()
+    fout = open(getProgramFileName("C"), "w")
+    print(text, file=fout)
+    fout.close()
+    # compiling the program
+    os.system(" g++ -o " + getExecutibleFileName("C") + " " + getProgramFileName("C") + " 2>" + getErrorFileName())
+    # reading errors
+    finputs = open(getErrorFileName(), "r")
+    errors = finputs.readlines()
+    finputs.close()
+    print(errors)
+    # running with user defined inputs
+    if True:
+        finputs = open(getCustomInputsFileName(), "w")
+        print(inputs, file=finputs)
+        finputs.close()
+        # checking for compile errors
+        if len(errors) == 0:
+
+            os.system(" ./" + getExecutibleFileName("C") + " < " + getCustomInputsFileName() +
+                      " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+
+
+        else:
+            # os.system("rm -r submissions/" + getUserId())
+            return errors
+
+    # reading program outputs
+    finputs = open(getOutputFileName(), "r")
+    outputs = finputs.readlines()
+    finputs.close()
+    # reading RTE
+    finputs = open(getErrorFileName(), "r")
+    errors = finputs.readlines()
+    finputs.close()
+    # os.system("rm -r submissions/" + getUserId())
+    # checking for RTE
+    output = ""
+    cleanup()
+    for x in outputs:
+        output += x
+    if len(errors) == 0:
+        print(output)
+        return output
+    else:
+        print(errors)
+        return errors
+
+
+def getCode(filename):
+    codelist = open(filename).readlines()
+    code = ""
+    for x in codelist:
+        code += x + "\n"
+    return code
+
+
+def getInputFileListForUdebug(problemId):
+    os.system("cd static/inputs_for_udebug &&ls | grep " + problemId + ">" + getUserId() + ".txt")
+    return open("static/inputs_for_udebug/" + getUserId() + ".txt").readlines()
+
+
+def getInputsForUdebug(filename):
+    codelist = open(filename).readlines()
+    code = ""
+    for x in codelist:
+        code += x
+    return code
+
+
+def extractInputName(x, problemId):
+    return x.replace(problemId, "").replace(".txt", "")
+
+
+@app.route('/udebug/<problemId>', methods=['GET', 'POST'])
+def udebug(problemId):
+    acceptedOutput = ""
+    yourOutputs = ""
+    inputs = ""
+    mismatchNumber = -1
+    results = list()
+    inputFiles = getInputFileListForUdebug(problemId)
+    selectedinputFile = ""
+    usableInputFiles = list()
+    for x in inputFiles:
+        usableInputFiles.append(extractInputName(x, problemId))
+    print(inputFiles)
+    if "get_accepted_output_button" in request.form:
+        acceptedOutput = request.form["accepted_output_textarea"]
+        inputs = request.form["input_textarea"]
+        code = getCode("static/solutions/" + problemId + ".c")
+        acceptedOutput = runForUbebug(inputs, code)
+        print(code)
+        print(acceptedOutput)
+
+    elif "compare_outputs_button" in request.form:
+        print(request.form)
+        acceptedOutput = request.form["accepted_output_textarea"]
+        inputs = request.form["input_textarea"]
+        yourOutputs = request.form["your_output_textarea"]
+        code = getCode("static/solutions/" + problemId + ".c")
+        acceptedOutput = runForUbebug(inputs, code)
+        # print(code)
+        # print(acceptedOutput)
+        yourOutputList = list()
+        acceptedOutputList = list()
+        for x in acceptedOutput.split("\n"):
+            if x == None:
+                acceptedOutputList.append("")
+            else:
+                acceptedOutputList.append(x)
+        for x in yourOutputs.split("\n"):
+            if x == None:
+                yourOutputList.append("")
+            else:
+                yourOutputList.append(x)
+        acceptedOutputLineNumber = len(acceptedOutputList)
+        yourOutputLineNumber = len(yourOutputList)
+        if (len(acceptedOutputList) > len(yourOutputList)):
+            for i in range(len(acceptedOutputList) - len(yourOutputList)):
+                yourOutputList.append("")
+        elif (len(acceptedOutputList) < len(yourOutputList)):
+            for i in range(-len(acceptedOutputList) + len(yourOutputList)):
+                acceptedOutputList.append("")
+        outputpair = zip(acceptedOutputList, yourOutputList)
+        mismatchNumber = 0
+        for i, (x, y) in enumerate(outputpair):
+            if x != y[:-1]:
+                mismatchNumber += 1
+                if (i < acceptedOutputLineNumber and i < yourOutputLineNumber):
+                    results.append((int(i + 1), x, int(i + 1), y))
+                elif (i < acceptedOutputLineNumber):
+                    results.append((int(i + 1), x, "", y))
+                else:
+                    results.append(("", x, int(i + 1), y))
+    if "inputstorer" in request.form and len(request.form["inputstorer"]) > 0:
+        selectedinputFile = "static/inputs_for_udebug/" + problemId + str(request.form["inputstorer"]).replace("\n",
+                                                                                                               "").replace(
+            "\r", "").strip(" ") + ".txt"
+        inputs = getInputsForUdebug(selectedinputFile)
+    return render_template('udebug.html', selectedinput=inputs, acceptedOutput=acceptedOutput, yourOutput=yourOutputs,
+                           results=results, mismatchNumber=mismatchNumber, inputs=usableInputFiles)
+
+
+
 
 
 # *****************************************************************************************

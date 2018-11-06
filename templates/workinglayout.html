@@ -1,0 +1,2266 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600|Oswald" rel="stylesheet">
+    <link type="text/css" rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css"
+          media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="https://www.torrentbd.com/torrent/themes/material/theme.css"
+          media="screen,projection"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content="SkB"/>
+    <meta name="description" content="TorrentBD is the leading Private Torrent Tracker in Bangladesh."/>
+    <meta name="keywords" content="TorrentBD, BD, torrent, Bangladesh, BDIX, local site, high speed torrent"/>
+    <link rel="shortcut icon"
+          href="https://1.bp.blogspot.com/-F2JeKtPCJYI/VgjpVxwMO4I/AAAAAAAAADg/VyNyp-yW9Ac/s1600/TBD.ico"/>
+    <script type="text/javascript" src="https://www.torrentbd.com/torrent/themes/material/jquery-2.1.1.min.js"></script>
+    <script src="https://www.torrentbd.com/torrent/themes/material/jquery.cookie.js"></script>
+    <script type="text/javascript" src="https://www.torrentbd.com/torrent/themes/material/code256.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.torrentbd.com/torrent/themes/material/scheme_01_009.css"
+          media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="https://www.torrentbd.com/torrent/themes/material/inhouse_005.css"
+          media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="https://www.torrentbd.com/torrent/themes/immutables.css"
+          media="screen,projection"/>
+    <style>
+        .inline-block {
+            display: inline-block;
+        }
+
+        .personal-links h6 {
+            font-size: 1.05em;
+            margin: 10px auto;
+        }
+
+        .personal-links-ul li {
+            list-style-type: none;
+            padding: 5px 4px;
+            display: inline-block;
+            font-size: .9em;
+        }
+
+        .personal-links-ul li a:hover {
+            font-weight: normal;
+            text-decoration: underline;
+        }
+
+        @media only screen and (max-width: 1400px) {
+            nav ul a {
+                padding: 0 10px;
+            }
+        }
+    </style>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".button-collapse").sideNav();
+            $('.modal-trigger').leanModal({
+                dismissible: true, // Modal can be dismissed by clicking outside of the modal
+                opacity: .1, // Opacity of modal background
+                in_duration: 10, // Transition in duration
+                out_duration: 10, // Transition out duration
+            });
+            $('.datepicker').pickadate({
+                selectMonths: true, // Creates a dropdown to control month
+                selectYears: 15, // Creates a dropdown of 15 years to control year
+                format: 'yyyy-mm-dd'
+            });
+            $('.materialboxed').materialbox();
+            $('select').material_select();
+            $('.option').material_select();
+        });
+    </script>
+    <title>CodeFlask OJ</title>
+
+
+</head>
+<body>
+<header>
+
+    <div id="new-pm-notification" class="blue darken-3"
+         style="position: fixed; top: 5rem; right: .5rem; padding: .4rem 1.5rem; opacity: .95; z-index:999854; display: none;">
+        <h5>
+            <a class="white-text" href="mailbox.php?inbox"><i class="material-icons small left">mail_outline</i> You
+                have a new PM!</a>
+        </h5>
+    </div>
+
+    <ul id="dropdown4" class="dropdown-content">
+        <li><a href="support.php">Support</a></li>
+        <li><a href="faq.php">FAQ</a></li>
+        <li><a href="rules.php">Rules</a></li>
+    </ul>
+
+    <ul id="dropdown7" class="dropdown-content">
+        <li><a href="templates.php">Templates</a></li>
+        <li><a href="preview.php">BBCode Preview</a></li>
+    </ul>
+    <ul id="dropdown3" class="dropdown-content">
+        <li><a href="torrents.php">Browse All</a></li>
+        <li><a href="torrents-today.php">Today's Torrents</a></li>
+        <li><a href="torrents-search.php?sort=freeleech&amp;order=desc">FreeLeech Torrents</a></li>
+        <li class="divider"></li>
+        <li><a href='torrents.php?parent_cat=Anime'>Anime</a></li>
+        <li><a href='torrents.php?parent_cat=Apps'>Apps</a></li>
+        <li><a href='torrents.php?parent_cat=Bangla'>Bangla</a></li>
+        <li><a href='torrents.php?parent_cat=Cartoons'>Cartoons</a></li>
+        <li><a href='torrents.php?parent_cat=Documentaries'>Documentaries</a></li>
+        <li><a href='torrents.php?parent_cat=E-books'>E-books</a></li>
+        <li><a href='torrents.php?parent_cat=Games'>Games</a></li>
+        <li><a href='torrents.php?parent_cat=Movies'>Movies</a></li>
+        <li><a href='torrents.php?parent_cat=Music'>Music</a></li>
+        <li><a href='torrents.php?parent_cat=Other'>Other</a></li>
+        <li><a href='torrents.php?parent_cat=Sports'>Sports</a></li>
+        <li><a href='torrents.php?parent_cat=Tutorials'>Tutorials</a></li>
+        <li><a href='torrents.php?parent_cat=TV'>TV</a></li>
+    </ul>
+    <nav>
+        <div class="nav-wrapper" style="background: #00666a;">
+            <a href="index.php" class="brand-logo"><img id="logo-img"
+                                                        src="https://www.torrentbd.com/torrent/images/logo-124.png"
+                                                        width="250px" alt="TorrentBD Logo"
+                                                        class="side-nav-logo valign center-align"/></a>
+            <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a class="waves-effect modal-trigger" href="#search"><i class="small material-icons">search</i></a>
+                </li>
+                <li id="home-menu-li"><a href="index.php">Home</a></li>
+                <li><a href="movies.php">Movies</a></li>
+                <li><a href="tv.php">TV</a></li>
+                <li><a href="torrents-upload.php">Upload</a></li>
+                <li><a class="dropdown-button" href="torrents.php" data-activates="dropdown3">Torrents<i
+                        class="material-icons right">arrow_drop_down</i></a></li>
+                <li><a href="forums.php">Forum</a></li>
+                <li><a href="requests.php">Request</a></li>
+                <li><a class="dropdown-button" href="templates.php" data-activates="dropdown7">Tools<i
+                        class="material-icons right">arrow_drop_down</i></a></li>
+                <li><a class="dropdown-button" href="support.php" data-activates="dropdown4">Help<i
+                        class="material-icons right">arrow_drop_down</i></a></li>
+                <li><a href="donate.php">Donate</a></li>
+            </ul>
+
+            <ul class="side-nav" id="mobile-demo">
+                <li>
+                    <div class="chip">
+                        <img src=https://www.torrentbd.com/torrent/images/default_avatar.png
+                             onerror="this.src='images/default_avatar.png'">
+                        muntakim1995
+                    </div>
+                </li>
+                <div class="sidenav-block" style="padding-top: 16px">
+                    <div class="sidenav-info">Class: Power User</div>
+                    <div class="sidenav-info">Ratio: 24.94</div>
+                    <div class="sidenav-info">
+                        <a href="mailbox.php?inbox">
+                            Inbox
+                            <span>(0)</span>
+                        </a>
+                    </div>
+                    <div class="sidenav-info">
+                    </div>
+                </div>
+                <div class="sidenav-block sidenav-btn">
+                    <a class="tooltipped inline-item" data-position="bottom" data-delay="50"
+                       href="account.php?action=edit_settings&do=edit" data-tooltip="Account Settings"><i
+                            class="material-icons">settings</i></a>
+                    <a class="tooltipped inline-item" data-position="bottom" data-delay="50"
+                       href="account-details.php?id=84078" data-tooltip="My Profile"><i class="material-icons">perm_identity</i></a>
+                    <a class="tooltipped inline-item" data-position="bottom" data-delay="50" href="account-logout.php"
+                       data-tooltip="Logout"><i class="material-icons">power_settings_new</i></a>
+                </div>
+                <li class="divider"></li>
+                <div class="input-field">
+                    <form action="torrents-search.php" method="get" style="height: 45px;">
+                        <input placeholder="Search for a torrent" id="search-sn" name="search" type="text"
+                               class="validate" autofocus="">
+                    </form>
+                </div>
+
+                <li><a href="index.php">Home</a></li>
+                <li><a href="movies.php">Movies</a></li>
+                <li><a href="tv.php">TV</a></li>
+                <li><a href="torrents-upload.php">Upload</a></li>
+                <li class="no-padding">
+                    <ul class="collapsible collapsible-accordion">
+                        <li>
+                            <a class="collapsible-header">Torrents<i
+                                    class="mdi-navigation-arrow-drop-down left"></i></a>
+                            <div class="collapsible-body">
+                                <ul>
+                                    <li><a href="torrents.php">Browse All</a></li>
+                                    <li><a href="torrents-today.php">Today's Torrents</a></li>
+                                    <li><a href="torrents-search.php?sort=freeleech&amp;order=desc">FreeLeech
+                                        Torrents</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href='torrents.php?parent_cat=Anime'>Anime</a></li>
+                                    <li><a href='torrents.php?parent_cat=Apps'>Apps</a></li>
+                                    <li><a href='torrents.php?parent_cat=Bangla'>Bangla</a></li>
+                                    <li><a href='torrents.php?parent_cat=Cartoons'>Cartoons</a></li>
+                                    <li><a href='torrents.php?parent_cat=Documentaries'>Documentaries</a></li>
+                                    <li><a href='torrents.php?parent_cat=E-books'>E-books</a></li>
+                                    <li><a href='torrents.php?parent_cat=Games'>Games</a></li>
+                                    <li><a href='torrents.php?parent_cat=Movies'>Movies</a></li>
+                                    <li><a href='torrents.php?parent_cat=Music'>Music</a></li>
+                                    <li><a href='torrents.php?parent_cat=Other'>Other</a></li>
+                                    <li><a href='torrents.php?parent_cat=Sports'>Sports</a></li>
+                                    <li><a href='torrents.php?parent_cat=Tutorials'>Tutorials</a></li>
+                                    <li><a href='torrents.php?parent_cat=TV'>TV</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="forums.php">Forum</a></li>
+                <li><a href="requests.php">Request</a></li>
+                <li><a href="support.php">Support</a></li>
+                <li><a href="faq.php">FAQ</a></li>
+                <li class="no-padding">
+                    <ul class="collapsible collapsible-accordion">
+                        <li>
+                            <a class="collapsible-header">Tools<i class="mdi-navigation-arrow-drop-down left"></i></a>
+                            <div class="collapsible-body">
+                                <ul>
+                                    <li><a href="templates.php">Templates</a></li>
+                                    <li><a href="preview.php">BBCode Preview</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="donate.php">Donate</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<main>
+    <div class="row">
+
+        <div class="col l3 m12 s12" style="max-width:420px;">
+            <div class="row hide-on-med-and-down">
+                <div class="col s12">
+
+                    <div class="card">
+                        <div class="card-image waves-effect waves-block waves-light">
+                            <img class="activator circle avatar"
+                                 src=https://www.torrentbd.com/torrent/images/default_avatar.png style="margin:auto;"
+                                 onerror="this.src='images/default_avatar.png'">
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title activator grey-text text-darken-4" title="View More">muntakim1995<i
+                                    style="color: #00acc1" class="material-icons right">change_history</i></span>
+                            <p style="font-size: 1rem; font-family: 'Oswald'; margin-bottom: 22px;" title="User Class">
+
+                                <span class="tbdrank power-user">Power User</span>
+                            </p>
+                            <table class="table profile-info-table">
+                                <tr>
+                                    <td>UL</td>
+                                    <td>: 853.10 GB</td>
+                                </tr>
+                                <tr>
+                                    <td>DL</td>
+                                    <td>: 34.20 GB</td>
+                                </tr>
+                                <tr>
+                                    <td>Ratio</td>
+                                    <td>: 24.94</td>
+                                </tr>
+                                <tr>
+                                    <td>Invites</td>
+                                    <td>: <a href="invite.php" class="tooltipped" data-position="bottom" data-delay="50"
+                                             data-tooltip="Can be used to invite users to TorrentBD.">5</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Seedbonus</td>
+                                    <td>: <a href="seedbonus.php" id="user-sb" class="tooltipped" data-position="bottom"
+                                             data-delay="50"
+                                             data-tooltip="Can be used to redeem Upload Credit, Invites etc. Click to know more.">710656.5</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Seed to go</td>
+                                    <td>: <a href="hnr.php?seeding" class="tooltipped" data-position="bottom"
+                                             data-delay="50"
+                                             data-tooltip="Number of torrents you need to seed for at least 48 hours. Click to know more."><span
+                                            class="green-text"> -- </span></a></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="text-align: center; padding-top: 25px;">
+                                        <div class="switch tooltipped" style="margin: 8px auto !important;"
+                                             data-position="bottom" data-delay="50" data-tooltip="TorrentBD Dark">
+                                            <form name="color_scheme_form" method="post" action="ajscripts.php">
+                                                <input type="hidden" name="task" value="switchColorScheme">
+                                                <input type="hidden" name="redirect_to" value="index.php">
+                                                <label>
+                                                    <input type="checkbox" id="color_scheme" name="color_scheme"
+                                                           checked="checked">
+                                                    <span class="lever" style="margin: auto 8px;"></span>
+                                                </label>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="card-action account-action-buttons" style="padding: 15px">
+                            <a class="tooltipped" data-position="bottom" data-delay="50" href="mailbox.php?inbox"
+                               data-tooltip="Mailbox">
+                                <i class="material-icons ">email</i>
+                                <span>(0)</span>
+                            </a>
+                            <a class="tooltipped" data-position="bottom" data-delay="50"
+                               href="account.php?action=edit_settings&do=edit" data-tooltip="Account Settings"><i
+                                    class="material-icons">settings</i></a>
+                            <a class="tooltipped" data-position="bottom" data-delay="50"
+                               href="account-details.php?id=84078" data-tooltip="My Profile"><i class="material-icons">perm_identity</i></a>
+                            <a class="tooltipped" data-position="bottom" data-delay="50" href="account-logout.php"
+                               data-tooltip="Logout"><i class="material-icons">power_settings_new</i></a>
+                        </div>
+                        <div class="card-reveal">
+                            <span class="card-title">muntakim1995<i class="material-icons right">close</i></span>
+                            <p>Activity:
+                                <span class="green-text" title="Currently Seeding"><i class="tiny material-icons">file_upload</i>199</span>
+                                &nbsp;&nbsp;
+                                <span class="red-text" title="Currently Downloading"><i class="tiny material-icons">file_download</i>0</span>
+                            </p>
+                            <p>Privacy Level: Normal</p>
+                            <p>IP Address: 103.60.175.23</p>
+                            <p>Upload Reputation: 37</p>
+                            <p><br></p>
+                            <p>
+                                <a href="watchlists.php" target="_blank">Watchlists</a>
+                            </p>
+                            <p>
+                                <a href="bookmarks.php" target="_blank">Bookmarked Torrents</a>
+                            </p>
+                            <p>
+                                <a href="download-history.php" target="_blank">Download History</a>
+                            </p>
+                            <p>
+                                <a href="support.php?user=84078" target="_blank">Support Tickets</a>
+                            </p>
+                            <p>
+                                <a href="forums.php?action=userposts" target="_blank">Forum Posts</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-content staff-todo-container personal-links"
+                             style="padding: 1px 12px; text-align: center;">
+                            <h6>Personal Links</h6>
+                            <hr>
+                            <ul class="plsl">
+                                <li><a href="bookmarks.php" class="tooltipped" data-position="top" data-delay="50"
+                                       data-tooltip="Bookmarks">
+                                    <img src="images/bookmark-icon.png" height="26">
+                                </a></li>
+                                <li><a href="watchlists.php" class="tooltipped" data-position="top" data-delay="50"
+                                       data-tooltip="Watchlists">
+                                    <img src="images/watchlist-icon.png" height="26"></a></li>
+                                <li><a href="templates.php" class="tooltipped" data-position="top" data-delay="50"
+                                       data-tooltip="Templates"><img src="images/templates-2-icon.png" height="26">
+                                </a></li>
+                                <li><a href="account-details.php?id=84078#torrents" class="tooltipped"
+                                       data-position="top" data-delay="50" data-tooltip="Uploads">
+                                    <img src="images/torrent-uploads-icon.png" height="26">
+                                </a></li>
+                                <li><a href="istrackerup.php" class="tooltipped" data-position="top" data-delay="50"
+                                       data-tooltip="Tracker Status">
+                                    <img src="images/tracker-icon.png" height="26">
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <ul class="collapsible" data-collapsible="accordion">
+
+                        <li>
+                            <div class="collapsible-header" onclick="loadPopularTorrentsPanel()"><i
+                                    class="material-icons orange600">trending_up</i>Trending Torrents
+                            </div>
+                            <div class="collapsible-body">
+                                <div id="opular-torrents-panel" class="collection">
+                                    <div class="loading-container">
+                                        <div class="loader-dzg"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="collapsible-header" onclick="loadStaffpicksPanel()"><i
+                                    class="material-icons orange600">loyalty</i>Staff Picks
+                            </div>
+                            <div class="collapsible-body">
+                                <div id="staffpicks-panel" class="collection">
+                                    <div class="loading-container">
+                                        <div class="loader-dzg"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="collapsible" data-collapsible="accordion">
+
+                        <li>
+                            <div class="collapsible-header" onclick="loadStatsPanel()"><i
+                                    class="material-icons orange600">view_list</i>Site Stats
+                            </div>
+                            <div class="collapsible-body">
+                                <div id="stats-panel" class="row">
+                                    <div class="loading-container">
+                                        <div class="loader-dzg"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="collapsible-header" onclick="loadPollsPanel()"><i
+                                    class="material-icons orange600">assessment</i>Poll <i id="new_poll_notif"
+                                                                                           class="material-icons right"
+                                                                                           style="color:#1e88e5; display:none">priority_high</i>
+                            </div>
+                            <div class="collapsible-body">
+                                <div id="polls-panel" class="row">
+                                    <div class="loading-container">
+                                        <div class="loader-dzg"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="collapsible-header" onclick="loadTopUploadersPanel()"><img class="title-glyph"
+                                                                                                   src="images/top-uploaders-icon.png">
+                                Top Uploaders
+                            </div>
+                            <div class="collapsible-body">
+                                <div id="top-uploaders-panel" class="row">
+                                    <div class="loading-container">
+                                        <div class="loader-dzg"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <ul class="collapsible">
+
+                        <div id="forums-panel-activator" class="collapsible-header" onclick="toggleForumsPanel()">
+                            <i class="material-icons orange600">question_answer</i>Forums <span class="right"><i
+                                class="material-icons">arrow_drop_down</i></span>
+                        </div>
+                        <div id="forums-panel-container" class="collapsible-body toggle-outline">
+                            <div id="forums-panel" class="row">
+                                <div class="loading-container">
+                                    <div class="loader-dzg"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col l9 m12 s12" style="margin-top:6px">
+            <style>
+                .card-panel {
+                    padding: 0px;
+                }
+
+                .news-content {
+                    margin-bottom: .6rem;
+                }
+
+                .shout-table td {
+                    padding: 5px;
+                }
+
+                .torrent-filters p {
+                    display: inline-block;
+                    padding: .3rem 2.5rem .3rem 0;
+
+                }
+
+                [type="checkbox"] + label {
+                    padding-left: 30px;
+                }
+
+                .news-header {
+                    font-weight: 200;
+                    font-style: italic;
+                    font-size: 0.8rem;
+                    margin-bottom: 1.8rem;
+                }
+
+                .shouts, .shouts i {
+                    font-size: 0.9rem;
+                }
+
+                .shout-time {
+                    color: #9e9e9e;
+                    margin-right: .6rem;
+                }
+
+                .shouts-send .btn {
+                    padding: 0 .8rem;
+                    margin-right: .5rem;
+                }
+
+                /*.home-search-wrapper {
+                  position: relative;
+                }
+                .home-search-wrapper i {
+                  position: absolute;
+                    font-size: 24px;
+                    top: 14px;
+                    left: 10px;
+                }
+                input.home-search-input {
+                  width: 90%;
+                  padding: 8px 0px 8px 30px;
+                    height: 20px;
+                    transition: all 200ms ease;
+                }*/
+
+                .carousel {
+                    overflow: hidden;
+                    position: relative;
+                    width: 100%;
+                    height: 300px;
+                    -webkit-perspective: 500px;
+                    perspective: 500px;
+                    -webkit-transform-style: preserve-3d;
+                    transform-style: preserve-3d;
+                    -webkit-transform-origin: 0% 50%;
+                    transform-origin: 0% 50%;
+                }
+
+                .carousel .carousel-item {
+                    display: none;
+                    text-align: center;
+                    width: 200px;
+                    height: 250px;
+                    position: absolute;
+                    top: -30px;
+                    left: 0;
+                }
+
+                .carousel .carousel-item img {
+                    max-width: 97%;
+                    max-height: 97%;
+                }
+
+                .carousel-text {
+                    margin-top: .2rem;
+                    font-size: .9rem;
+                }
+
+                .carousel-text i {
+                    margin-top: 10px;
+                }
+
+                .carousel-text-items {
+                    padding: 0rem .4rem;
+                }
+
+                .new-torrent-tag {
+                    font-size: .8rem;
+                    background: #00666a;
+                    color: white;
+                    padding: .1rem .4rem;
+                    border-radius: .2rem;
+                    margin-left: .5rem;
+                }
+
+                .trending {
+                    padding: 1rem !important;
+                    overflow: auto !important;
+                }
+
+                #news-outline img {
+                    max-width: 95%;
+                }
+
+                .shouts-send {
+                    padding: 0px 2px !important;
+                }
+
+                .torr-filter-container {
+                    margin-top: .5rem;
+                }
+
+                #torrents_search {
+                    font-size: 2rem;
+                    border-bottom: none !important;
+                    color: #039be5;
+                }
+
+                .torr-search-label {
+                    font-size: 1rem !important;
+                }
+
+                #torrents_search:focus {
+                    border-bottom: none !important;
+                    box-shadow: none !important;
+                }
+
+                #shout-history-wrapper {
+                    position: fixed;
+                    width: 100vw;
+                    height: 100vh;
+                    left: 0;
+                    top: 0;
+                    background: rgba(33, 33, 33, 0.8);
+                    z-index: 1000;
+                    display: none;
+                }
+
+                #shout-history-container {
+                    background: white;
+                    width: 65%;
+                    margin: auto;
+                    height: 80%;
+                    margin-top: 4%;
+                }
+
+                #shout-history {
+                    padding: .5rem 1.2rem !important;
+                    font-size: .9rem;
+                    overflow-y: auto;
+                    height: 90%;
+                }
+
+                #shout-history i {
+                    font-size: .9rem;
+                }
+
+                @media (max-width: 991px) {
+                    #shout-history-container {
+                        width: 86%;
+                        margin-top: 8%;
+                    }
+                }
+
+            </style>
+
+            <div class="row card-panel">
+                <div class="col s12 content-title toggle" onclick="toggleExclusives()">
+                    <h6 class="left">Exclusives</h6>
+                    <span class="right toggle-indicator"><i class="material-icons">arrow_drop_down</i></span>
+                </div>
+                <span id="exclusives-outline" class="toggle-outline">
+<div class="col s12 exclusives">
+<div class="carousel">
+<a class="carousel-item tooltipped" href="torrents-details.php?id=258025&amp;hit=1" target="_blank" data-position="top"
+   data-delay="0" data-tooltip="Chilling Adventures of Sabrina S01 1080p NF WEBRip x265 HEVC 6CH-MRN | 7.05 GB">
+<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/torrent/uploads/images/2580251.jpg">
+<p class="carousel-text">
+<span class="carousel-text-items green-text">343</span> |
+<span class="carousel-text-items red-text">45</span> |
+<span class="carousel-text-items orange100">363</span>
+</p>
+</a>
+<a class="carousel-item tooltipped" href="torrents-details.php?id=257958&amp;hit=1" target="_blank" data-position="top"
+   data-delay="0" data-tooltip="Castlevania S02 1080p WEB-DL DD5.1 H264-NG | 8.97 GB">
+<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+     data-src="/torrent/posters/uuJVpzEe5T0E96ZiRbwTuAYY6517102.jpg">
+<p class="carousel-text">
+<span class="carousel-text-items green-text">327</span> |
+<span class="carousel-text-items red-text">31</span> |
+<span class="carousel-text-items orange100">323</span>
+</p>
+</a>
+<a class="carousel-item tooltipped" href="torrents-details.php?id=257917&amp;hit=1" target="_blank" data-position="top"
+   data-delay="0" data-tooltip="Christopher Robin 2018 1080p BluRay DTS-HD MA 7.1 x264 - AvoHD | 9.72 GB">
+<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+     data-src="/torrent/posters/gtwFEZaJoAzO4oGOJK2ZHgYY4575576.jpg">
+<p class="carousel-text">
+<span class="carousel-text-items green-text">155</span> |
+<span class="carousel-text-items red-text">11</span> |
+<span class="carousel-text-items orange100">162</span>
+</p>
+</a>
+<a class="carousel-item tooltipped" href="torrents-details.php?id=257824&amp;hit=1" target="_blank" data-position="top"
+   data-delay="0" data-tooltip="The Joke Thief 2018 1080p WEB-DL DD5.1 H.264-CMRG | 2.81 GB">
+<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+     data-src="/torrent/posters/BhOuTmH9dirimxwh7S0t3wYY8027322.jpg">
+<p class="carousel-text">
+<span class="carousel-text-items green-text">103</span> |
+<span class="carousel-text-items red-text">4</span> |
+<span class="carousel-text-items orange100">86</span>
+</p>
+</a>
+<a class="carousel-item tooltipped" href="torrents-details.php?id=257719&amp;hit=1" target="_blank" data-position="top"
+   data-delay="0" data-tooltip="Bollywood Khans Hits Vol-2 Bluray 1080p H265 10bits AC3 5.1- IHK | 200.01 GB">
+<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/torrent/uploads/images/2577191.jpg">
+<p class="carousel-text">
+<span class="carousel-text-items green-text">26</span> |
+<span class="carousel-text-items red-text">46</span> |
+<span class="carousel-text-items orange100">23</span>
+</p>
+</a>
+<a class="carousel-item tooltipped" href="torrents-details.php?id=257602&amp;hit=1" target="_blank" data-position="top"
+   data-delay="0" data-tooltip="SOULCALIBUR VI-CODEX | 11.17 GB">
+<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/torrent/uploads/images/2576021.jpg">
+<p class="carousel-text">
+<span class="carousel-text-items green-text">339</span> |
+<span class="carousel-text-items red-text">21</span> |
+<span class="carousel-text-items orange100">341</span>
+</p>
+</a>
+<a class="carousel-item tooltipped" href="torrents-details.php?id=257472&amp;hit=1" target="_blank" data-position="top"
+   data-delay="0" data-tooltip="BlacKkKlansman 2018 1080p WEB-DL DD5 1 H264-CMRG | 4.71 GB">
+<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+     data-src="/torrent/posters/ZZCH0bpFfZTfThGaoZacKAYY7349662.jpg">
+<p class="carousel-text">
+<span class="carousel-text-items green-text">318</span> |
+<span class="carousel-text-items red-text">17</span> |
+<span class="carousel-text-items orange100">266</span>
+</p>
+</a>
+<a class="carousel-item tooltipped" href="torrents-details.php?id=257468&amp;hit=1" target="_blank" data-position="top"
+   data-delay="0" data-tooltip="Juliet, Naked 2018 1080p WEB-DL H264 AC3-EVO | 3.38 GB">
+<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+     data-src="/torrent/posters/usZycQ338C0hrWYRlw2rtAYY5607096.jpg">
+<p class="carousel-text">
+<span class="carousel-text-items green-text">227</span> |
+<span class="carousel-text-items red-text">14</span> |
+<span class="carousel-text-items orange100">195</span>
+</p>
+</a>
+<a class="carousel-item tooltipped" href="torrents-details.php?id=257443&amp;hit=1" target="_blank" data-position="top"
+   data-delay="0" data-tooltip="Teen Titans Go! To the Movies 2018 1080p BluRay DTS-MA x264 - AvoHD | 7.55 GB">
+<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+     data-src="/torrent/posters/wmAYazRKmuBBZ0zGeZSvlQYY7424200.jpg">
+<p class="carousel-text">
+<span class="carousel-text-items green-text">77</span> |
+<span class="carousel-text-items red-text">6</span> |
+<span class="carousel-text-items orange100">69</span>
+</p>
+</a>
+<a class="carousel-item tooltipped" href="torrents-details.php?id=257434&amp;hit=1" target="_blank" data-position="top"
+   data-delay="0" data-tooltip="Mile 22 2018 1080p HDRip X264 AC3 EVO | 10.47 GB">
+<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/torrent/uploads/images/2574341.jpg">
+<p class="carousel-text">
+<span class="carousel-text-items green-text">648</span> |
+<span class="carousel-text-items red-text">25</span> |
+<span class="carousel-text-items orange100">608</span>
+</p>
+</a>
+<a class="carousel-item tooltipped" href="torrents-details.php?id=257384&amp;hit=1" target="_blank" data-position="top"
+   data-delay="0" data-tooltip="Incredibles 2 2018 1080p WEB-DL DD5.1 H264-CMRG | 4.02 GB">
+<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+     data-src="/torrent/posters/r8krZkSuIZXnTIVRK4SPGwYY3606756.jpg">
+<p class="carousel-text">
+<span class="carousel-text-items green-text">2040</span> |
+<span class="carousel-text-items red-text">67</span> |
+<span class="carousel-text-items orange100">2109</span>
+</p>
+</a>
+<a class="carousel-item tooltipped" href="torrents-details.php?id=257245&amp;hit=1" target="_blank" data-position="top"
+   data-delay="0" data-tooltip="Thunder Road 2018 1080p WEB-DL H264 AC3-EVO | 3.32 GB">
+<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+     data-src="/torrent/posters/tdL1zt0X6i1cDcwAgBn4dQYY7738450.jpg">
+<p class="carousel-text">
+<span class="carousel-text-items green-text">308</span> |
+<span class="carousel-text-items red-text">9</span> |
+<span class="carousel-text-items orange100">267</span>
+</p>
+</a>
+<a class="carousel-item tooltipped" href="torrents-details.php?id=257156&amp;hit=1" target="_blank" data-position="top"
+   data-delay="0" data-tooltip="The Crown S01-S02 1080p BluRay HEVC AAC 5.1 x265-ALiEN | 14.70 GB">
+<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="/torrent/uploads/images/2571561.jpg">
+<p class="carousel-text">
+<span class="carousel-text-items green-text">144</span> |
+<span class="carousel-text-items red-text">20</span> |
+<span class="carousel-text-items orange100">119</span>
+</p>
+</a>
+</div>
+</div>
+</span>
+            </div>
+
+            <div class="row card-panel shoutbox-container">
+                <div class="col s12 content-title toggle" onclick="toggleShoutbox()">
+                    <h6 class="left">Shoutbox</h6>
+                    <span class="right toggle-indicator"><i class="material-icons">arrow_drop_down</i></span>
+                </div>
+                <span id="shoutbox-outline" class="toggle-outline" style="width: 100%">
+<div class="col s12 shouts" style="height: 250px; overflow: auto">
+<div class="loading-container">
+<div class="loader-dzg"></div>
+</div>
+</div>
+<div class="col s12 shouts-send">
+<div class="row shout-send-container">
+<div class="input-field col s12 inline-submit-input" id="shout-text-container">
+<input id="shout_text" name="shout_text" type="text" class="shoutbox-text">
+<button id="sendShoutBtn" class="inline-submit-btn inline-btn-1" onclick="sendShout()"><i
+        class="material-icons">send</i></button>
+<button class="inline-submit-btn inline-btn-2" onclick="toggleSmilies()" title="Smilies & Stickers"><i
+        class="material-icons" style="color: #fbc02d">mood</i></button>
+<button id="shoutHistoryBtn" class="inline-submit-btn inline-btn-3" onclick="getShoutHistory()" title="Shout History"><i
+        class="material-icons">history</i></button>
+<label for="first_name" class="shout-label">Shout Out Loud! &#9732;</label>
+</div>
+<div id="smilies-outline" class="col s12 toggle-outline" style="padding: 1.5rem">
+<div class="loading-container">
+<div class="loader-dzg"></div>
+</div>
+</div>
+</div>
+</div>
+</span>
+            </div>
+
+            <div id="shout-history-wrapper">
+                <div id="shout-history-container" class="row z-depth-1">
+                    <div class="col s12 content-title">
+                        <h6 class="left">Shout History</h6>
+                    </div>
+                    <div id="shout-history" class="col s12">
+                        <div class="loading-container">
+                            <div class="loader-dzg"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row card-panel">
+                <div class="col s12 content-title">
+                    <h6>Torrents</h6>
+                </div>
+                <div class="col s12 torr-filter-container">
+                    <div class="row" style="margin-bottom: 15px">
+                        <div class="input-field col s12">
+                            <input id="torrents_search" name="torrents_search" type="text"
+                                   class="home-search-input inline-submit-input center-align"
+                                   placeholder="Search Torrents" autofocus="autofocus">
+                            <input type="hidden" name="spcat" id="spcat" value="">
+
+                        </div>
+                        <div class="col s12 torrent-filters center">
+                            <button class="btn btn-floating waves-effect waves-light tooltipped blue lighten-2"
+                                    data-position="bottom" data-tooltip="Torrent Filters" data-delay="10"
+                                    onclick="toggleCategories()">
+                                <i id="category-toggle-indicator" class="material-icons">add</i>
+                            </button>
+                            <button id="torr-reset-btn"
+                                    class="btn btn-floating waves-effect waves-light red lighten-3 tooltipped"
+                                    data-position="bottom" data-tooltip="Default Torrents List" data-delay="10"
+                                    onclick="resetTorrents()" style="margin: 0rem 0rem 0rem 2rem; display: none;">
+                                <i class="material-icons">autorenew</i>
+                            </button>
+                        </div>
+                        <div class="col s12 torrent-filters z-depth-2" id="torrent-categories"
+                             style="display: none; margin: 2rem auto;">
+                            <div class="row btw" style="margin: 0px; padding: .8rem;">
+                                <div class="row">
+                                    <div class="switch col s12 center">
+                                        <p>
+                                            <label>
+                                                <input type="checkbox" class="torr-search-filter" id="freeleech_filter"
+                                                       name="freeleech_filter" value="true">
+                                                <span class="lever" style="margin-top: -3px"></span>
+                                                <span class="center" style="font-size: 1rem">Freeleech</span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label>
+                                                <input type="checkbox" class="torr-search-filter"
+                                                       id="internal_release_filter" name="internal_release_filter"
+                                                       value="true">
+                                                <span class="lever" style="margin-top: -3px"></span>
+                                                <span class="center" style="font-size: 1rem">Internal</span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label>
+                                                <input type="checkbox" class="torr-search-filter" id="active_filter"
+                                                       name="active_filter" value="true">
+                                                <span class="lever" style="margin-top: -3px"></span>
+                                                <span class="center" style="font-size: 1rem">Active</span>
+                                            </label>
+                                        </p>
+                                    </div>
+
+                                </div>
+                                <div class="col l3 m4 s6">
+                                    <input type="checkbox" class="torr-search-filter" id="cat_anime"
+                                           name="torrent_category" value="Anime"/>
+                                    <label for="cat_anime">Anime</label>
+                                </div>
+                                <div class="col l3 m4 s6">
+                                    <input type="checkbox" class="torr-search-filter" id="cat_apps"
+                                           name="torrent_category" value="Apps"/>
+                                    <label for="cat_apps">Apps</label>
+                                </div>
+                                <div class="col l3 m4 s6">
+                                    <input type="checkbox" class="torr-search-filter" id="cat_bangla"
+                                           name="torrent_category" value="Bangla"/>
+                                    <label for="cat_bangla">Bangla</label>
+                                </div>
+                                <div class="col l3 m4 s6">
+                                    <input type="checkbox" class="torr-search-filter" id="cat_documentaries"
+                                           name="torrent_category" value="Documentaries"/>
+                                    <label for="cat_documentaries">Documentaries</label>
+                                </div>
+                                <div class="col l3 m4 s6">
+                                    <input type="checkbox" class="torr-search-filter" id="cat_ebooks"
+                                           name="torrent_category" value="E-books"/>
+                                    <label for="cat_ebooks">E-books</label>
+                                </div>
+                                <div class="col l3 m4 s6">
+                                    <input type="checkbox" class="torr-search-filter" id="cat_hindi"
+                                           name="torrent_category" value="Hindi"/>
+                                    <label for="cat_hindi">Hindi</label>
+                                </div>
+                                <div class="col l3 m4 s6">
+                                    <input type="checkbox" class="torr-search-filter" id="cat_games"
+                                           name="torrent_category" value="Games"/>
+                                    <label for="cat_games">Games</label>
+                                </div>
+                                <div class="col l3 m4 s6">
+                                    <input type="checkbox" class="torr-search-filter" id="cat_movie"
+                                           name="torrent_category" value="Movies"/>
+                                    <label for="cat_movie">Movies</label>
+                                </div>
+                                <div class="col l3 m4 s6">
+                                    <input type="checkbox" class="torr-search-filter" id="cat_music"
+                                           name="torrent_category" value="Music"/>
+                                    <label for="cat_music">Music</label>
+                                </div>
+                                <div class="col l3 m4 s6">
+                                    <input type="checkbox" class="torr-search-filter" id="cat_sports"
+                                           name="torrent_category" value="Sports"/>
+                                    <label for="cat_sports">Sports</label>
+                                </div>
+                                <div class="col l3 m4 s6">
+                                    <input type="checkbox" class="torr-search-filter" id="cat_tutorials"
+                                           name="torrent_category" value="Tutorials"/>
+                                    <label for="cat_tutorials">Tutorials</label>
+                                </div>
+                                <div class="col l3 m4 s6">
+                                    <input type="checkbox" class="torr-search-filter" id="cat_tv"
+                                           name="torrent_category" value="TV"/>
+                                    <label for="cat_tv">TV</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="torrents-main" class="col s12">
+                    <div class="torrents-container">
+                        <ul class="pagination center">
+                            <li class="waves-effect active white-text" onclick="getTorrents(1)">1</li>
+                            <li class="waves-effect" onclick="getTorrents(2)">2</li>
+                            <li class="waves-effect" onclick="getTorrents(3)">3</li>
+                            <li class="waves-effect" onclick="getTorrents(4)">4</li>
+                            <li class="waves-effect" onclick="getTorrents(5)">5</li>
+                            <li class="waves-effect" onclick="getTorrents(6)">6</li>
+                            <li class="waves-effect" onclick="getTorrents(7)">7</li>
+                            <li class="waves-effect" onclick="getTorrents(8)">8</li>
+                            <li class="waves-effect" onclick="getTorrents(9)">9</li>
+                            <li class="waves-effect" onclick="getTorrents(2)" title="Next"><i class="material-icons">chevron_right</i>
+                            </li> &nbsp;<li class="waves-effect" onclick="getTorrents(4319)">Last</li>
+                        </ul>
+                        <table class="bordered torrents-table">
+                            <thead>
+                            <tr>
+                                <th class="hide-on-small-only">Type</th>
+                                <th>Name</th>
+                                <th>DL</th>
+                                <th class="">Uploader</th>
+                                <th class="hide-on-med-and-down">Comm</th>
+                                <th class="tab-sortable" onclick="getTorrents(1, 'size', 'desc')">Size</th>
+                                <th class="tab-sortable" onclick="getTorrents(1, 'seeders', 'desc')">S</th>
+                                <th class="tab-sortable" onclick="getTorrents(1, 'leechers', 'desc')">L</th>
+                                <th class="tab-sortable" onclick="getTorrents(1, 'times_completed', 'desc')">C</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(61)"><img
+                                        class="cat-pic-img" src="images/categories/i_tv_episodes_hd.png"
+                                        title="TV: Episodes - 720p | 1080p"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258264&amp;hit=1">Bigg Boss S12E42 27th October
+                                        2018 (Weekened ka Vaar) 720p HDTV-HDHub4u</a>
+                                    <span class='new-torrent-tag'>NEW</span>
+                                    <span class="torrent-added-on">8 mins ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258264&amp;name=%5B%20HDHUb4u.Mobi%20%5D%20-%20Bigg-b0ss-S12E42-27-oct-2018-720p.mkv.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=63078"><span
+                                            class='tbdrank uploader'>Faiyaz93</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258264#comments">0</a>
+                                </td>
+                                <td>413.52 MB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">3</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(61)"><img
+                                        class="cat-pic-img" src="images/categories/i_tv_episodes_hd.png"
+                                        title="TV: Episodes - 720p | 1080p"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258263&amp;hit=1">Bigg Boss S12E40 (2018) Hindi
+                                        (OCT 27) 720p HDTV x264 AAC-MovCr</a>
+                                    <span class='new-torrent-tag'>NEW</span>
+                                    <span class="torrent-added-on">8 mins ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258263&amp;name=%5BMovCr.cc%5D%20-%20Bigg%20Boss%2012%20%282018%29%20Hindi%20-%20EP41%20%28OCT%2027%29%20-%20720p%20-%20HDTV%20%20-%20x264%20-%20400MB%20-%20%20AAC%20-%20MovCr.mp4.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=63078"><span
+                                            class='tbdrank uploader'>Faiyaz93</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258263#comments">0</a>
+                                </td>
+                                <td>457.71 MB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(28)"><img
+                                        class="cat-pic-img" src="images/categories/i_anime.png" title="Anime: All"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258262&amp;hit=1">Goblin Slayer S01E04 1080p WEBRip
+                                        AAC x265 - Galahal</a>
+                                    <img class='rel-icon' src='images/free.gif' border='0' alt='FL'
+                                         title='FreeLeech (Download is not counted)'/>&nbsp; <img class='rel-icon'
+                                                                                                  src='images/internal-diamond-ind-3.png'
+                                                                                                  border='0' height='14'
+                                                                                                  alt='INTERNAL'
+                                                                                                  title='TorrentBD Internal Release'/><span
+                                        class='new-torrent-tag'>NEW</span>
+                                    <span class="torrent-added-on">22 mins ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258262&amp;name=Goblin%20Slayer%20S01E04%201080p%20WEBRip%20AAC%20x265%20-%20Galahal.mkv.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=63078"><span
+                                            class='tbdrank uploader'>Faiyaz93</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258262#comments">0</a>
+                                </td>
+                                <td>399.87 MB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(28)"><img
+                                        class="cat-pic-img" src="images/categories/i_anime.png" title="Anime: All"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258258&amp;hit=1">Goblin Slayer S01E04 Web h264
+                                        1080p AAC 2.0 Softsubs- HorribleSubs</a>
+                                    <span class='new-torrent-tag'>NEW</span>
+                                    <span class="torrent-added-on">1 hr ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258258&amp;name=%5BHorribleSubs%5D%20Goblin%20Slayer%20-%2004%20%5B1080p%5D.mkv.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=29972"><span
+                                            class='tbdrank power-user'>MDSakib</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258258#comments">0</a>
+                                </td>
+                                <td>1.14 GB</td>
+                                <td class="green-text">2</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">1</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(47)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_1080p_10.png"
+                                        title="Movies: 1080p Blu-Ray"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258257&amp;hit=1">Slender Man 2018 1080p BluRay
+                                        DTS-HD MA 5 1 x264-iFT</a>
+                                    <img class='rel-icon' src='images/free.gif' border='0' alt='FL'
+                                         title='FreeLeech (Download is not counted)'/><span
+                                        class='new-torrent-tag'>NEW</span>
+                                    <span class="torrent-added-on">1 hr ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258257&amp;name=Slender.Man.2018.1080p.BluRay.DTS-HD.MA.5.1.x264-iFT.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=17854"><span class='tbdrank elite'>Parvej</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258257#comments">0</a>
+                                </td>
+                                <td>10.63 GB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(61)"><img
+                                        class="cat-pic-img" src="images/categories/i_tv_episodes_hd.png"
+                                        title="TV: Episodes - 720p | 1080p"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258256&amp;hit=1">A Discovery Of Witches S01E07
+                                        720p x265-ZMNT</a>
+                                    &nbsp; &nbsp;<img src='images/seedbox-tiny.png' border='0' alt='SeedBox'
+                                                      title='Uploaded From High Speed Seedbox' height='14'/><span
+                                        class='new-torrent-tag'>NEW</span>
+                                    <span class="torrent-added-on">1 hr ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258256&amp;name=A.Discovery.Of.Witches.S01E07.720p.x265-ZMNT%20%281%29.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=38385"><span
+                                            class='tbdrank star-uploader'>AmiHALAL</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258256#comments">0</a>
+                                </td>
+                                <td>286.42 MB</td>
+                                <td class="green-text">4</td>
+                                <td class="" style="color:#e57373">1</td>
+                                <td class="">3</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(24)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_sd_10.png"
+                                        title="Movies: SD Blu-Ray"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258255&amp;hit=1">Charming.2018.BRRip.XviD.MP3-XVID</a>
+                                    <span class='new-torrent-tag'>NEW</span>
+                                    <span class="torrent-added-on">1 hr ago</span>
+                                </td>
+                                <td><a href="download.php?id=258255&amp;name=Charming.2018.BRRip.XviD.MP3-XVID.torrent"><i
+                                        class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=102564"><span class='tbdrank newbie'>saifruet</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258255#comments">0</a>
+                                </td>
+                                <td>1.08 GB</td>
+                                <td class="green-text">2</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">1</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(47)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_1080p_10.png"
+                                        title="Movies: 1080p Blu-Ray"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258254&amp;hit=1">Hurricane 2018 1080p BluRay DTS-H
+                                        MA 5 1 x264-iFT</a>
+                                    <img class='rel-icon' src='images/free.gif' border='0' alt='FL'
+                                         title='FreeLeech (Download is not counted)'/><span
+                                        class='new-torrent-tag'>NEW</span>
+                                    <span class="torrent-added-on">1 hr ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258254&amp;name=Hurricane.2018.1080p.BluRay.DTS-H.MA.5.1.x264-iFT.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=17854"><span class='tbdrank elite'>Parvej</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258254#comments">0</a>
+                                </td>
+                                <td>11.39 GB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">2</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(28)"><img
+                                        class="cat-pic-img" src="images/categories/i_anime.png" title="Anime: All"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258253&amp;hit=1">Goblin Slayer S01E04 Web h264
+                                        720p AAC 2.0 Softsubs- HorribleSubs</a>
+                                    &nbsp; &nbsp;<img src='images/seedbox-tiny.png' border='0' alt='SeedBox'
+                                                      title='Uploaded From High Speed Seedbox' height='14'/><span
+                                        class='new-torrent-tag'>NEW</span>
+                                    <span class="torrent-added-on">1 hr ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258253&amp;name=%5BHorribleSubs%5D%20Goblin%20Slayer%20-%2004%20%5B720p%5D.mkv%20%281%29.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=38385"><span
+                                            class='tbdrank star-uploader'>AmiHALAL</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258253#comments">0</a>
+                                </td>
+                                <td>461.62 MB</td>
+                                <td class="green-text">7</td>
+                                <td class="" style="color:#e57373">1</td>
+                                <td class="">6</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(28)"><img
+                                        class="cat-pic-img" src="images/categories/i_anime.png" title="Anime: All"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258252&amp;hit=1">Sword Art Online - Alicization
+                                        2018 S01E04 720p WEb-DL AAC 2.0 x264 - HorribleSubs </a>
+                                    &nbsp; &nbsp;<img src='images/seedbox-tiny.png' border='0' alt='SeedBox'
+                                                      title='Uploaded From High Speed Seedbox' height='14'/><span
+                                        class='new-torrent-tag'>NEW</span>
+                                    <span class="torrent-added-on">1 hr ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258252&amp;name=%5BHorribleSubs%5D%20Sword%20Art%20Online%20-%20Alicization%20-%2004%20%5B720p%5D.mkv%20%282%29.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=51127"><span class='tbdrank staff-associate'>AmiALAL <img
+                                            src='https://www.torrentbd.com/torrent/images/superseeder-badge-8.png'
+                                            alt='Super Seeder' title='Super Seeder' height='13' border=0> <img
+                                            src='https://www.torrentbd.com/torrent/images/star-badge-3.png'
+                                            alt='Contributor' title='Contributor' height='13' border='0'></span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258252#comments">0</a>
+                                </td>
+                                <td>463.45 MB</td>
+                                <td class="green-text">4</td>
+                                <td class="" style="color:#e57373">2</td>
+                                <td class="">2</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(36)"><img
+                                        class="cat-pic-img" src="images/categories/i_ebooks_all.png"
+                                        title="E-books: All"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258251&amp;hit=1">The Economist - 27.10.2018
+                                        [E-book &amp; Audio Edition]</a>
+                                    <span class="torrent-added-on">1 hr ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258251&amp;name=The%20Economist%20-%2027.10.2018%20%5BE-book%20%26%20Audio%20Edition%5D.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=48038"><span
+                                            class='tbdrank power-user'>x16tech</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258251#comments">0</a>
+                                </td>
+                                <td>255.39 MB</td>
+                                <td class="green-text">2</td>
+                                <td class="" style="color:#e57373">1</td>
+                                <td class="">1</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(55)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_web_3.png"
+                                        title="Movies: WEB-DL | WEBRip"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258250&amp;hit=1">Been.So.Long.2018.WEBRip.x264-FGT</a>
+                                    <span class="torrent-added-on">2 hrs ago</span>
+                                </td>
+                                <td><a href="download.php?id=258250&amp;name=Been.So.Long.2018.WEBRip.x264-FGT.torrent"><i
+                                        class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=102564"><span class='tbdrank newbie'>saifruet</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258250#comments">0</a>
+                                </td>
+                                <td>974.25 MB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(28)"><img
+                                        class="cat-pic-img" src="images/categories/i_anime.png" title="Anime: All"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258246&amp;hit=1">Nanbaka S01 1080p Blu-ray Remux
+                                        AVC True HD 5.1-ALiEN</a>
+                                    <img class='rel-icon' src='images/free.gif' border='0' alt='FL'
+                                         title='FreeLeech (Download is not counted)'/>&nbsp; <img class='rel-icon'
+                                                                                                  src='images/internal-diamond-ind-3.png'
+                                                                                                  border='0' height='14'
+                                                                                                  alt='INTERNAL'
+                                                                                                  title='TorrentBD Internal Release'/>&nbsp;
+                                    &nbsp;<img src='images/seedbox-tiny.png' border='0' alt='SeedBox'
+                                               title='Uploaded From High Speed Seedbox' height='14'/>
+                                    <span class="torrent-added-on">2 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258246&amp;name=Nanbaka.S01.1080p.Blu-ray.Remux.AVC.True.HD.5.1-ALiEN1.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=51127"><span class='tbdrank staff-associate'>AmiALAL <img
+                                            src='https://www.torrentbd.com/torrent/images/superseeder-badge-8.png'
+                                            alt='Super Seeder' title='Super Seeder' height='13' border=0> <img
+                                            src='https://www.torrentbd.com/torrent/images/star-badge-3.png'
+                                            alt='Contributor' title='Contributor' height='13' border='0'></span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258246#comments">3</a>
+                                </td>
+                                <td>58.12 GB</td>
+                                <td class="green-text">0</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(55)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_web_3.png"
+                                        title="Movies: WEB-DL | WEBRip"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258245&amp;hit=1">Alpha.2018.WEB-DL.x264-FGT</a>
+                                    <span class="torrent-added-on">2 hrs ago</span>
+                                </td>
+                                <td><a href="download.php?id=258245&amp;name=Alpha.2018.WEB-DL.x264-FGT.torrent"><i
+                                        class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=81264"><span
+                                            class='tbdrank member'>ashek12</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258245#comments">1</a>
+                                </td>
+                                <td>940.47 MB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">1</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(42)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_720p_10.png"
+                                        title="Movies: 720p Blu-Ray"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258242&amp;hit=1">SkyScraper (2018) 720p BluRay
+                                        x264 Dual Audio [Hindi DD5.1 - English DDP5.1] - MSUBS ~ Ranvijay</a>
+                                    &nbsp; &nbsp;<img src='images/seedbox-tiny.png' border='0' alt='SeedBox'
+                                                      title='Uploaded From High Speed Seedbox' height='14'/>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258242&amp;name=SkyScraper%20%282018%29%20720p%20BluRay%20x264%20Dual%20Audio%20%5BHindi%20DD5.1%20-%20English%20DDP5.1%5D%20-%20MSUBS%20_%20Ranvijay.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=100852"><span
+                                            class='tbdrank member'>DeVoe</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258242#comments">0</a>
+                                </td>
+                                <td>1.89 GB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">1</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(47)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_1080p_10.png"
+                                        title="Movies: 1080p Blu-Ray"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258239&amp;hit=1">The Red Pill (2016) 1080p BluRay
+                                        x265 HEVC 10bit AAC 5.1 - Tigole</a>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258239&amp;name=The%20Red%20Pill%20%282016%29%201080p%20BluRay%20x265%20HEVC%2010bit%20AAC%205.1%20-%20Tigole.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=73876"><span
+                                            class='tbdrank power-user'>MrHiTLer</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258239#comments">0</a>
+                                </td>
+                                <td>3.96 GB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(55)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_web_3.png"
+                                        title="Movies: WEB-DL | WEBRip"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258238&amp;hit=1">Mile 22 (2018) 1080p HDRip AAC
+                                        2.0 x264 - SHITBOX</a>
+                                    <img class='rel-icon' src='images/free.gif' border='0' alt='FL'
+                                         title='FreeLeech (Download is not counted)'/>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258238&amp;name=Mile%2022%20%282018%29%201080p%20WEBRip%20AAC%202.0%20x264%20-%20SHITBOX.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=73876"><span
+                                            class='tbdrank power-user'>MrHiTLer</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258238#comments">1</a>
+                                </td>
+                                <td>10.38 GB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">2</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(55)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_web_3.png"
+                                        title="Movies: WEB-DL | WEBRip"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258237&amp;hit=1">BlacKkKlansman 2018 1080p WEB-DL
+                                        DD5.1 HEVC x265-RMTeam</a>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258237&amp;name=BlacKkKlansman%202018%201080p%20WEB-DL%20DD5.1%20HEVC%20x265%20-%20RMTeam.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=73876"><span
+                                            class='tbdrank power-user'>MrHiTLer</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258237#comments">0</a>
+                                </td>
+                                <td>1.75 GB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(55)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_web_3.png"
+                                        title="Movies: WEB-DL | WEBRip"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258236&amp;hit=1">Bicentennial Man (1999) 1080p
+                                        AMZN WEBRip x265 HEVC 10bit AAC 5.1 Panda</a>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258236&amp;name=Bicentennial%20Man%20%281999%29%201080p%20AMZN%20WEBRip%20x265%20HEVC%2010bit%20AAC%205.1%20Panda.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=73876"><span
+                                            class='tbdrank power-user'>MrHiTLer</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258236#comments">0</a>
+                                </td>
+                                <td>4.01 GB</td>
+                                <td class="green-text">2</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">1</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(56)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_dvdscr_3.png"
+                                        title="Movies: DVDSCR | R5 | R6"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258234&amp;hit=1">Hello Guru Prema Kosame (2018)
+                                        Telugu DVDScr x264 MP3 700MB -MovieRulz</a>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td><a href="download.php?id=258234&amp;name=Hello%20guru%20prema%20kosame.torrent"><i
+                                        class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    Anonymous
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258234#comments">0</a>
+                                </td>
+                                <td>726.03 MB</td>
+                                <td class="green-text">0</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(28)"><img
+                                        class="cat-pic-img" src="images/categories/i_anime.png" title="Anime: All"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258233&amp;hit=1">Kemonozume S01 DvdRip 720p x265 -
+                                        MeGaTroN</a>
+                                    <img class='rel-icon' src='images/free.gif' border='0' alt='FL'
+                                         title='FreeLeech (Download is not counted)'/>&nbsp; <img class='rel-icon'
+                                                                                                  src='images/internal-diamond-ind-3.png'
+                                                                                                  border='0' height='14'
+                                                                                                  alt='INTERNAL'
+                                                                                                  title='TorrentBD Internal Release'/>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258233&amp;name=Kemonozume%20%5BDVDRip%20720p%2010bit%20HEVC%5D%5BMeGaTroN%5D.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=68373"><span
+                                            class='tbdrank member'>MeGaTroNenCodes</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258233#comments">0</a>
+                                </td>
+                                <td>1.44 GB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">1</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(28)"><img
+                                        class="cat-pic-img" src="images/categories/i_anime.png" title="Anime: All"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258232&amp;hit=1">Toaru Majutsu no Index aka A
+                                        Certain Magical Index - S01+S02 - Blu-ray MKV h264 10-bit 1080p AAC 2.0 Dual
+                                        Audio Softsubs-DHD</a>
+                                    <img class='rel-icon' src='images/free.gif' border='0' alt='FL'
+                                         title='FreeLeech (Download is not counted)'/>&nbsp; &nbsp;<img
+                                        src='images/seedbox-tiny.png' border='0' alt='SeedBox'
+                                        title='Uploaded From High Speed Seedbox' height='14'/>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258232&amp;name=Toaru%20Majutsu%20no%20Index%20S01%2BS02.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    Anonymous
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258232#comments">0</a>
+                                </td>
+                                <td>31.84 GB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(18)"><img
+                                        class="cat-pic-img" src="images/categories/i_apps_pc.png" title="Apps: PC"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258231&amp;hit=1">Adobe Media Encoder CC 2019 v13.0
+                                        Multilingual x64-WEBiSO</a>
+                                    &nbsp; &nbsp;<img src='images/seedbox-tiny.png' border='0' alt='SeedBox'
+                                                      title='Uploaded From High Speed Seedbox' height='14'/>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258231&amp;name=Adobe.Media.Encoder.CC.2019.v13.0.Multilingual.x64-WEBiSO%20%281%29.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=77317"><span class='tbdrank star-uploader'>MachInfinity</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258231#comments">0</a>
+                                </td>
+                                <td>1.27 GB</td>
+                                <td class="green-text">2</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">1</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(42)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_720p_10.png"
+                                        title="Movies: 720p Blu-Ray"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258230&amp;hit=1">Hotel Transylvania 3 Summer
+                                        Vacation (2018) 720p BluRay x264 [Dual-Audio][Hindi 5.1 - English 5.1] ESubs -
+                                        Downloadhub</a>
+                                    &nbsp; &nbsp;<img src='images/seedbox-tiny.png' border='0' alt='SeedBox'
+                                                      title='Uploaded From High Speed Seedbox' height='14'/>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258230&amp;name=Hotel%20Transylvania%203%20Summer%20Vacation%20%282018%29%20720p%20BluRay%20x264%20%5BDual-Audio%5D%5BHindi%205.1%20-%20English%205.1%5D%20ESubs%20-%20Downloadhub.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=100852"><span
+                                            class='tbdrank member'>DeVoe</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258230#comments">0</a>
+                                </td>
+                                <td>968.72 MB</td>
+                                <td class="green-text">6</td>
+                                <td class="" style="color:#e57373">1</td>
+                                <td class="">6</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(18)"><img
+                                        class="cat-pic-img" src="images/categories/i_apps_pc.png" title="Apps: PC"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258229&amp;hit=1">Adobe Premiere Pro CC 2019 v13.0
+                                        Multilingual x64-WEBiSO</a>
+                                    &nbsp; &nbsp;<img src='images/seedbox-tiny.png' border='0' alt='SeedBox'
+                                                      title='Uploaded From High Speed Seedbox' height='14'/>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td><a href="download.php?id=258229&amp;name=premiereprocc2019.iso.torrent"><i
+                                        class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=51127"><span class='tbdrank staff-associate'>AmiALAL <img
+                                            src='https://www.torrentbd.com/torrent/images/superseeder-badge-8.png'
+                                            alt='Super Seeder' title='Super Seeder' height='13' border=0> <img
+                                            src='https://www.torrentbd.com/torrent/images/star-badge-3.png'
+                                            alt='Contributor' title='Contributor' height='13' border='0'></span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258229#comments">3</a>
+                                </td>
+                                <td>1.67 GB</td>
+                                <td class="green-text">4</td>
+                                <td class="" style="color:#e57373">2</td>
+                                <td class="">2</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(46)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_hdrip_3.png"
+                                        title="Movies: HD-Rip"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258228&amp;hit=1">ROAR 2015 Hindi 720p HDRip x264
+                                        AC3 - Hon3y</a>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258228&amp;name=ROAR%202015%20Hindi%20720p%20HDRip%20x264%20AC3%20-%20Hon3y.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=75052"><span class='tbdrank member'>hawlader333 <img
+                                            src='https://www.torrentbd.com/torrent/images/warn.png' alt='Warned'
+                                            title='Warned' height='13' border=0></span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258228#comments">0</a>
+                                </td>
+                                <td>2.18 GB</td>
+                                <td class="green-text">0</td>
+                                <td class="" style="color:#e57373">1</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(10)"><img
+                                        class="cat-pic-img" src="images/categories/i_games_pc_7.png" title="Games: PC">
+                                </td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258227&amp;hit=1">Kerbal Space Program [FitGirl
+                                        Repack]</a>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258227&amp;name=Kerbal%20Space%20Program%20%5BFitGirl%20Repack%5D.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=27152"><span
+                                            class='tbdrank member'>BGBDKID</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258227#comments">1</a>
+                                </td>
+                                <td>518.35 MB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(22)"><img
+                                        class="cat-pic-img" src="images/categories/i_music_audio_2.png"
+                                        title="Music: Audio"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258225&amp;hit=1">The Official UK Top 40 Singles
+                                        Chart (26.10.2018) Mp3 (320kbps) [Hunter]</a>
+                                    &nbsp; &nbsp;<img src='images/seedbox-tiny.png' border='0' alt='SeedBox'
+                                                      title='Uploaded From High Speed Seedbox' height='14'/>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258225&amp;name=The%20Official%20UK%20Top%2040%20Singles%20Chart%20%2826.10.2018%29%20Mp3%20%28320kbps%29%20%5BHunter%5D.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=100852"><span
+                                            class='tbdrank member'>DeVoe</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258225#comments">0</a>
+                                </td>
+                                <td>318.47 MB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">3</td>
+                                <td class="">1</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(46)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_hdrip_3.png"
+                                        title="Movies: HD-Rip"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258224&amp;hit=1">Mile 22 2018 1080p HDRip -
+                                        MkvCage</a>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258224&amp;name=Mile.22.2018.1080p.HDRip.MkvCage.ws.mkv.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=84981"><span
+                                            class='tbdrank power-user'>saddafeee</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258224#comments">0</a>
+                                </td>
+                                <td>1.51 GB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">1</td>
+                                <td class="">1</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(28)"><img
+                                        class="cat-pic-img" src="images/categories/i_anime.png" title="Anime: All"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258223&amp;hit=1">JoJo's Bizarre Adventure Golden
+                                        Wind 2018 S01E04 WEB-Rip x265 720p AC-3 Softsubs -Dark Knight</a>
+                                    <img class='rel-icon' src='images/free.gif' border='0' alt='FL'
+                                         title='FreeLeech (Download is not counted)'/>&nbsp; <img class='rel-icon'
+                                                                                                  src='images/internal-diamond-ind-3.png'
+                                                                                                  border='0' height='14'
+                                                                                                  alt='INTERNAL'
+                                                                                                  title='TorrentBD Internal Release'/>&nbsp;
+                                    &nbsp;<img src='images/seedbox-tiny.png' border='0' alt='SeedBox'
+                                               title='Uploaded From High Speed Seedbox' height='14'/>
+                                    <span class="torrent-added-on">3 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258223&amp;name=JoJo%27s%20Bizarre%20Adventure%20Golden%20Wind%202018%20S01E04%20WEB-Rip%20x265%20720p%20AC-3%20Softsubs%20-Dark%20Knight.mkv.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=59225"><span
+                                            class='tbdrank elite'>Dark_Knight</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258223#comments">0</a>
+                                </td>
+                                <td>309.59 MB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">3</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(62)"><img
+                                        class="cat-pic-img" src="images/categories/i_tv_seasons_hd.png"
+                                        title="TV: Packs - 720p | 1080p"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258222&amp;hit=1">Castlevania S02 720p Web-DL DD
+                                        5.1 H264 -HorribleSubs</a>
+                                    <span class="torrent-added-on">4 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258222&amp;name=%5BHorribleSubs%5D%20Castlevania%20S2%20%2801-08%29%20%5B720p%5D%20%28Batch%29.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=42278"><span class='tbdrank power-user'>yokai</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258222#comments">0</a>
+                                </td>
+                                <td>3.93 GB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(47)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_1080p_10.png"
+                                        title="Movies: 1080p Blu-Ray"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258221&amp;hit=1">The Spy Who Dumped Me 2018 1080p
+                                        10bit BluRay 8CH x265 HEVC-PSA</a>
+                                    &nbsp; &nbsp;<img src='images/seedbox-tiny.png' border='0' alt='SeedBox'
+                                                      title='Uploaded From High Speed Seedbox' height='14'/>
+                                    <span class="torrent-added-on">4 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258221&amp;name=The.Spy.Who.Dumped.Me.2018.1080p.10bit.BluRay.8CH.x265.HEVC-PSA.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=100852"><span
+                                            class='tbdrank member'>DeVoe</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258221#comments">0</a>
+                                </td>
+                                <td>1.98 GB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(28)"><img
+                                        class="cat-pic-img" src="images/categories/i_anime.png" title="Anime: All"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258220&amp;hit=1">Golden Time S01 720p BDRip HEVC
+                                        Vorbis x265 [AniDL]</a>
+                                    <span class="torrent-added-on">4 hrs ago</span>
+                                </td>
+                                <td><a href="download.php?id=258220&amp;name=Golden%20Time.torrent"><i
+                                        class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=81467"><span
+                                            class='tbdrank member'>CoolBro</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258220#comments">1</a>
+                                </td>
+                                <td>1.09 GB</td>
+                                <td class="green-text">0</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(18)"><img
+                                        class="cat-pic-img" src="images/categories/i_apps_pc.png" title="Apps: PC"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258219&amp;hit=1">PhoenixOS
+                                        v3.0.5.469_(x86_x64)</a>
+                                    <span class="torrent-added-on">4 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258219&amp;name=PhoenixOSInstaller_v3.0.5.469_x86_x64.exe.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=78823"><span
+                                            class='tbdrank member'>rahatmahmud18</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258219#comments">3</a>
+                                </td>
+                                <td>656.97 MB</td>
+                                <td class="green-text">0</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(76)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_remux_10.png"
+                                        title="Movies: Lossless Blu-Ray"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258217&amp;hit=1">Fantastic Mr Fox 2009 1080p
+                                        Criterion Collection Blu-ray ReMuX AVC DTS 5.1 -R2D2</a>
+                                    <span class="torrent-added-on">4 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258217&amp;name=Fantastic.Mr.Fox.2009.1080p.Criterion.Collection.Bluray.ReMuX.AVC.DTS.5.1.-R2D2.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=63426"><span
+                                            class='tbdrank power-user'>obakfaud</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258217#comments">0</a>
+                                </td>
+                                <td>8.29 GB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(61)"><img
+                                        class="cat-pic-img" src="images/categories/i_tv_episodes_hd.png"
+                                        title="TV: Episodes - 720p | 1080p"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258216&amp;hit=1">A Discovery Of Witches S01E07
+                                        INTERNAL 1080p HDTV x264-FaiLED</a>
+                                    <span class="torrent-added-on">4 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258216&amp;name=a.discovery.of.witches.s01e07.internal.1080p.hdtv.x264-failed.mkv.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=24592"><span class='tbdrank elite'>niazmehedi</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258216#comments">0</a>
+                                </td>
+                                <td>1.49 GB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(76)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_remux_10.png"
+                                        title="Movies: Lossless Blu-Ray"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258211&amp;hit=1">Crank (2006) Directors Cut BluRay
+                                        1080p DTS-HD HRA 5.1 VC-1 REMUX - FraMeSToR</a>
+                                    <img class='rel-icon' src='images/free.gif' border='0' alt='FL'
+                                         title='FreeLeech (Download is not counted)'/>
+                                    <span class="torrent-added-on">4 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258211&amp;name=Crank.2006.Directors.Cut.BluRay.1080p.DTS-HD.HRA.5.1.VC-1.REMUX-FraMeSToR.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=63426"><span
+                                            class='tbdrank power-user'>obakfaud</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258211#comments">0</a>
+                                </td>
+                                <td>15.69 GB</td>
+                                <td class="green-text">1</td>
+                                <td class="" style="color:#e57373">1</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(0)"><img
+                                        class="cat-pic-img" src="images/categories/" title=": "></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258210&amp;hit=1"></a>
+                                    <span class="torrent-added-on">986 wks ago</span>
+                                </td>
+                                <td><a href="download.php?id=258210&amp;name="><i class="material-icons small">file_download</i></a>
+                                </td>
+                                <td class="">
+                                    <a href="account-details.php?id=0"><span class='tbdrank '></span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258210#comments">0</a>
+                                </td>
+                                <td>0.00 B</td>
+                                <td class="green-text">0</td>
+                                <td class="" style="color:#e57373">0</td>
+                                <td class="">0</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(5)"><img
+                                        class="cat-pic-img" src="images/categories/i_tv_episodes.png"
+                                        title="TV: Episodes"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258208&amp;hit=1">A Discovery Of Witches S01E07
+                                        HDTV x264-GARBAGE</a>
+                                    &nbsp; &nbsp;<img src='images/seedbox-tiny.png' border='0' alt='SeedBox'
+                                                      title='Uploaded From High Speed Seedbox' height='14'/>
+                                    <span class="torrent-added-on">4 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258208&amp;name=A.Discovery.Of.Witches.S01E07.HDTV.x264-GARBAGE.mkv.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=77317"><span class='tbdrank star-uploader'>MachInfinity</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258208#comments">0</a>
+                                </td>
+                                <td>316.89 MB</td>
+                                <td class="green-text">7</td>
+                                <td class="" style="color:#e57373">3</td>
+                                <td class="">6</td>
+                            </tr>
+                            <tr>
+                                <td class="tab-sortable hide-on-small-only" onclick="getSpCatTorrents(55)"><img
+                                        class="cat-pic-img" src="images/categories/i_movies_web_3.png"
+                                        title="Movies: WEB-DL | WEBRip"></td>
+                                <td class="torrent-name" style="position: relative">
+                                    <a href="torrents-details.php?id=258206&amp;hit=1">Oskar (2018) Bengali 720p WEB-DL
+                                        x265 HEVC 10 Bit - Team Techbangla</a>
+                                    &nbsp; &nbsp;<img src='images/seedbox-tiny.png' border='0' alt='SeedBox'
+                                                      title='Uploaded From High Speed Seedbox' height='14'/>
+                                    <span class="torrent-added-on">5 hrs ago</span>
+                                </td>
+                                <td>
+                                    <a href="download.php?id=258206&amp;name=Oskar%20%5B2018%5D%20Bengali%20Movie%20_720p%20%20_web_hd%20X%20265%20-%20%5BHEVC%5D%20-%2010%20Bit%20BY_Team_Techbangla%20Xclusive.torrent"><i
+                                            class="material-icons small">file_download</i></a></td>
+                                <td class="">
+                                    <a href="account-details.php?id=64722"><span class='tbdrank uploader'>aimyafi</span></a>
+                                </td>
+                                <td class="hide-on-med-and-down"><a href="torrents-details.php?id=258206#comments">0</a>
+                                </td>
+                                <td>1.10 GB</td>
+                                <td class="green-text">10</td>
+                                <td class="" style="color:#e57373">6</td>
+                                <td class="">9</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <ul class="pagination center">
+                            <li class="waves-effect active white-text" onclick="getTorrents(1)">1</li>
+                            <li class="waves-effect" onclick="getTorrents(2)">2</li>
+                            <li class="waves-effect" onclick="getTorrents(3)">3</li>
+                            <li class="waves-effect" onclick="getTorrents(4)">4</li>
+                            <li class="waves-effect" onclick="getTorrents(5)">5</li>
+                            <li class="waves-effect" onclick="getTorrents(6)">6</li>
+                            <li class="waves-effect" onclick="getTorrents(7)">7</li>
+                            <li class="waves-effect" onclick="getTorrents(8)">8</li>
+                            <li class="waves-effect" onclick="getTorrents(9)">9</li>
+                            <li class="waves-effect" onclick="getTorrents(2)" title="Next"><i class="material-icons">chevron_right</i>
+                            </li> &nbsp;<li class="waves-effect" onclick="getTorrents(4319)">Last</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row card-panel">
+                <div class="col s12 content-title toggle" onclick="toggleOnlineUsers()">
+                    <h6 class="left">Online Users</h6>
+                    <span class="right toggle-indicator"><i class="material-icons">arrow_drop_down</i></span>
+                </div>
+                <span id="online-users-outline" class="toggle-outline">
+<div class="col s12 online-users-content" style="padding: 1rem;">
+<div class="loading-container">
+<div class="loader-dzg"></div>
+</div>
+</div>
+</span>
+            </div>
+            <br>
+
+            <script>
+                //  var siteUrl = "https://www.torrentbd.com/torrent/";
+                //  var count = 172750;
+                var siteUrl = location.protocol + "//" + location.hostname + "/torrent/";
+                var searchBox = $('#torrents_search');
+                var searchBtn = $('.search-btn');
+                var exclusivesPaused = false;
+                var torrentsToScroll = false;
+
+                //getTorrents(1);   # get torrents on page load
+
+                $(document).ready(function () {
+
+                    shoutInit();
+
+                    $('#torrents_search').on('keypress', function (e) {
+                        if (e.which === 13) {
+                            searchTorrents();
+                        }
+                    });
+
+                    $('#shout_text').on('keypress', function (e) {
+                        if (e.which === 13) {
+                            sendShout();
+                        }
+                    });
+
+                    $('.torr-search-filter').on('change', function () {
+                        searchTorrents();
+                    });
+
+                    $('.torr-filter-container').on('mouseover', function () {
+                        //$('#torrents_search').attr("placeholder", "Type in torrent name ...");
+                        $('#torrents_search').focus();
+                    });
+
+                    // $('#torrents_search').on('focus', function() {
+                    //   $(this).attr("placeholder", "Type in torrent name ...");
+                    // });
+
+                    // $('#torrents_search').on('focusout', function() {
+                    //   $(this).attr("placeholder", "Hover to Search Torrents");
+                    // });
+
+                    $('#shout-text-container').on('mouseover', function () {
+                        $('#shout_text').focus();
+                    });
+                    $('.shoutbox-container').on('mouseout', function () {
+                        $('#shout_text').blur();
+                    });
+
+                    /*
+                    $('.shoutbox-text').on('focus', function() {
+                      $('.shout-label').html('Shout Out Loud! &#9732;');
+                    });
+
+                    $('.shoutbox-text').on('focusout', function() {
+                      $('.shout-label').html('Shout');
+                    });
+                    */
+
+                    $('.exclusives').on('mouseover', function () {
+                        exclusivesPaused = true;
+                    })
+
+                    $('.exclusives').on('mouseout', function () {
+                        exclusivesPaused = false;
+                    })
+
+                    $('.carousel-item').on('swipe', function () {
+                        exclusivesPaused = true;
+                    })
+
+                    $('.carousel').carousel({
+                        padding: 170
+                    });
+
+                    $('#torrents-main').on('click', '.pagination', function () {
+                        torrentsToScroll = true;
+                    });
+
+                    autoplay();
+
+                    setTimeout(function () {
+                        notifyHome();
+                    }, 1600);
+
+                });
+
+                function scrollTorrentsPos(speed) {
+                    $('html, body').animate({
+                        scrollTop: $("#torrents-main").offset().top
+                    }, speed);
+                }
+
+                function autoplay() {
+                    setInterval(play, 2000);
+                }
+
+                function play() {
+                    if (hideExclusives == 1 || exclusivesPaused)
+                        return;
+
+                    $('.carousel').carousel('next');
+                }
+
+
+                function searchTorrents() {
+                    searchBox.attr("readonly", "readonly");
+                    searchBtn.attr('disabled', 'disabled');
+                    getTorrents(1);
+                    torrentsToScroll = true;
+                    $('#torr-reset-btn').fadeIn(700);
+                }
+
+
+                function getShoutHistory() {
+
+                    $('#shout-history-wrapper').fadeIn("fast");
+
+                    $.post(
+                        siteUrl + "ajgetshouthistory.php",
+                        {
+                            task: 'getRecent'
+                        },
+                        function (data) {
+                            $('#shout-history').html(data);
+                        }
+                    );
+
+                }
+
+                $("#shout-history-wrapper").click(
+                    function (e) {
+                        if ($(e.target).closest("#shout-history").length === 0) {
+                            $("#shout-history-wrapper").fadeOut("fast");
+                        }
+                    }
+                );
+
+
+                function getTorrents(page, sortBy, order) {
+
+                    var query = $('#torrents_search').val();
+                    var spcat = $('#spcat').val();
+                    var fl = $('#freeleech_filter').is(':checked');
+                    var intrls = $('#internal_release_filter').is(':checked');
+                    var active = $('#active_filter').is(':checked');
+
+                    var categories = [];
+                    $('input[name=torrent_category]:checked').each(function (i) {
+                        categories[i] = $(this).val();
+                    });
+
+                    $.post(
+                        siteUrl + "ajgettorrents.php",
+                        {
+                            page: page,
+                            origin: 'home',
+                            sortBy: sortBy,
+                            order: order,
+                            query: query,
+                            fl: fl,
+                            intrls: intrls,
+                            active: active,
+                            categories: categories,
+                            spcat: spcat
+                        },
+                        function (data) {
+                            $('#torrents-main').html(data);
+                            if (torrentsToScroll)
+                                scrollTorrentsPos(300);
+                            searchBtn.removeAttr('disabled');
+                            searchBox.removeAttr('readonly');
+                        }
+                    );
+
+                }
+
+
+                /*  function getCatTorrents(page, catId) {
+
+                    $.post(
+                      siteUrl + "ajgettorrents.php",
+                      {
+                        page: page,
+                        origin: 'home',
+                        spcat: catId,
+
+                      },
+                      function(data) {
+                        $('#torrents-main').html(data);
+                        if(torrentsToScroll)
+                          scrollTorrentsPos(300);
+                        searchBtn.removeAttr('disabled');
+                        searchBox.removeAttr('readonly');
+                      }
+                    );
+
+                  }
+                */
+
+
+                function getSpCatTorrents(catId) {
+                    $('#spcat').val(catId);
+                    getTorrents(1);
+                    $('#torr-reset-btn').fadeIn(700);
+                }
+
+
+                function resetTorrents() {
+
+                    $.post(
+                        siteUrl + "ajgettorrents.php",
+                        {
+                            page: 1,
+                            origin: 'home',
+                        },
+                        function (data) {
+                            $('#torrents-main').html(data);
+                            $('#torr-reset-btn').fadeOut();
+                            $('#torrents_search').val('');
+                            $('#spcat').val('');
+                            //  $(':checkbox').attr('checked',false);
+                            $('input:checkbox').removeAttr('checked');
+                        }
+                    );
+
+                }
+
+
+                function toggleCategories() {
+                    var toggleIndicator = $('#category-toggle-indicator');
+                    $('#torrent-categories').toggle();
+
+                    if (toggleIndicator.text() == 'add')
+                        toggleIndicator.text('remove');
+                    else
+                        toggleIndicator.text('add');
+                }
+
+            </script>
+        </div>
+    </div>
+</main>
+<footer class="page-footer blue-grey darken-2" style="padding-top:0px">
+    <div class="footer-copyright">
+        <div class="container">
+            © TorrentBD | by ENiGMA
+            <a class="grey-text text-lighten-4 right">Served in 0.29 secs</a></div>
+    </div>
+</footer>
+<script type="text/javascript" src="https://www.torrentbd.com/torrent/themes/material/marquee.js"></script>
+<script>
+
+    function init() {
+        var imgDefer = document.getElementsByTagName('img');
+        for (var i = 0; i < imgDefer.length; i++) {
+            if (imgDefer[i].getAttribute('data-src')) {
+                imgDefer[i].setAttribute('src', imgDefer[i].getAttribute('data-src'));
+            }
+        }
+    }
+
+    $(window).load(function () {
+
+        init();
+
+
+    });
+
+</script>
+
+</body>
+</html>
