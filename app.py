@@ -874,7 +874,7 @@ class lol:
         self.box=box
 
 class create_contest_form(Form):
-    contestname=StringField("Contest Name",[validators.DataRequired()])
+    contestname=TextAreaField("Contest Name",[validators.DataRequired()])
 
 def forward_letter(letter, positions):
     if letter.islower():
