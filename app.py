@@ -365,21 +365,29 @@ def postab():
 
 #*******************************************
 #   ASIF AHMED*******************************
-@app.route('/profile')
-def profile():
+@app.route('/profile/<id>')
+def profile(id):
     from profile import profileCall
     if not ('username' in session):
         return redirect(url_for("login"))
-    return render_template('profile.html', user=profileCall())
+    user,form=profileCall(id)
+    userNow = session['username']
+    canEdit = 0
+    if userNow == id or id == 'myself':
+        canEdit = 1
+
+    print(canEdit)
+    return render_template('profile.html', form=form,user=user,canEdit=canEdit)
 
 
-@app.route('/posts')
-def posts():
+@app.route('/posts/<id>')
+def posts(id):
     if not ('username' in session):
         return redirect(url_for('login'))
 
     from profile import profilePostCall
-    return render_template('user_post.html', post_array=profilePostCall())
+    post_array,user=profilePostCall(id)
+    return render_template('user_post.html', post_array=post_array,user=user)
 
 
 @app.route('/issues', methods=['GET', 'POST'])
@@ -402,12 +410,26 @@ def news():
     return render_template('news.html',article_array=newsCall())
 
 
-@app.route('/submission')
-def submissions():
+@app.route('/submission/<id>')
+def submissions(id):
     if not ('username' in session):
         return redirect(url_for('login'))
     from profile import profileSubmissionCall
-    return render_template('user_submission.html', submission_array=profileSubmissionCall())
+    submission_array,user = profileSubmissionCall(id)
+    return render_template('user_submission.html', submission_array=submission_array,user=user)
+
+@app.route('/contests/<id>')
+def userContests(id):
+    from profile import profileContestsCall
+    user= profileContestsCall(id)
+    return render_template('user_contests.html',user=user)
+
+@app.route('/issue/<id>')
+def userIssues(id):
+    from profile import profileIssueCall
+    user,issue_array= profileIssueCall(id)
+    return render_template('user_issues.html',user=user,issue_array=issue_array)
+
 
 #   ASIF AHMED*******************************
 # ***************************************************************************
@@ -1211,11 +1233,11 @@ def graphbuild():
             f1 = open('templates/'+'checker.txt', "w+")
             print(stst,file=f)
 
-            nd_list=node_list(st=form.nodes_desc.data.replace('\n',' '),nd_cnt=form.nodes_cnt.data)
-            ed_list=edge_list(st=form.ed_desc.data.replace('\n',' '),ed_cnt=form.ed_cnt.data)
-            gp=graph(nd_list,ed_list)
-            ad=adapter(gp)
-            js=jsonstring(ad)
+            nd_list=FunctionList.node_list(st=form.nodes_desc.data.replace('\n', ' '), nd_cnt=form.nodes_cnt.data)
+            ed_list=FunctionList.edge_list(st=form.ed_desc.data.replace('\n', ' '), ed_cnt=form.ed_cnt.data)
+            gp=FunctionList.graph(nd_list, ed_list)
+            ad=FunctionList.adapter(gp)
+            js=FunctionList.jsonstring(ad)
             print(js.getstring(),file=f)
 
             print(sted,file=f)
@@ -1232,17 +1254,17 @@ def graphbuild():
             f1 = open('templates/' + 'checker.txt', "w+")
             print(stst, file=f)
 
-            nd_list = node_list(st=form.nodes_desc.data.replace('\n', ' '), nd_cnt=form.nodes_cnt.data)
-            ed_list = edge_list(st=form.ed_desc.data.replace('\n', ' '), ed_cnt=form.ed_cnt.data)
+            nd_list = FunctionList.node_list(st=form.nodes_desc.data.replace('\n', ' '), nd_cnt=form.nodes_cnt.data)
+            ed_list = FunctionList.edge_list(st=form.ed_desc.data.replace('\n', ' '), ed_cnt=form.ed_cnt.data)
             sz=len(ed_list)
             for i in range(0,sz,2):
                 if ed_list[i]<=ed_list[i+1]:
                     xx=ed_list[i]
                     ed_list[i]=ed_list[i+1]
                     ed_list[i+1]=xx
-            gp = graph(nd_list, ed_list)
-            ad = adapter(gp)
-            js = jsonstring(ad)
+            gp = FunctionList.graph(nd_list, ed_list)
+            ad = FunctionList.adapter(gp)
+            js = FunctionList.jsonstring(ad)
             print(js.getstring(), file=f)
 
             print(sted, file=f)

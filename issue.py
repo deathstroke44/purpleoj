@@ -9,7 +9,7 @@ from forms import IssueForm, CommentForm
 
 
 class Issue:
-    def __init__(self, id, username, title ,problemID, problemName, text, date):
+    def __init__(self, id, username, title ,problemID, problemName, text, date,commentNumber):
         self.id = id
         self.username = username
         self.title = title
@@ -17,6 +17,7 @@ class Issue:
         self.text = text
         self.problemName = problemName
         self.date = date
+        self.commentNumber = commentNumber
 
 
 class Comment:
@@ -27,6 +28,7 @@ class Comment:
         self.problemID = problemID
         self.text = text
         self.date = date
+
 
 def issueCall():
     form = IssueForm()
@@ -64,7 +66,8 @@ def issueCall():
                       'Title': title,
                       'ProblemID': problemID,
                       'text': text,
-                      'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M")})
+                      'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
+                      'commentNumber': 0})
         # return redirect(url_for('issues'))
 
     issue_array = []
@@ -75,11 +78,11 @@ def issueCall():
             pb = problemsdb.find_one({'myid': issue['ProblemID']})
             issue_array.append(
                 Issue(issue['IssueID'], issue['UserName'], issue['Title'], issue['ProblemID'], pb['name'],
-                      issue['text'], issue['date']))
+                      issue['text'], issue['date'] , issue['commentNumber']))
         else:
             issue_array.append(
                 Issue(issue['IssueID'], issue['UserName'], issue['Title'], issue['ProblemID'], 'CodeFlask',
-                      issue['text'], issue['date']))
+                      issue['text'], issue['date'],issue['commentNumber']))
 
     return form,issue_array
 
@@ -96,6 +99,15 @@ def singleIssueCall(id):
         problemID = mongo.db.Issues.find_one({'IssueID': issueID})['ProblemID']
         user_name = session['username']
         date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+
+        issueToChange = mongo.db.Issues
+        number = issueToChange.find_one({'IssueID': issueID})['commentNumber']
+        issueToChange.update_one(
+            {'IssueID': issueID},
+            {
+                '$set': {'commentNumber': number + 1}
+            }
+        )
 
         comments = mongo.db.Comment
         comments.insert({'ID': commentID,
@@ -126,6 +138,6 @@ def singleIssueCall(id):
                                          comment['Date']))
 
     issue = Issue(issue['IssueID'], issue['UserName'], issue['Title'],
-                  issue['ProblemID'], problemName, issue['text'], issue['date'].split(" ")[0])
+                  issue['ProblemID'], problemName, issue['text'], issue['date'].split(" ")[0],issue['commentNumber'])
 
-    return form,comment_array,issue
+    return form,comment_array, issue

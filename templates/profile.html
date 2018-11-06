@@ -4,78 +4,53 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>Your Profile</h4>
+                        <h4>{{user.username}}'s Profile</h4>
                         <hr>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <form>
+                        <form method="POST" action="">
+                            {{ form.hidden_tag() }}
                           <div class="form-group row">
-                            <label for="username" class="col-4 col-form-label">User Name*</label>
-                            <div class="col-8">
-                                <p id="username"  class="form-control here" > {{ user.username }} </p>
+                            <label for="username" class="col-2 col-form-label">User Name</label>
+                            <div  id="username"  class="col-5">
+                                {{ form.username(class="form-control form-control-lg",placeholder=user.username,disabled=True) }}
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="name" class="col-4 col-form-label">Name</label>
-                            <div class="col-8">
-                              <input id="name" name="name" placeholder={{user.name}} class="form-control here" type="text">
-                            </div>
-                          </div>
-                          <!--<div class="form-group row">-->
-                            <!--<label for="lastname" class="col-4 col-form-label">Last Name</label>-->
-                            <!--<div class="col-8">-->
-                              <!--<input id="lastname" name="lastname" placeholder="Last Name" class="form-control here" type="text">-->
-                            <!--</div>-->
-                          <!--</div>-->
-                          <!--<div class="form-group row">-->
-                            <!--<label for="text" class="col-4 col-form-label">Nick Name*</label>-->
-                            <!--<div class="col-8">-->
-                              <!--<input id="text" name="text" placeholder="Nick Name" class="form-control here" required="required" type="text">-->
-                            <!--</div>-->
-                          <!--</div>-->
-                          <!--<div class="form-group row">-->
-                            <!--<label for="select" class="col-4 col-form-label">Display Name public as</label>-->
-                            <!--<div class="col-8">-->
-                              <!--<select id="select" name="select" class="custom-select">-->
-                                <!--<option value="admin">Admin</option>-->
-                              <!--</select>-->
-                            <!--</div>-->
-                          <!--</div>-->
-                          <div class="form-group row">
-                            <label for="email" class="col-4 col-form-label">Email*</label>
-                            <div class="col-8">
-                                <p id="email"  class="form-control here" >{{user.mail}}</p>
-                            </div>
-                          </div>
-                          <!--<div class="form-group row">-->
-                            <!--<label for="website" class="col-4 col-form-label">Website</label>-->
-                            <!--<div class="col-8">-->
-                              <!--<input id="website" name="website" placeholder="website" class="form-control here" type="text">-->
-                            <!--</div>-->
-                          <!--</div>-->
-                          <!--<div class="form-group row">-->
-                            <!--<label for="publicinfo" class="col-4 col-form-label">Public Info</label>-->
-                            <!--<div class="col-8">-->
-                              <!--<textarea id="publicinfo" name="publicinfo" cols="40" rows="4" class="form-control"></textarea>-->
-                            <!--</div>-->
-                          <!--</div>-->
-                            <div class="form-group row">
-                            <label for="pass" class="col-4 col-form-label">Password</label>
-                            <div class="col-8">
-                              <input id="pass" name="pass" placeholder="Password" class="form-control here" type="text">
+                            <label for="name" class="col-2 col-form-label">Name</label>
+                            <div class="col-5" id="name">
+                                {% if canEdit == 1 %}
+                                    {{ form.name(class="form-control form-control-lg",placeholder=user.name) }}
+                                {%endif%}
+
+                                {% if canEdit == 0 %}
+                                    {{ form.name(class="form-control form-control-lg",placeholder=user.name,disabled=True) }}
+                                {%endif%}
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="newpass" class="col-4 col-form-label">New Password</label>
-                            <div class="col-8">
-                              <input id="newpass" name="newpass" placeholder="New Password" class="form-control here" type="text">
+                            <label for="email" class="col-2 col-form-label">Email</label>
+                            <div class="col-5" id="email">
+                                {{ form.email(class="form-control form-control-lg",placeholder=user.mail,disabled=True) }}
                             </div>
                           </div>
-                          <div class="form-group row">
-                            <div class="offset-4 col-8">
-                              <button name="submit" type="submit" class="btn btn-primary">Update My Profile</button>
+                            <div class="form-group row" id="hide0">
+                            <label for="pass" class="col-2 col-form-label">Password</label>
+                            <div class="col-5" id="pass">
+                              {{ form.password(class="form-control form-control-lg") }}
+                            </div>
+                          </div>
+                          <div class="form-group row hide" id="hide1">
+                            <label for="newpass" class="col-2 col-form-label">New Password</label>
+                            <div class="col-5" id="newpass">
+                              {{ form.confirm(class="form-control form-control-lg") }}
+                            </div>
+                          </div>
+                          <div class="form-group row hide" id="hide2">
+                            <div class="offset-2 col-5 ">
+                              {{ form.submit(class="btn btn-outline-info") }}
                             </div>
                           </div>
                         </form>
@@ -84,4 +59,18 @@
 
             </div>
         </div>
+<script >
+    if ({{canEdit}} == 0 ){
+        var sub = document.getElementById("hide0");
+        sub.style.visibility = "hidden";
+
+        var sub = document.getElementById("hide1");
+        sub.style.visibility = "hidden";
+
+        var sub = document.getElementById("hide2");
+        sub.style.visibility = "hidden";
+    }
+
+
+</script>
 {% endblock content2 %}
