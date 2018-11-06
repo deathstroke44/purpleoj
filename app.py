@@ -16,7 +16,7 @@ from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
 from FunctionList import giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair
 from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
-from ClassesList import problem,postob,tripled
+from ClassesList import *
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
@@ -139,10 +139,6 @@ def upload_prev():
 def index():
     contest_db = mongo.db.contests
     problem_db = mongo.db.problems
-    #contest_now = contest_db.find({"_id": ObjectId(cc_id)})[0]
-    #starting_datetime = contest_now.get('Start Date') + "T" + contest_now.get('Start Time') + ":00+06:00"
-    #ending_datetime = contest_now.get('Start Date') + "T" + contest_now.get('End Time') + ":00+06:00"
-    #cc_name = contest_now.get('Contest Title')
     list = []
     postdb = mongo.db.posts
     existing_post = postdb.find({}).sort('_id')
@@ -165,14 +161,13 @@ def index():
                 flag=1
         pcet.replace(rep,'')
         ds=datetime.datetime.strptime(pc['Start Date']+' '+pcet,"%Y-%m-%d %H:%M")
-        #cd=datetime.datetime.strptime("%Y-%m-%d %H:%M",datetime.datetime.now())
         xx=dt.strftime("%Y-%m-%d %H:%M")
 
         cd = datetime.datetime.strptime(xx,"%Y-%m-%d %H:%M")
         print(ending_date)
         print(ds)
         print(cd)
-        if ds<=dt:
+        if ds>=dt:
             pclist.append(tripled(starting_datetime,ending_date,id,name))
     i = 0
     for posts in existing_post:
@@ -194,11 +189,6 @@ def index():
         msg = 'You are Logged in as ' + session['username']
         return render_template('home.html', msg=msg, posts=list,PC=pclist)
     return render_template('home.html', error=error, dumb=dumb, posts=list,PC=pclist)
-    return 'Hello World!'
-
-
-
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -209,9 +199,6 @@ def register():
         usernames = form.username.data
         passwords = form.password.data
         user = mongo.db.userlist
-
-        # db = connection['purpleoj']
-        # db.authenticate('red44', 'red123456789')
         existing_user = user.find_one({'USERNAME': usernames})
         dialoge = 'Your Account Is created Successfully'
         if existing_user:
@@ -224,10 +211,6 @@ def register():
                          'PASSWORDS': passwords})
         return redirect(url_for('index'))
     return render_template('register.html', form=form)
-
-
-
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -279,7 +262,6 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('index'))
 
-
 @app.route('/post', methods=['GET', 'POST'])
 def post():
     form = create_article_form(request.form)
@@ -306,15 +288,6 @@ def post():
     if not ('username' in session):
         return redirect(url_for('login'))
     return render_template('create_post.html', form=form)
-
-
-class prob_struct:
-    def __init__(self, pn, tl, ml, id):
-        self.pn = pn
-        self.tl = 'Time Limit : ' + str(tl) + 'ms'
-        self.ml = 'Memory Limit: ' + str(ml) + 'mb'
-        self.id = id
-
 
 @app.route('/about/<id>/submit/')
 def prob_submit(id):
