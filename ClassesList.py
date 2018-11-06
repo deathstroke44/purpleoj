@@ -28,3 +28,10 @@ class tripled:
         self.st=st
         self.ed=ed
         self.id=id
+
+class prob_struct:
+    def __init__(self, pn, tl, ml, id):
+        self.pn = pn
+        self.tl = 'Time Limit : ' + str(tl) + 'ms'
+        self.ml = 'Memory Limit: ' + str(ml) + 'mb'
+        self.id = id
