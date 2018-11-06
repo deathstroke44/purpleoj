@@ -16,7 +16,7 @@ from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
 from FunctionList import giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair
 from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
-from ClassesList import problem,postob
+from ClassesList import problem,postob,tripled
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
@@ -137,9 +137,43 @@ def upload_prev():
 
 @app.route('/')
 def index():
+    contest_db = mongo.db.contests
+    problem_db = mongo.db.problems
+    #contest_now = contest_db.find({"_id": ObjectId(cc_id)})[0]
+    #starting_datetime = contest_now.get('Start Date') + "T" + contest_now.get('Start Time') + ":00+06:00"
+    #ending_datetime = contest_now.get('Start Date') + "T" + contest_now.get('End Time') + ":00+06:00"
+    #cc_name = contest_now.get('Contest Title')
     list = []
     postdb = mongo.db.posts
     existing_post = postdb.find({}).sort('_id')
+    contest_db = mongo.db.contests
+    contest_cursor=contest_db.find({}).sort('Start Date')
+    pclist=[]
+    for pc in contest_cursor:
+        starting_datetime = pc['Start Date']+"T"+pc['Start Time']+":00+06:00"
+        ending_date = pc['Start Date']+"T"+pc['End Time']+":00+06:00"
+        id = pc['_id']
+        name=pc['Contest Title']
+        dt=datetime.datetime.now()
+        pcet=pc['End Time']
+        rep=''
+        flag=0
+        for i in range(0,len(pcet)):
+            if flag==1:
+                rep+=pcet[i]
+            if pcet[i]=='.':
+                flag=1
+        pcet.replace(rep,'')
+        ds=datetime.datetime.strptime(pc['Start Date']+' '+pcet,"%Y-%m-%d %H:%M")
+        #cd=datetime.datetime.strptime("%Y-%m-%d %H:%M",datetime.datetime.now())
+        xx=dt.strftime("%Y-%m-%d %H:%M")
+
+        cd = datetime.datetime.strptime(xx,"%Y-%m-%d %H:%M")
+        print(ending_date)
+        print(ds)
+        print(cd)
+        if ds<=dt:
+            pclist.append(tripled(starting_datetime,ending_date,id,name))
     i = 0
     for posts in existing_post:
         print(posts)
@@ -152,15 +186,14 @@ def index():
         list.append(ppp)
         print(list[i].dt)
         i = i + 1
-        list.reverse()
+    list.reverse()
     print(len(list))
-
     error = 'You are not logged in'
     dumb = 'dumb'
     if 'username' in session:
         msg = 'You are Logged in as ' + session['username']
-        return render_template('home.html', msg=msg, posts=list)
-    return render_template('home.html', error=error, dumb=dumb, posts=list)
+        return render_template('home.html', msg=msg, posts=list,PC=pclist)
+    return render_template('home.html', error=error, dumb=dumb, posts=list,PC=pclist)
     return 'Hello World!'
 
 
@@ -903,7 +936,7 @@ def contest():
         list.append(lol(existing_pb['myid'],existing_pb['name'],existing_pb['acsub'],existing_pb['sub'],existing_pb['myid']))
     if request.method == 'POST':
         print(request.form[form.contestname.name])
-        cnt=0;
+        cnt=0
         selected_problem_id=[]
         name='A'
         for prblm in list:

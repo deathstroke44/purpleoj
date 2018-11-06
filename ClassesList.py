@@ -21,3 +21,10 @@ class postob:
         self.dt = xdt
         self.user_ = xuser_
         self.id_ = xid_
+
+class tripled:
+    def __init__(self,st,ed,id,name):
+        self.name=name
+        self.st=st
+        self.ed=ed
+        self.id=id
