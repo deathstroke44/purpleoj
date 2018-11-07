@@ -17,6 +17,7 @@ from wtforms.fields.html5 import EmailField
 from FunctionList import allowed_file1,giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair,valid,valid1
 from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
 from ClassesList import *
+from CreateContest import *
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
@@ -1080,58 +1081,38 @@ def udebug(problemId):
 
 # *****************************************************************************************
 
-class lol:
-    def __init__(self,id,name,acc,sc,box):
-        self.id=id
-        self.name=name
-        self.acc=acc
-        self.sc=sc
-        self.box=box
+class Facade:
 
-class create_contest_form(Form):
-    contestname=StringField("Contest Name",[validators.DataRequired()])
+    def __init__(self):
+        self.contest = Contest()
 
-def forward_letter(letter, positions):
-    if letter.islower():
-        unicode_point = ord('a')
-    else:
-        unicode_point = ord('A')
-    start = ord(letter) - unicode_point
-    offset = ((start + positions)) + unicode_point
-    current_letter = chr(offset)
-    return current_letter
+    def createContest(self,form,list):
+        list=self.getProblemList()
+        return self.contest.createContest(mongo,form,list)
+
+    def getProblemList(self):
+        problemdb = mongo.db.problems
+        list = []
+        existing_pbs = problemdb.find({})
+        for existing_pb in existing_pbs:
+            list.append(Create(existing_pb['myid'], existing_pb['name'], existing_pb['acsub'], existing_pb['sub'],
+                                existing_pb['myid']))
+        return list
+
 
 @app.route('/contest',methods=['GET', 'POST'])
 def contest():
     form = create_contest_form(request.form)
+    facade= Facade()
 
-    problemdb=mongo.db.problems
-    list=[]
-    existing_pbs=problemdb.find({})
-    for existing_pb in existing_pbs:
-        list.append(lol(existing_pb['myid'],existing_pb['name'],existing_pb['acsub'],existing_pb['sub'],existing_pb['myid']))
     if request.method == 'POST':
-        print(request.form[form.contestname.name])
-        cnt=0;
-        selected_problem_id=[]
-        name='A'
-        for prblm in list:
-            if request.form.get(prblm.id):
-                cnt+=1
-                selected_problem_id.append({forward_letter(name,cnt-1):prblm.id});
-                print(prblm.name)
-        if cnt==0:
+        if facade.createContest(form,facade.getProblemList())==0:
             flash('You have to Choose at least 1 problem to set a contest.','failure')
-            return render_template('create_contest.html',obj=list,form=form)
+            return render_template('create_contest.html',obj=facade.getProblemList(),form=form)
         else:
-            contests=mongo.db.contests
-            contests.insert({'Contest Title':form.contestname.data,'Start Date':request.form['date'],
-                             'Start Time':request.form['start_time'],'End Time':request.form['end_time'],
-                             'Password':request.form['password'],'Problem Count':cnt,'Problem ID':selected_problem_id})
             return redirect(url_for('contests'))
 
-    return render_template('create_contest.html',obj=list,form=form)
-
+    return render_template('create_contest.html',obj=facade.getProblemList(),form=form)
 @app.route('/currentcontest/<contestID>/ranklist')
 def ranklist(contestID):
     # #total_problem=['A','B','C','D','E','F']
