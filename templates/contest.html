@@ -1,138 +1,161 @@
 {% block head %}
-<link rel="shortcut icon" href="/static/favicon.ico"/>
-<title> {{ name }} </title>
+    <link rel="shortcut icon" href="/static/favicon.ico"/>
+    <title> {{ name }} </title>
 {% endblock head %}
+
 {% extends 'index.html' %}
+
 {% block content %}
-<head>
-   <meta http-equiv="x-ua-compatible" content="IE-edge">
-   <meta name="viewport" content="width-device-width, initial-scale=1">
-   <link href="/static/For%20Table/dataTables.bootstrap.min.css" rel="stylesheet">
-</head>
+    <head>
+        <meta http-equiv="x-ua-compatible" content="IE-edge">
+        <meta name="viewport" content="width-device-width, initial-scale=1">
+        <link href="/static/For%20Table/dataTables.bootstrap.min.css" rel="stylesheet">
+    </head>
 <style>
-   .main-wrap{
-   padding:3%;
-   max-width:1200px;
-   display:block;
-   margin: 10px auto;
-   }
-   .table.table-striped {
-   width:100%;
-   border-collapse: collapse;
-   background: #fff;
-   overflow: hidden;
-   box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
-   -moz-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
-   -webkit-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
-   -o-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
-   -ms-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
-   }
-   .table.table-striped thead {
-   background: #fff;
-   box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
-   -moz-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
-   -webkit-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
-   -o-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
-   -ms-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
-   }
-   .table.table-striped th {
-   padding: 0.9rem 0.5rem;
-   font-weight: bold;
-   border: 1px solid #efefef;
-   text-align: left;
-   border-top: 0px;
-   }
-   .table.table-striped tbody tr:nth-child(odd){
-   background-color: rgba(0,0,0,.02);
-   }
-   .table.table-striped tbody tr td a {
-   color: #3c2f17;
-   font-size: 15px;
-   text-decoration:none;
-   font-weight:500;
-   }
-   .table.table-striped tr:nth-child(even) {
-   background-color: #fff;
-   }
-   .table.table-striped tbody tr td {
-   border: 1px solid #efefef;
-   padding: 0.7rem;
-   text-align: left;
-   border-top: 0px;
-   }
-   .ftr{
-   text-align: center;
-   margin-top: 20px;
-   font-weight: bold;
-   }
-   .ftr a{
-   color: #fff;
-   }
-   {
-   background-color: #1b6d85;
-   }
-   {#body#}
-   {#{#}
-   {#    padding: 3%;#}
-   {#    padding-top: 5%;#}
+    .main-wrap{
+        padding:3%;
+        max-width:1200px;
+        display:block;
+        margin: 10px auto;
+    }
+    .table.table-striped {
+      width:100%;
+        border-collapse: collapse;
+          background: #fff;
+        overflow: hidden;
+        box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
+        -moz-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
+        -webkit-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
+        -o-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
+        -ms-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
+    }
+
+    .table.table-striped thead {
+        background: #fff;
+        box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
+        -moz-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
+        -webkit-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
+        -o-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
+        -ms-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    .table.table-striped th {
+        padding: 0.9rem 0.5rem;
+        font-weight: bold;
+          border: 1px solid #efefef;
+        text-align: left;
+        border-top: 0px;
+    }
+
+    .table.table-striped tbody tr:nth-child(odd){
+        background-color: rgba(0,0,0,.02);
+    }
+
+    .table.table-striped tbody tr td a {
+        color: #3c2f17;
+        font-size: 15px;
+        text-decoration:none;
+      font-weight:500;
+    }
+
+    .table.table-striped tr:nth-child(even) {
+        background-color: #fff;
+    }
+
+    .table.table-striped tbody tr td {
+        border: 1px solid #efefef;
+        padding: 0.7rem;
+        text-align: left;
+        border-top: 0px;
+    }
+
+
+    .ftr{
+        text-align: center;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+
+    .ftr a{
+        color: #fff;
+    }
+
+    {
+        background-color: #1b6d85;
+    }
+    {#body#}
+    {#{#}
+    {#    padding: 3%;#}
+    {#    padding-top: 5%;#}
 </style>
-   <div class="main-wrap col-md-12">
-      <p><font size="12"> <b><i>{{ name }}</i></b></font></p>
-      <hr>
-      <table class="table table-striped">
-         <thead>
-            <tr>
-               <th>
-                  <p><a href="/currentcontest/{{ id }}/ranklist"> Standings </a></p>
-               </th>
-               <th >
-                  <center>
-                     <p id="timer"> {{ edto }} </p>
-                     <script>
-                        var ed_string = document.getElementById("timer").innerText;
-                        var countDownDate = new Date(ed_string).getTime();
-                        var x = setInterval(function() {
-                            var now = new Date().getTime();
-                            distance = countDownDate - now;
+<body>
+{#{% include 'layout.html' %}#}
 
-                            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+<p><font size="12"> <b><i>{{ name }}</i></b></font></p>
+
+<hr>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+  	<th class="col-sm-3">
+        <p ><a href="/currentcontest/{{ id }}/ranklist"> Standings </a></p>
+    </th>
+  	<th class="col-sm-9">
+        <center>
+    <p  id="timer"> {{ edto }} </p>
+        <script>
+            var ed_string = document.getElementById("timer").innerText;
+            var countDownDate = new Date(ed_string).getTime();
+            var x = setInterval(function() {
+                var now = new Date().getTime();
+                distance = countDownDate - now;
+
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
 
-                            if(days>0){
-                                document.getElementById("timer").innerHTML = days + " Day " + hours + " : " + minutes + " : " + seconds;
-                            }
-                            else if(days==0){
-                                document.getElementById("timer").innerHTML = "Remaining Time : "+hours + " : " + minutes + " : " + seconds;
-                            }
-                            else if (distance < 0) {
-                                clearInterval(x);
-                                document.getElementById("timer").innerHTML = "EXPIRED";
-                            }
-                        }, 1000);
+                if(days>0){
+                    document.getElementById("timer").innerHTML = days + " Day " + hours + " : " + minutes + " : " + seconds;
+                }
+                else if(days==0){
+                    document.getElementById("timer").innerHTML = hours + ":" + minutes + ":" + seconds;
+                }
 
-                     </script>
-                  </center>
-               </th>
-         </thead>
-      </table>
-      <table class="table table-striped" id="myTable">
-         <thead>
-            <tr>
-               <th data-sort="name">Problems</th>
-            </tr>
-         </thead>
-         <tbody>
-            {% for problems in obj %}
-            <tr>
-               <td>
-                  <a href="/currentcontest/{{ id }}/{{ problems.id }}">{{ problems.name }}</a>
-               </td>
-            </tr>
-            {% endfor %}
-         </tbody>
-      </table>
-   </div>
+                else if (distance < 0) {
+                    clearInterval(x);
+                    document.getElementById("timer").innerHTML = "EXPIRED";
+                }
+            }, 1000);
+
+        </script>
+            </center>
+
+    </th>
+    </thead>
+</table>
+
+<div class="main-wrap">
+    <table class="table table-striped" id="myTable">
+
+    <thead>
+        <tr>
+            <th data-sort="name">Problems</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for problems in obj %}
+        <tr>
+            <td>
+                <a href="/currentcontest/{{ id }}/{{ problems.id }}">{{ problems.name }}</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+</div>
+
+</body>
 {% endblock content %}
