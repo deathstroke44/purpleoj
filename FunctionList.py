@@ -1,6 +1,7 @@
 from app import *
 from Submission import *
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
+A_CAT=set(['cpp'])
 def givenode(node_name):
     node_name = node_name.replace('\n','')
     print(repr(node_name),end=' ')
@@ -99,6 +100,10 @@ class jsonstring:
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def allowed_file1(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in A_CAT
 
 def problem_user_submissions(mongo,user_name,problem_id):
     submissionsDatabase = mongo.db.submissions
