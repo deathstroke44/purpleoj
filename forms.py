@@ -59,7 +59,7 @@ class LoginForm(Form):
     username = StringField('Username', [validators.DataRequired()])
     password = PasswordField('Password', [validators.DataRequired()])
 
-class RegisterForm(Form):
+class RegisterForm(FlaskForm):
     name = StringField('Name', [validators.DataRequired()])
     username = StringField('Username', [validators.DataRequired()])
     email = EmailField('Email', [validators.DataRequired()])
@@ -68,3 +68,17 @@ class RegisterForm(Form):
         validators.EqualTo('confirm', message='Passwords do not match')
     ])
     confirm = PasswordField('Confirm Password')
+
+
+class UpdateProfileForm(FlaskForm):
+    name = StringField('Name', [validators.DataRequired()])
+    username = StringField('Username', [validators.optional()])
+    email = EmailField('Email', [validators.optional()])
+    password = PasswordField('Password', [
+        validators.DataRequired(),
+        validators.EqualTo('confirm', message='Passwords do not match')
+    ])
+    confirm = PasswordField('Confirm Password')
+    submit = SubmitField('Submit')
+
+

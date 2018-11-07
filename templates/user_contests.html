@@ -10,24 +10,24 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>{{user.username}}'s Posts</h4>
+                        <h4>{{user.username}}'s Contests</h4>
                         <hr>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
+                        <div class="panel-group">
                             {% for post in post_array %}
-                        <div class="card mt-2">
-                              <div class="card-header">{{post.title}}</div>
-                            <div class="card-body">
-                              <div class="card-text" w3-include-html={{post.text}}>
+                            <div class="panel panel-default">
+                              <div class="panel-heading">{{post.title}}</div>
+                              <div class="panel-body" w3-include-html={{post.text}}>
                                   <script>
                                         w3.includeHTML();
                                     </script>
                               </div>
                             </div>
-                        </div>
                             {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>

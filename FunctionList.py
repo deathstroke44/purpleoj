@@ -1,6 +1,7 @@
 from app import *
 from Submission import *
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
+A_CAT=set(['cpp'])
 def givenode(node_name):
     node_name = node_name.replace('\n','')
     print(repr(node_name),end=' ')
@@ -100,6 +101,10 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def allowed_file1(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in A_CAT
+
 def problem_user_submissions(mongo,user_name,problem_id):
     submissionsDatabase = mongo.db.submissions
     submissionsCursor = submissionsDatabase.find({
@@ -113,3 +118,25 @@ def problem_user_submissions(mongo,user_name,problem_id):
     print(len(submissions))
     print('omi')
     return submissions
+
+def valid(strr, request):
+    if strr not in request.files:
+        return False
+    filee = request.files[strr]
+    if filee.filename == '':
+        return False
+    if filee and allowed_file(filee.filename):
+        print("Something")
+        return True
+    return False
+
+def valid1(strr, request):
+    if strr not in request.files:
+        return False
+    filee = request.files[strr]
+    if filee.filename == '':
+        return False
+    if filee and allowed_file1(filee.filename):
+        print("Something")
+        return True
+    return False

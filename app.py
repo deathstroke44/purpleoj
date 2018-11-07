@@ -9,7 +9,6 @@ from flask_ckeditor import CKEditor, CKEditorField
 from flask_codemirror import CodeMirror
 from flask_codemirror.fields import CodeMirrorField
 from flask_pymongo import PyMongo
-from pymongo import ASCENDING, DESCENDING
 from flask_wtf import FlaskForm
 from werkzeug.utils import secure_filename
 from wtforms import Form, IntegerField, StringField, PasswordField, validators
@@ -17,7 +16,8 @@ from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
 from FunctionList import giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair
 from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
-from ClassesList import *
+from ClassesList import problem,postob
+from CreateContest import *
 from UtilityFunctionsForEditor import *
 from strategypatternforsubmission import *
 app = Flask(__name__)
@@ -140,38 +140,9 @@ def upload_prev():
 
 @app.route('/')
 def index():
-    contest_db = mongo.db.contests
-    problem_db = mongo.db.problems
     list = []
     postdb = mongo.db.posts
     existing_post = postdb.find({}).sort('_id')
-    contest_db = mongo.db.contests
-    contest_cursor=contest_db.find({}).sort('Start Date')
-    pclist=[]
-    for pc in contest_cursor:
-        starting_datetime = pc['Start Date']+"T"+pc['Start Time']+":00+06:00"
-        ending_date = pc['Start Date']+"T"+pc['End Time']+":00+06:00"
-        id = pc['_id']
-        name=pc['Contest Title']
-        dt=datetime.datetime.now()
-        pcet=pc['End Time']
-        rep=''
-        flag=0
-        for i in range(0,len(pcet)):
-            if flag==1:
-                rep+=pcet[i]
-            if pcet[i]=='.':
-                flag=1
-        pcet.replace(rep,'')
-        ds=datetime.datetime.strptime(pc['Start Date']+' '+pcet,"%Y-%m-%d %H:%M")
-        xx=dt.strftime("%Y-%m-%d %H:%M")
-
-        cd = datetime.datetime.strptime(xx,"%Y-%m-%d %H:%M")
-        print(ending_date)
-        print(ds)
-        print(cd)
-        if ds>=dt:
-            pclist.append(tripled(starting_datetime,ending_date,id,name))
     i = 0
     for posts in existing_post:
         print(posts)
@@ -184,15 +155,20 @@ def index():
         list.append(ppp)
         print(list[i].dt)
         i = i + 1
-    list.reverse()
+        list.reverse()
     print(len(list))
 
     error = 'You are not logged in'
     dumb = 'dumb'
     if 'username' in session:
         msg = 'You are Logged in as ' + session['username']
-        return render_template('home.html', msg=msg, posts=list,PC=pclist)
-    return render_template('home.html', error=error, dumb=dumb, posts=list,PC=pclist)
+        return render_template('home.html', msg=msg, posts=list)
+    return render_template('home.html', error=error, dumb=dumb, posts=list)
+    return 'Hello World!'
+
+
+
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -203,6 +179,9 @@ def register():
         usernames = form.username.data
         passwords = form.password.data
         user = mongo.db.userlist
+
+        # db = connection['purpleoj']
+        # db.authenticate('red44', 'red123456789')
         existing_user = user.find_one({'USERNAME': usernames})
         dialoge = 'Your Account Is created Successfully'
         if existing_user:
@@ -213,8 +192,12 @@ def register():
                          'USERNAME': usernames,
                          'MAIL': emails,
                          'PASSWORDS': passwords})
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
     return render_template('register.html', form=form)
+
+
+
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -264,6 +247,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('username', None)
+    session.clear()
     return redirect(url_for('index'))
 
 
@@ -293,6 +277,15 @@ def post():
     if not ('username' in session):
         return redirect(url_for('login'))
     return render_template('create_post.html', form=form)
+
+
+class prob_struct:
+    def __init__(self, pn, tl, ml, id):
+        self.pn = pn
+        self.tl = 'Time Limit : ' + str(tl) + 'ms'
+        self.ml = 'Memory Limit: ' + str(ml) + 'mb'
+        self.id = id
+
 
 @app.route('/about/<id>/submit/')
 def prob_submit(id):
@@ -389,6 +382,7 @@ def submissions():
 
 #   ASIF AHMED*******************************
 # ***************************************************************************
+dir_path = os.path.dirname(os.path.realpath(__file__))
 languages = ["Java", "C", "Python"]
 # CODEMIRROR_LANGUAGES = ['python','c']
 #
@@ -1044,71 +1038,42 @@ def udebug(problemId):
 
 
 # *****************************************************************************************
+class Facade:
 
-class lol:
-    def __init__(self,id,name,acc,sc,box):
-        self.id=id
-        self.name=name
-        self.acc=acc
-        self.sc=sc
-        self.box=box
+    def __init__(self):
+        self.contest = Contest()
 
-class create_contest_form(Form):
-    contestname=StringField("Contest Name",[validators.DataRequired()])
+    def createContest(self,form,list):
+        list=self.getProblemList()
+        return self.contest.createContest(mongo,form,list)
 
-def forward_letter(letter, positions):
-    if letter.islower():
-        unicode_point = ord('a')
-    else:
-        unicode_point = ord('A')
-    start = ord(letter) - unicode_point
-    offset = ((start + positions)) + unicode_point
-    current_letter = chr(offset)
-    return current_letter
+    def getProblemList(self):
+        problemdb = mongo.db.problems
+        list = []
+        existing_pbs = problemdb.find({})
+        for existing_pb in existing_pbs:
+            list.append(Create(existing_pb['myid'], existing_pb['name'], existing_pb['acsub'], existing_pb['sub'],
+                                existing_pb['myid']))
+        return list
+
 
 @app.route('/contest',methods=['GET', 'POST'])
 def contest():
     form = create_contest_form(request.form)
+    facade= Facade()
 
-    problemdb=mongo.db.problems
-    list=[]
-    existing_pbs=problemdb.find({})
-    for existing_pb in existing_pbs:
-        list.append(lol(existing_pb['myid'],existing_pb['name'],existing_pb['acsub'],existing_pb['sub'],existing_pb['myid']))
     if request.method == 'POST':
-        print(request.form[form.contestname.name])
-        cnt=0;
-        selected_problem_id=[]
-        name='A'
-        for prblm in list:
-            if request.form.get(prblm.id):
-                cnt+=1
-                selected_problem_id.append({forward_letter(name,cnt-1):prblm.id});
-                print(prblm.name)
-        if cnt==0:
+        if facade.createContest(form,facade.getProblemList())==0:
             flash('You have to Choose at least 1 problem to set a contest.','failure')
-            return render_template('create_contest.html',obj=list,form=form)
+            return render_template('create_contest.html',obj=facade.getProblemList(),form=form)
         else:
-            contests=mongo.db.contests
-            contests.insert({'Contest Title':form.contestname.data,'Start Date':request.form['date'],
-                             'Start Time':request.form['start_time'],'End Time':request.form['end_time'],
-                             'Password':request.form['password'],'Problem Count':cnt,'Problem ID':selected_problem_id})
             return redirect(url_for('contests'))
 
-    return render_template('create_contest.html',obj=list,form=form)
+    return render_template('create_contest.html',obj=facade.getProblemList(),form=form)
 
 @app.route('/currentcontest/<contestID>/ranklist')
 def ranklist(contestID):
-    # #total_problem=['A','B','C','D','E','F']
-    # submission_history=[{'name':'A','status':'AC','total_submission':3}]
-    # submission_history.append({'name':'B','status':'WA','total_submission':2})
-    # submission_history.append({'name': 'E', 'status': 'RTE', 'total_submission': 6})
-    # submission_history.append({'name': 'C', 'status': 'WA', 'total_submission': 2})
-    # submission_history.append({'name': 'D', 'status': 'TLE', 'total_submission': 2})
-    # submission_history.append({'name': 'F', 'status': 'NS', 'total_submission': 0})
-    # contestant1={'name':'SALAM','acc':3,'penalty':120,'submission_history':submission_history}
-    # contestant2 = {'name': 'Borkot', 'acc': 2, 'penalty': 110, 'submission_history': submission_history}
-    # Total_contestant=[contestant1,contestant2]
+
     Total_contestant=[]
     submission=mongo.db.submissions
     contestant_wise_submission=submission_formatter(submission,contestID)
@@ -1248,18 +1213,19 @@ def contests():
     loaded_contests = contest_db.find({})
     for contest_curr in loaded_contests:
         time_string = contest_curr['Start Date'] + ' ' + contest_curr['Start Time']
-        #time_obj = datetime.strptime(time_string, '%Y-%m-%d %H:%M')
+        # time_obj = datetime.strptime(time_string, '%Y-%m-%d %H:%M')
         subd = contest_curr['Start Date'].split('-')
         subt = contest_curr['Start Time'].split(':')
         dt1 = datetime.datetime(int(subd[0]), int(subd[1]), int(subd[2]), int(subt[0]), int(subt[1]))
         new_contest = contestdata(contest_curr['_id'],
-                              contest_curr['Contest Title'],
-                              dt1)
+                                  contest_curr['Contest Title'],
+                                  dt1)
         contest_list.append(new_contest)
-    contest_list.sort(key=lambda r:r.time, reverse=True)
+    contest_list.sort(key=lambda r: r.time, reverse=True)
     if not ('username' in session):
         return redirect(url_for('login'))
     return render_template('contests.html', obj=contest_list)
+
 
 class PasswordForm(Form):
     password = StringField('Password')
@@ -1268,7 +1234,7 @@ class PasswordForm(Form):
 # Password check for contest
 @app.route('/contest/<id>/verify', methods=['GET', 'POST'])
 def verify_contest(id):
-    form = PasswordForm(request.form)
+    form = PasswordField(request.form)
     contest_db = mongo.db.contests
     contest_now = contest_db.find({"_id": ObjectId(id)})[0]
     c_pass = contest_now.get('Password')
@@ -1276,18 +1242,18 @@ def verify_contest(id):
     print("p : " + c_pass)
     if not c_pass:
         print("no password")
-        url = "http://127.0.0.1:5000/currentcontest/" + id
+        url = "http://127.0.0.1:5000/currentcontest/" + id + "/landing"
         return redirect(url, 302)
     if request.method == 'POST':
         password = request.form['password']
         print(password)
         print(c_pass)
         if c_pass == password:
-            url = "http://127.0.0.1:5000/currentcontest/" + id
-            return  redirect(url, 302)
+            url = "http://127.0.0.1:5000/currentcontest/" + id + "/landing"
+            return redirect(url, 302)
         else:
             error = "You need to enter the password for this contest"
-            return render_template('contest_verify.html', error=error, form=form)
+            return render_template('contest_verify.html', error=error, form=form, name=c_name)
     else:
         return render_template('contest_verify.html', form=form, name=c_name)
 
@@ -1308,8 +1274,9 @@ def load_contest(cc_id):
     for p in problems:
         for x, y in p.items():
             i = problem_db.find_one({'myid': y})
+            print(i)
             new_prob = problem(i['sub_task_count'], i['myid'], i['pnt1'], i['pnt2'], i['pnt3'], i['time_limit'],
-                               i['memory_limit'], i['stylee'], x + ". " + i['name'], i['acsub'], i['sub'], i['setter'])
+                               i['memory_limit'], i['stylee'], i['name'], i['acsub'], i['sub'], i['setter'])
             problem_list.append(new_prob)
     if not ('username' in session):
         return redirect(url_for('login'))
@@ -1331,6 +1298,26 @@ def load_contest_problem(contest_id, id2):
         return redirect(url_for('login'))
     return render_template("problem_viewer.html", pdf_src='/static/uploads/' + id2 + '.pdf', pbds=pbds, cid=contest_id,
                            et=end_time)
+
+
+# landing page if contest is not started yet
+@app.route('/currentcontest/<contst_id>/landing')
+def check_contest(contst_id):
+    current_time = datetime.datetime.now()
+    print(current_time)
+    contest_db = mongo.db.contests
+    contest_now = contest_db.find({"_id": ObjectId(contst_id)})[0]
+    cc_name = contest_now.get('Contest Title')
+    starting_datetime = contest_now.get('Start Date') + "T" + contest_now.get('Start Time') + ":00+06:00"
+    time_string = contest_now.get('Start Date') + " " + contest_now.get('Start Time')
+    start_time_p = datetime.datetime.strptime(time_string, "%Y-%m-%d %H:%M")
+    if not ('username' in session):
+        return redirect(url_for('login'))
+    if start_time_p < current_time:
+        url = "http://127.0.0.1:5000/currentcontest/" + contst_id
+        return redirect(url, 302)
+    else:
+        return render_template("contest_landing.html", cid=contst_id, st=starting_datetime, name=cc_name)
 
 
 ######################################################################################################

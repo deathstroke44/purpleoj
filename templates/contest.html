@@ -99,11 +99,11 @@
     <thead>
     <tr>
   	<th class="col-sm-3">
-        <div class="well well-lg"><a href="/currentcontest/{{ id }}/ranklist"> Standings </a></div>
+        <p ><a href="/currentcontest/{{ id }}/ranklist"> Standings </a></p>
     </th>
   	<th class="col-sm-9">
         <center>
-    <div class="well well-lg" id="timer"> {{ edto }} </div>
+    <p  id="timer"> {{ edto }} </p>
         <script>
             var ed_string = document.getElementById("timer").innerText;
             var countDownDate = new Date(ed_string).getTime();
@@ -121,8 +121,9 @@
                     document.getElementById("timer").innerHTML = days + " Day " + hours + " : " + minutes + " : " + seconds;
                 }
                 else if(days==0){
-                    document.getElementById("timer").innerHTML = hours + " : " + minutes + " : " + seconds;
+                    document.getElementById("timer").innerHTML = hours + ":" + minutes + ":" + seconds;
                 }
+
                 else if (distance < 0) {
                     clearInterval(x);
                     document.getElementById("timer").innerHTML = "EXPIRED";
