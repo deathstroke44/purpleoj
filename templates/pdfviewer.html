@@ -10,9 +10,11 @@
         #bs
 {
     margin-top: 2px;
-    width: 100%;
+    width: 40%;
+            margin-left: 30%;
+            alignment: center;
     align-content: center;
-    background-color: blue;
+    background-color: black;
 }
 #first
 {
@@ -30,17 +32,31 @@
     height: 10px;
     background-color: black;
 }
-
+.lol
+{
+    margin: 4px;
+    padding: 4px;
+}
+            body{
+                text-emphasis-style: inherit;
+            }
+            .inner
+            {
+                background-color: whitesmoke;
+            }
         </style>
 <body>
     </head>
             <div class="row mt-5">
-                <div class="col-md-3">
-                    <div class="jumbotron" >
-                        <p>
-                            <b>{{ pbds.pn }}</b>
+                <div class="col-md-3 shadow">
+                    <div class="lol" >
+                    <div class="card-header">
+                        <p align="center">
+
+                            <b class="lead">{{ pbds.pn }}</b>
                         </p>
-                        <hr>
+                    </div>
+                    <hr>
                         <p>
                             {{ pbds.tl }}
                         </p>
@@ -58,7 +74,9 @@
                         </font>
                         </a>
                         <br><br>
+                    <div class="card-header">
                         <p class="lead" align="center">Previous Submissions</p>
+                    </div>
                         <hr>
                         {% for previous in Previous %}
 

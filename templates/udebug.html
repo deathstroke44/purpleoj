@@ -1,0 +1,140 @@
+{% extends 'index.html' %}
+{% block head %}
+{% endblock head %}
+{% block content %}
+    <head>
+        <link rel="stylesheet" href="/static/css/udebug.css">
+        <style type='text/css'>
+            textarea {
+                vertical-align: top;
+            }
+        </style>
+    </head>
+    <body>
+    {% include 'layout.html' %}
+    {% from "includes/_formhelpers.html" import render_field %}
+    <div class="form-group">
+        <form id="form" method="POST" action="">
+            <div class="container">
+                <div style="padding-left: 2%" class=" form-group">
+                    <label for="inputs_table"><font color="black">Select An Input</font></label>
+                    <br>
+                    <table class="table table-striped table-hover table-bordered" width="1000" id="inputs_table">
+                        {#            <p><font size="8"> <b> </b></font></p>#}
+                        <tbody>
+                        {% for input in inputs %}
+                            <tr>
+                                <td>
+                                    <p>{{ loop.index }}</p>
+                                </td>
+                                <td>
+                                    {{ input }}
+                                </td>
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+                <div style="padding-left: 2%">
+                    <label for="input_textarea"><font color="black">Inputs</font></label>
+                    <br>
+                    <textarea id="input_textarea" name="input_textarea" cols="50"
+                              rows="10">{{ selectedinput }}</textarea>
+                </div>
+
+            </div>
+            <input type="submit" class="btn btn-primary center-block" name="get_accepted_output_button"
+                   value="Get Accepted Output" id="get_accepted_output_button"/>
+
+
+            <div class="container">
+
+                <div style="padding-left: 2%">
+
+                    <label for="accepted_output_textarea"><font color="black">Accepted Outputs</font></label>
+                    <br>
+                    <textarea id="accepted_output_textarea" name="accepted_output_textarea" cols="50"
+                              rows="10">{{ acceptedOutput }}</textarea>
+
+                </div>
+
+
+                <div style="padding-left: 2%">
+                    <label for="your_output_textarea"><font color="black">Your Outputs</font></label>
+                    <br>
+                    <textarea id="your_output_textarea" name="your_output_textarea" cols="50"
+                              rows="10">{{ yourOutput }}</textarea>
+                </div>
+
+            </div>
+            <input type="submit" class="btn btn-primary center-block" name="compare_outputs_button"
+                   value="Compare Outputs" id="compare_outputs_button"/>
+
+            {% if mismatchNumber>0 %}
+                <p style="padding-top: 2%" align="center">
+                    <font color="red">The outputs are not identical! The number of differences is {{ mismatchNumber }}.
+                        See the table below.</font>
+                </p>
+            {% elif mismatchNumber==0 %}
+                <p style="padding-top: 2%" align="center">
+                    <font color="green">Woohoo! Your output is identical to the accepted output!</font>
+                </p>
+            {% endif %}
+            <label style="padding-top: 2%" for="inputs_table"><font color="black">Select An Input</font></label>
+            <br>
+            <table class="table table-striped table-hover table-bordered" width="1000" id="inputs_table">
+                {#            <p><font size="8"> <b> </b></font></p>#}
+                <thead>
+                <tr>
+                    <th>Line No.</th>
+                    <th>Accepted Output</th>
+                    <th>Line No.</th>
+                    <th>Yours Output</th>
+                </tr>
+                </thead>
+
+                {% for acceptedOutputlineNo,acceptedOutput,yourOutputlineNo,yourOutput in results %}
+                    <tr>
+                        <td>
+                            <p>{{ acceptedOutputlineNo }}</p>
+                        </td>
+                        <td>
+                            <p>{{ acceptedOutput }}</p>
+                        </td>
+                        <td>
+                            <p>{{ yourOutputlineNo }}</p>
+                        </td>
+                        <td>
+                            <p>{{ yourOutput }}</p>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <textarea id="inputstorer" name="inputstorer" style="visibility: hidden"></textarea>
+        </form>
+
+    </div>
+    <script>
+
+        var form = document.getElementById("form");
+        var inputStorer = document.getElementById("inputstorer");
+        document.querySelector("#inputs_table tbody").addEventListener("click", function (event) {
+            var td = event.target;
+            while (td !== this && !td.matches("td")) {
+                td = td.parentNode;
+
+            }
+            if (td === this) {
+                window.alert("No table cell found");
+            } else if (td.cellIndex == 1) {
+                inputStorer.innerHTML = td.innerHTML;
+                form.submit();
+            }
+        });
+
+
+    </script>
+    </body>
+{% endblock content %}

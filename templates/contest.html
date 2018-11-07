@@ -87,8 +87,6 @@
     {#{#}
     {#    padding: 3%;#}
     {#    padding-top: 5%;#}
-    {
-    #}#}
 </style>
 <body>
 {#{% include 'layout.html' %}#}
@@ -101,12 +99,13 @@
     <thead>
     <tr>
   	<th class="col-sm-3">
-        <div class="well well-lg"><a href="/currentcontest/{{ id }}/ranklist"> Standings </a></div>
+        <p ><a href="/currentcontest/{{ id }}/ranklist"> Standings </a></p>
     </th>
   	<th class="col-sm-9">
-    <div class="well well-lg" id="timer"> {{ sdto }} </div>
+        <center>
+    <p  id="timer"> {{ edto }} </p>
         <script>
-            var ed_string = document.getElementById("timer").value;
+            var ed_string = document.getElementById("timer").innerText;
             var countDownDate = new Date(ed_string).getTime();
             var x = setInterval(function() {
                 var now = new Date().getTime();
@@ -117,15 +116,22 @@
                 var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                document.getElementById("timer").innerHTML = "EXPIRED";
-                {#days + "d " + hours + "h " + minutes + "m " + seconds + "s ";#}
-                if (distance < 0) {
+
+                if(days>0){
+                    document.getElementById("timer").innerHTML = days + " Day " + hours + " : " + minutes + " : " + seconds;
+                }
+                else if(days==0){
+                    document.getElementById("timer").innerHTML = hours + ":" + minutes + ":" + seconds;
+                }
+
+                else if (distance < 0) {
                     clearInterval(x);
                     document.getElementById("timer").innerHTML = "EXPIRED";
                 }
             }, 1000);
 
         </script>
+            </center>
 
     </th>
     </thead>

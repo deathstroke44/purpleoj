@@ -45,15 +45,15 @@
     </head>
 <body>
 {% include 'index.html' %}
-<main role="main" class="container">
+<main role="main" class="container shadow">
    <div class="row mt-5">
       <div class="col-md-1">
            </div>
-      <div class="col-md-9">
+      <div class="col-md-10">
 
 
-<h1 class="lead"><font size="5px"><strong>Post Something</strong></font></h1>
-<hr>
+<h1 class="lead card-header"><font size="5px"><strong>Post Something</strong></font></h1>
+
 <br>
 <br>
 {%  from  "includes/_formhelpers.html" import render_field %}
@@ -98,9 +98,9 @@
             {
                 this.state=_state;
             }
-            save(_state)
+            save()
             {
-                return new Memento(_state);
+                return new Memento(this.state);
             }
             restore(_Memento)
             {
@@ -198,7 +198,8 @@
                     //document.getElementById("par").innerHTML= e.editor.getData();
 
                     var rr=e.editor.getData();
-                    care_taker.addMemento(originator.save(rr));
+                    originator.setstate(rr);
+                    care_taker.addMemento(originator.save());
                     //alert(rr);
                     //alert("pushed");
                     //alert(care_taker.list.length);
@@ -222,7 +223,8 @@ document.getElementById("rede").onclick=function () {
     if(care_taker.list.length>0)
     {
         var rr=CKEDITOR.instances["ck"].getData();
-        care_taker.addredoMemento(originator.save(rr));
+        originator.setstate(rr);
+        care_taker.addredoMemento(originator.save());
         CKEDITOR.instances["ck"].setData(care_taker.getMemento(care_taker.list.length-1).state);
         care_taker.popMemento();
     }
@@ -234,7 +236,8 @@ document.getElementById("rede").onclick=function () {
             if(care_taker.lis2.length>=1)
             {
                  var rr=CKEDITOR.instances["ck"].getData();
-                 care_taker.addMemento(originator.save(rr));
+                 originator.setstate(rr);
+                 care_taker.addMemento(originator.save());
                  CKEDITOR.instances["ck"].setData(care_taker.getredoMemento(care_taker.lis2.length-1).state);
                  care_taker.popredomemento();
             }

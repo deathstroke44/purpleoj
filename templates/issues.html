@@ -28,8 +28,9 @@ td {
             <h4 style="margin-top:25px;"><strong>Issues</strong></h4>
          </div>
          <div class="col-md-2">
-            <button onclick="document.getElementById('modal-wrapper').style.display='block'">
-            New Issue</button>
+            <button class="btn btn-dark" onclick="document.getElementById('modal-wrapper').style.display='block'">
+                New Issue</button>
+             <span class="glyphicon glyphicon-plus"></span>
             <div id="modal-wrapper" class="modal">
                <form class="modal-content animate" method="POST" action="">
                {{ form.hidden_tag() }}
@@ -102,7 +103,7 @@ td {
                     <td>
                         <h5>
                            <a href="issues/{{issue.id}}">
-                        {{ issue.title }}
+                        {{ issue.title }}   <span style="float:right;" class="badge badge-secondary">{{issue.commentNumber}}</span>
                         </a>
                         </h5>
                        {% if issue.problemName != 'CodeFlask' %}
