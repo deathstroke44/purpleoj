@@ -135,7 +135,6 @@ class SubmitForContestStrategy(SubmitStrategy):
         problemsDatabase = app.mongo.db.problems
         submissionDatabase = app.mongo.db.submissions
         problemsdb = ProblemsDatabase()
-        print("for contest")
         submissionInfo = submitCode(auxFrom, problemId)
         problemsdb.incrementSumissionCount(problemsDatabase, problemId)
         print(submissionInfo)
@@ -147,8 +146,10 @@ class SubmitForContestStrategy(SubmitStrategy):
             verdict["Status"] = submissionInfo.get("Compilation Status")
         elif submissionInfo.get("Run Status") != None:
             verdict["Status"] = submissionInfo.get("Run Status")
+            print("problemTimeLimit" + problemTimeLimit, submissionInfo.get("Execution Time"))
         else:
-            if float(problemTimeLimit) < float(submissionInfo.get("Execution Time")):
+            print(problemTimeLimit, submissionInfo.get("Execution Time"))
+            if float(problemTimeLimit) < float(submissionInfo.get("Execution Time")) * 1000:
                 verdict["Status"] = "TLE"
             else:
                 if submissionInfo.get("Result Verdict") == "Passed":
@@ -187,7 +188,7 @@ class SubmitNormalStrategy(SubmitStrategy):
         elif submissionInfo.get("Run Status") != None:
             verdict["Status"] = submissionInfo.get("Run Status")
         else:
-            if float(problemTimeLimit) < float(submissionInfo.get("Execution Time")):
+            if float(problemTimeLimit) < float(submissionInfo.get("Execution Time")) * 1000:
                 verdict["Status"] = "TLE"
             else:
                 if submissionInfo.get("Result Verdict") == "Passed":
