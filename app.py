@@ -1,6 +1,7 @@
 import datetime
 import os
 import time
+
 from flask import Flask, render_template, request
 from flask import flash
 from flask import redirect, url_for, session, Session
@@ -13,7 +14,7 @@ from werkzeug.utils import secure_filename
 from wtforms import Form, IntegerField, StringField, PasswordField, validators
 from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
-import FunctionList
+from FunctionList import allowed_file1,giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair,valid,valid1
 from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
 from ClassesList import *
 app = Flask(__name__)
@@ -38,22 +39,22 @@ def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
         sbcnt = int(request.form.get('cnt'))
-        if not FunctionList.valid(strr='file', request=request):
+        if not valid(strr='file', request=request):
             return redirect(request.url)
         if sbcnt >= 1:
-            if not FunctionList.valid(strr='ifile1', request=request) or not FunctionList.valid(strr='ofile1',
-                                                                                                request=request) or nameform.point1.data == None:
+            if not valid(strr='ifile1', request=request) or not valid(strr='ofile1',
+                                                                      request=request) or nameform.point1.data == None:
                 return redirect(request.url)
         if sbcnt >= 2:
-            if not FunctionList.valid(strr='ifile2', request=request) or not FunctionList.valid(strr='ofile2',
-                                                                                                request=request) or nameform.point2.data == None:
+            if not valid(strr='ifile2', request=request) or not valid(strr='ofile2',
+                                                                      request=request) or nameform.point2.data == None:
                 return redirect(request.url)
         if sbcnt >= 3:
-            if not FunctionList.valid(strr='ifile3', request=request) or not FunctionList.valid(strr='ofile3',
-                                                                                                request=request) or nameform.point3.data == None:
+            if not valid(strr='ifile3', request=request) or not valid(strr='ofile3',
+                                                                      request=request) or nameform.point3.data == None:
                 return redirect(request.url)
         checkerd =False
-        if FunctionList.valid1(strr='checker', request=request):
+        if valid1(strr='checker',request=request):
             checkerd=True
         gpb = 'samin'+uuid.uuid4().__str__()
         file = request.files['file']
@@ -106,6 +107,41 @@ def upload_file():
     if not ('username' in session):
         return redirect(url_for('login'))
     return render_template('upload_problem.html', nameform=nameform)
+
+
+def valid(strr, request):
+    if strr not in request.files:
+        return False
+    filee = request.files[strr]
+    if filee.filename == '':
+        return False
+    if filee and allowed_file(filee.filename):
+        print("Something")
+        return True
+    return False
+
+
+def upload_prev():
+    nameform = UploadForm(request.form)
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('upload_file', filename=filename))
+    return render_template('upload_problem.html', nameform=nameform)
+
+
+
 
 @app.route('/')
 def index():
@@ -271,7 +307,7 @@ def pdfviewers(id):
     pbds = prob_struct(pb['name'], pb['time_limit'], pb['memory_limit'], id)
     if not ('username' in session):
         return redirect(url_for('login'))
-    Previous = FunctionList.problem_user_submissions(mongo, session['username'], id)
+    Previous = problem_user_submissions(mongo,session['username'],id)
     for i in range(0,len(Previous)):
         print(Previous[i].first)
     #Previous=[]
@@ -378,6 +414,7 @@ def userIssues(id):
 
 #   ASIF AHMED*******************************
 # ***************************************************************************
+dir_path = os.path.dirname(os.path.realpath(__file__))
 languages = ["Java", "C", "Python"]
 # CODEMIRROR_LANGUAGES = ['python','c']
 #
