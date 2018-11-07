@@ -9,7 +9,7 @@ class NewsStrategyAbstract(object):
 
     @abc.abstractmethod
     def Load(self, soup):
-        """Required Method"""
+        pass
 
 
 class Article:

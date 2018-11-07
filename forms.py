@@ -59,12 +59,26 @@ class LoginForm(Form):
     username = StringField('Username', [validators.DataRequired()])
     password = PasswordField('Password', [validators.DataRequired()])
 
-class RegisterForm(Form):
-    name = StringField('Name', [validators.Length(min=1, max=50)])
-    username = StringField('Username', [validators.Length(min=4, max=50)])
-    email = EmailField('Email', [validators.Length(min=1, max=50)])
+class RegisterForm(FlaskForm):
+    name = StringField('Name', [validators.DataRequired()])
+    username = StringField('Username', [validators.DataRequired()])
+    email = EmailField('Email', [validators.DataRequired()])
     password = PasswordField('Password', [
-        validators.Length(min=5,max=10),
+        validators.DataRequired(),
         validators.EqualTo('confirm', message='Passwords do not match')
     ])
     confirm = PasswordField('Confirm Password')
+
+
+class UpdateProfileForm(FlaskForm):
+    name = StringField('Name', [validators.DataRequired()])
+    username = StringField('Username', [validators.optional()])
+    email = EmailField('Email', [validators.optional()])
+    password = PasswordField('Password', [
+        validators.DataRequired(),
+        validators.EqualTo('confirm', message='Passwords do not match')
+    ])
+    confirm = PasswordField('Confirm Password')
+    submit = SubmitField('Submit')
+
+

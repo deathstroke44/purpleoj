@@ -1,0 +1,144 @@
+{% extends 'index.html' %}
+{% block head %}
+{% endblock head %}
+{% block content %}
+    <style>
+        #lskp {
+            margin-top: 3%;
+            margin-left: 3%;
+            margin-right: 3%;
+        }
+
+        .lol {
+            margin-left: 10%;
+            margin-right: 10%;
+        }
+
+        .highlight {
+            background-color: #fff;
+            padding: 1%;
+            shape-rendering: geometricPrecision;
+        }
+
+        #upcard {
+            width: 100%;
+            background-color: #bee5eb;
+        }
+
+        #fr {
+            float: right;
+        }
+
+        #fl {
+            float: left;
+        }
+
+        #bs {
+            margin: 2px;
+            align-content: center;
+            background-color: blue;
+            float: right;
+        }
+    </style>
+    <body>
+
+    <div class=lol>
+        <br>
+        <br>
+        <br>
+        <section>
+
+            <div id="upcard">
+                <P id="fl"><strong><font size="5px">Problem Set</font></strong></P>
+            </div>
+        </section>
+        <br>
+        <div id="lskp">
+            <table class="table table-striped table-bordered table-hover" id="mydata">
+                <thead>
+                <tr>
+                    <th>Problem Name</th>
+                    <th>Problem Setter</th>
+                    <th>Category</th>
+                    <th>Accepted Submission</th>
+                    <th>Total Submission</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                </tr>
+                </tfoot>
+                <tbody>
+                {% for problem in obj %}
+                    <tr>
+                        <td>
+                            <a href="udebug/{{ problem.id }}">
+                                {{ problem.name }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ problem.setter }}
+                        </td>
+                        <td>
+                            {{ problem.stylee }}
+                        </td>
+                        <td>
+                            {{ problem.acsub }}
+                        </td>
+                        <td>
+                            {{ problem.sub }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                <!---   <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr>
+                    <tr><td>4456</td><td>Samin Yeaser</td><td>44</td><td>saminyeaserlight@gmail.com</td></tr> -->
+                </tbody>
+            </table>
+        </div>
+
+        <script>
+            highlight("Problem Set");
+        </script>
+        <script src="/static/For%20Table/jquery.js"></script>
+        <script src="/static/For%20Table/jquery.dataTables.min.js"></script>
+        <script src="/static/For%20Table/dataTables.bootstrap4.min.js"></script>
+        <script>
+            $('#mydata').dataTable()
+        </script>
+    </div>
+
+{% endblock content %}

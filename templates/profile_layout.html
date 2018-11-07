@@ -1,4 +1,6 @@
-
+{% block head %}
+    <title>{{user.username}}'s Profile</title>
+{% endblock head %}
 {% extends "index.html" %}
 {% block content %}
 <!------ Include the above in your HEAD tag ---------->
@@ -31,24 +33,15 @@
 	<div class="row mt-5">
         <div class="col-md-5" style="margin-top: 0px;">
 		     <div class="list-group list-group-horizontal" id="links">
-              <a href="/profile" class="list-group-item list-group-item-action" id="prof">Profile</a>
-                 <a href="/submission" class="list-group-item list-group-item-action" id="sub">Submission</a>
-              <a href="/posts" class="list-group-item list-group-item-action" id="post">Post</a>
-              <a href="/contests" class="list-group-item list-group-item-action" id="contest">Contest</a>
-              <a href="/settings" class="list-group-item list-group-item-action" id="settings">Settings</a>
+              <a href="/profile/{{user.username}}" class="list-group-item list-group-item-action" id="prof">Profile</a>
+                 <a href="/submission/{{user.username}}" class="list-group-item list-group-item-action" id="sub">Submission</a>
+              <a href="/posts/{{user.username}}" class="list-group-item list-group-item-action" id="post">Post</a>
+              <a href="/contests/{{user.username}}" class="list-group-item list-group-item-action" id="contest">Contest</a>
+              <a href="/issue/{{user.username}}" class="list-group-item list-group-item-action" id="issues">Issues</a>
 
             </div>
         </div>
     </div>
-        <!--<nav aria-label="breadcrumb">-->
-          <!--<ol class="breadcrumb">-->
-            <!--<li class="breadcrumb-item active" id="prof"><a href="/profile" >Profile</a></li>-->
-            <!--<li class="breadcrumb-item" id="sub"><a href="/submission" >Submission</a></li>-->
-              <!--<li class="breadcrumb-item active"  aria-current="page"><a href="/posts" >Post</a></li>-->
-              <!--<li class="breadcrumb-item" id="contest"><a href="/contests" >Contest</a></li>-->
-              <!--<li class="breadcrumb-item" id="settings"><a href="/settings" >Settings</a></li>-->
-          <!--</ol>-->
-        <!--</nav>-->
     <div class="row mt-5">
         <div class="col-md-10">
             {% block content2 %}{% endblock %}
@@ -75,8 +68,8 @@
         var sub = document.getElementById("contest");
         sub.className += " active";
     }
-    else if(res[3] == "settings"){
-        var sub = document.getElementById("settings");
+    else if(res[3] == "issue"){
+        var sub = document.getElementById("issues");
         sub.className += " active";
     }
 </script>
