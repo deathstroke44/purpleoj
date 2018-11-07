@@ -1,6 +1,7 @@
 import datetime
 import os
 import time
+
 from flask import Flask, render_template, request
 from flask import flash
 from flask import redirect, url_for, session, Session
@@ -13,14 +14,13 @@ from werkzeug.utils import secure_filename
 from wtforms import Form, IntegerField, StringField, PasswordField, validators
 from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
-from FunctionList import giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair,allowed_file1
+from FunctionList import giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair
 from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
 from ClassesList import *
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
 ALLOWED_CATEGORY = set(['ACM', 'IOI'])
-A_CAT=set(['cpp'])
 import uuid
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -38,9 +38,7 @@ def upload_file():
     nameform = UploadForm(request.form)
     if request.method == 'POST':
         # check if the post request has the file part
-        sbcnt = request.form.get('cnt')
-        sbcnt=int(sbcnt)
-        print(sbcnt)
+        sbcnt = nameform.count.data
         if not valid(strr='file', request=request):
             return redirect(request.url)
         if sbcnt >= 1:
@@ -55,18 +53,11 @@ def upload_file():
             if not valid(strr='ifile3', request=request) or not valid(strr='ofile3',
                                                                       request=request) or nameform.point3.data == None:
                 return redirect(request.url)
-        checkerd=False
-        if valid1(strr='checker',request=request):
-            checkerd=True
 
         gpb = uuid.uuid4().__str__()
         file = request.files['file']
         filename = gpb + '.pdf'  # secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        if checkerd==True:
-            file = request.files['checker']
-            filename = gpb + 'sol'+'.cpp'  # secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         for i in range(1, sbcnt + 1):
             inp = 'ifile' + str(i)
             out = 'ofile' + str(i)
@@ -100,8 +91,7 @@ def upload_file():
             'stylee': pb.stylee,
             'acsub': 0,
             'sub': 0,
-            'setter': session['username'],
-            'checker': checkerd
+            'setter': session['username']
         })
 
         return redirect(url_for('upload_file', filename=filename))
@@ -118,17 +108,6 @@ def valid(strr, request):
     if filee.filename == '':
         return False
     if filee and allowed_file(filee.filename):
-        print("Something")
-        return True
-    return False
-
-def valid1(strr, request):
-    if strr not in request.files:
-        return False
-    filee = request.files[strr]
-    if filee.filename == '':
-        return False
-    if filee and allowed_file1(filee.filename):
         print("Something")
         return True
     return False
@@ -158,7 +137,6 @@ def upload_prev():
 
 @app.route('/')
 def index():
-    #update_userlist(mongo)
     contest_db = mongo.db.contests
     problem_db = mongo.db.problems
     list = []
