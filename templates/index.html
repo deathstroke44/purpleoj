@@ -133,15 +133,18 @@
             </li>
         </ul>
         <ul class="sidebar-nav-bottom" style="list-style-type:none" >
+            {% if not session.logged_in %}
             <li  id="login">
                 <a href="/login">Login</a>
             </li>
             <li id="register">
                 <a href="/register">Sign Up</a>
             </li>
+            {% else %}
             <li>
                 <a href="/logout">Sign Out</a>
             </li>
+            {% endif %}
         </ul>
         <div class="main">
         {% block content %}{% endblock %}

@@ -190,7 +190,7 @@ def register():
                          'USERNAME': usernames,
                          'MAIL': emails,
                          'PASSWORDS': passwords})
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
     return render_template('register.html', form=form)
 
 
@@ -245,6 +245,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('username', None)
+    session.clear()
     return redirect(url_for('index'))
 
 
