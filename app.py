@@ -406,7 +406,7 @@ def submissions(id):
 @app.route('/contests/<id>')
 def userContests(id):
     from profile import profileContestsCall
-    user= profileContestsCall(id)
+    user,contest_array= profileContestsCall(id)
     return render_template('user_contests.html',user=user)
 
 @app.route('/issue/<id>')
