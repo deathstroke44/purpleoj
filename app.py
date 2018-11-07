@@ -1,7 +1,6 @@
 import datetime
 import os
 import time
-import FunctionList
 from flask import Flask, render_template, request
 from flask import flash
 from flask import redirect, url_for, session, Session
@@ -14,7 +13,7 @@ from werkzeug.utils import secure_filename
 from wtforms import Form, IntegerField, StringField, PasswordField, validators
 from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
-from FunctionList import allowed_file1,giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair,valid,valid1
+import FunctionList
 from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
 from ClassesList import *
 app = Flask(__name__)
@@ -39,22 +38,22 @@ def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
         sbcnt = int(request.form.get('cnt'))
-        if not valid(strr='file', request=request):
+        if not FunctionList.valid(strr='file', request=request):
             return redirect(request.url)
         if sbcnt >= 1:
-            if not valid(strr='ifile1', request=request) or not valid(strr='ofile1',
-                                                                      request=request) or nameform.point1.data == None:
+            if not FunctionList.valid(strr='ifile1', request=request) or not FunctionList.valid(strr='ofile1',
+                                                                                                request=request) or nameform.point1.data == None:
                 return redirect(request.url)
         if sbcnt >= 2:
-            if not valid(strr='ifile2', request=request) or not valid(strr='ofile2',
-                                                                      request=request) or nameform.point2.data == None:
+            if not FunctionList.valid(strr='ifile2', request=request) or not FunctionList.valid(strr='ofile2',
+                                                                                                request=request) or nameform.point2.data == None:
                 return redirect(request.url)
         if sbcnt >= 3:
-            if not valid(strr='ifile3', request=request) or not valid(strr='ofile3',
-                                                                      request=request) or nameform.point3.data == None:
+            if not FunctionList.valid(strr='ifile3', request=request) or not FunctionList.valid(strr='ofile3',
+                                                                                                request=request) or nameform.point3.data == None:
                 return redirect(request.url)
         checkerd =False
-        if valid1(strr='checker',request=request):
+        if FunctionList.valid1(strr='checker', request=request):
             checkerd=True
         gpb = 'samin'+uuid.uuid4().__str__()
         file = request.files['file']
@@ -272,7 +271,7 @@ def pdfviewers(id):
     pbds = prob_struct(pb['name'], pb['time_limit'], pb['memory_limit'], id)
     if not ('username' in session):
         return redirect(url_for('login'))
-    Previous = problem_user_submissions(mongo,session['username'],id)
+    Previous = FunctionList.problem_user_submissions(mongo, session['username'], id)
     for i in range(0,len(Previous)):
         print(Previous[i].first)
     #Previous=[]
@@ -351,6 +350,8 @@ def singleIssue(id):
 @app.route('/news')
 def news():
     from newsScrapping import newsCall
+    from newsStrategy import article_array
+    article_array = []
     return render_template('news.html',article_array=newsCall())
 
 

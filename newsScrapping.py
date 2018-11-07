@@ -44,7 +44,7 @@ class AtCoder(NewsMain):
 
 def newsCall():
     socket = Socket()
-    socket.getData()
+    # socket.getData()
     adapter = Adapter(socket)
     client = Client(adapter)
 
