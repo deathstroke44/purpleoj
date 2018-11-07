@@ -4,6 +4,7 @@ from forms import UpdateProfileForm
 
 from app import mongo
 from issue import Issue
+from bson.objectid import ObjectId
 
 
 class User:
@@ -96,12 +97,28 @@ def profileSubmissionCall(id):
 
 
 def profileContestsCall(id):
+    class contest_object:
+        def __init__(self, title, id):
+            self.title = title
+            self.id = id
+
+    contest_array=[]
     user_name = id
     users = mongo.db.userlist
     exiting_user = users.find_one({'USERNAME': user_name})
     user = User(exiting_user['NAMES'], exiting_user['USERNAME'], exiting_user['MAIL'])
 
-    return user
+    submissions = mongo.db.submissions.find({})
+    contests = mongo.db.contests
+    for submission in submissions:
+        if submission['Contest Id'] != '' and submission['User Id'] == id:
+            contestId = submission['Contest Id']
+            print(contestId)
+            contestTitle = contests.find({"_id": ObjectId(contestId)})[0].get('Contest Title')
+            print(contestTitle)
+            contest_array.append(contest_object(contestTitle,contestId))
+
+    return user,contest_array
 
 
 def profileIssueCall(id):

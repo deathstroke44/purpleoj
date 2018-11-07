@@ -79,6 +79,6 @@ class UpdateProfileForm(FlaskForm):
         validators.EqualTo('confirm', message='Passwords do not match')
     ])
     confirm = PasswordField('Confirm Password')
-    submit = SubmitField('Submit')
+    submit = SubmitField('Update')
 
 

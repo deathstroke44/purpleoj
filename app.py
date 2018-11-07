@@ -14,9 +14,9 @@ from werkzeug.utils import secure_filename
 from wtforms import Form, IntegerField, StringField, PasswordField, validators
 from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
-from FunctionList import giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair
+from FunctionList import allowed_file1,giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair,valid,valid1
 from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
-from ClassesList import problem,postob
+from ClassesList import *
 from CreateContest import *
 from UtilityFunctionsForEditor import *
 from strategypatternforsubmission import *
@@ -41,7 +41,7 @@ def upload_file():
     nameform = UploadForm(request.form)
     if request.method == 'POST':
         # check if the post request has the file part
-        sbcnt = nameform.count.data
+        sbcnt = int(request.form.get('cnt'))
         if not valid(strr='file', request=request):
             return redirect(request.url)
         if sbcnt >= 1:
@@ -56,11 +56,18 @@ def upload_file():
             if not valid(strr='ifile3', request=request) or not valid(strr='ofile3',
                                                                       request=request) or nameform.point3.data == None:
                 return redirect(request.url)
-
-        gpb = uuid.uuid4().__str__()
+        checkerd =False
+        if valid1(strr='checker',request=request):
+            checkerd=True
+        gpb = 'samin'+uuid.uuid4().__str__()
         file = request.files['file']
         filename = gpb + '.pdf'  # secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if checkerd==True:
+            file = request.files['checker']
+            filename = gpb + 'sol.cpp'  # secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
         for i in range(1, sbcnt + 1):
             inp = 'ifile' + str(i)
             out = 'ofile' + str(i)
@@ -94,7 +101,8 @@ def upload_file():
             'stylee': pb.stylee,
             'acsub': 0,
             'sub': 0,
-            'setter': session['username']
+            'setter': session['username'],
+            'checker':checkerd
         })
 
         return redirect(url_for('upload_file', filename=filename))
@@ -140,12 +148,37 @@ def upload_prev():
 
 @app.route('/')
 def index():
+    contest_db = mongo.db.contests
+    problem_db = mongo.db.problems
     list = []
     postdb = mongo.db.posts
     existing_post = postdb.find({}).sort('_id')
+    contest_db = mongo.db.contests
+    contest_cursor=contest_db.find({}).sort('Start Date')
+    pclist=[]
+    for pc in contest_cursor:
+        starting_datetime = pc['Start Date']+"T"+pc['Start Time']+":00+06:00"
+        ending_date = pc['Start Date']+"T"+pc['End Time']+":00+06:00"
+        id = pc['_id']
+        name=pc['Contest Title']
+        dt=datetime.datetime.now()
+        pcet=pc['End Time']
+        rep=''
+        flag=0
+        for i in range(0,len(pcet)):
+            if flag==1:
+                rep+=pcet[i]
+            if pcet[i]=='.':
+                flag=1
+        pcet.replace(rep,'')
+        ds=datetime.datetime.strptime(pc['Start Date']+' '+pcet,"%Y-%m-%d %H:%M")
+        xx=dt.strftime("%Y-%m-%d %H:%M")
+
+        cd = datetime.datetime.strptime(xx,"%Y-%m-%d %H:%M")
+        if ds>=dt:
+            pclist.append(tripled(starting_datetime,ending_date,id,name))
     i = 0
     for posts in existing_post:
-        print(posts)
         posttitle = posts['TITLE']
         posttext = posts['TEXT']
         postuser = posts['USER']
@@ -153,36 +186,27 @@ def index():
         postid = posts['_id']
         ppp = postob(posttitle, posttext, postdate, postuser, postid)
         list.append(ppp)
-        print(list[i].dt)
         i = i + 1
-        list.reverse()
-    print(len(list))
+    list.reverse()
 
     error = 'You are not logged in'
     dumb = 'dumb'
     if 'username' in session:
         msg = 'You are Logged in as ' + session['username']
-        return render_template('home.html', msg=msg, posts=list)
-    return render_template('home.html', error=error, dumb=dumb, posts=list)
-    return 'Hello World!'
-
-
-
-
+        return render_template('home.html', msg=msg, posts=list,PC=pclist)
+    return render_template('home.html', error=error, dumb=dumb, posts=list,PC=pclist)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm(request.form)
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST':
         names = form.name.data
         emails = form.email.data
         usernames = form.username.data
         passwords = form.password.data
         user = mongo.db.userlist
-
-        # db = connection['purpleoj']
-        # db.authenticate('red44', 'red123456789')
         existing_user = user.find_one({'USERNAME': usernames})
+        print('lolllllllllll')
         dialoge = 'Your Account Is created Successfully'
         if existing_user:
             dialoge = 'There is alredy an account in this username'
@@ -194,10 +218,6 @@ def register():
                          'PASSWORDS': passwords})
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
-
-
-
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -278,15 +298,6 @@ def post():
         return redirect(url_for('login'))
     return render_template('create_post.html', form=form)
 
-
-class prob_struct:
-    def __init__(self, pn, tl, ml, id):
-        self.pn = pn
-        self.tl = 'Time Limit : ' + str(tl) + 'ms'
-        self.ml = 'Memory Limit: ' + str(ml) + 'mb'
-        self.id = id
-
-
 @app.route('/about/<id>/submit/')
 def prob_submit(id):
     return 'Submit ' + id
@@ -336,21 +347,29 @@ def postab():
 
 #*******************************************
 #   ASIF AHMED*******************************
-@app.route('/profile')
-def profile():
+@app.route('/profile/<id>')
+def profile(id):
     from profile import profileCall
     if not ('username' in session):
         return redirect(url_for("login"))
-    return render_template('profile.html', user=profileCall())
+    user,form=profileCall(id)
+    userNow = session['username']
+    canEdit = 0
+    if userNow == id or id == 'myself':
+        canEdit = 1
+
+    print(canEdit)
+    return render_template('profile.html', form=form,user=user,canEdit=canEdit)
 
 
-@app.route('/posts')
-def posts():
+@app.route('/posts/<id>')
+def posts(id):
     if not ('username' in session):
         return redirect(url_for('login'))
 
     from profile import profilePostCall
-    return render_template('user_post.html', post_array=profilePostCall())
+    post_array,user=profilePostCall(id)
+    return render_template('user_post.html', post_array=post_array,user=user)
 
 
 @app.route('/issues', methods=['GET', 'POST'])
@@ -370,15 +389,31 @@ def singleIssue(id):
 @app.route('/news')
 def news():
     from newsScrapping import newsCall
+    from newsStrategy import article_array
+    article_array = []
     return render_template('news.html',article_array=newsCall())
 
 
-@app.route('/submission')
-def submissions():
+@app.route('/submission/<id>')
+def submissions(id):
     if not ('username' in session):
         return redirect(url_for('login'))
     from profile import profileSubmissionCall
-    return render_template('user_submission.html', submission_array=profileSubmissionCall())
+    submission_array,user = profileSubmissionCall(id)
+    return render_template('user_submission.html', submission_array=submission_array,user=user)
+
+@app.route('/contests/<id>')
+def userContests(id):
+    from profile import profileContestsCall
+    user= profileContestsCall(id)
+    return render_template('user_contests.html',user=user)
+
+@app.route('/issue/<id>')
+def userIssues(id):
+    from profile import profileIssueCall
+    user,issue_array= profileIssueCall(id)
+    return render_template('user_issues.html',user=user,issue_array=issue_array)
+
 
 #   ASIF AHMED*******************************
 # ***************************************************************************
@@ -1037,7 +1072,184 @@ def udebug(problemId):
 
 
 
+@app.route('/udebug', methods=['GET', 'POST'])
+def problemList():
+    problemsdb = mongo.db.problems
+    list = []
+    existing_posts = problemsdb.find({})
+    i = 0
+    for existing_post in existing_posts:
+        ppp = problem(existing_post['sub_task_count'],
+                      existing_post['myid'],
+                      existing_post['pnt1'],
+                      existing_post['pnt2'],
+                      existing_post['pnt3'],
+                      existing_post['time_limit'],
+                      existing_post['memory_limit'],
+                      existing_post['stylee'],
+                      existing_post['name'],
+                      existing_post['acsub'],
+                      existing_post['sub'],
+                      existing_post['setter'])
+        list.append(ppp)
+        i = i + 1
+    print(len(list))
+    # lol
+    if not ('username' in session):
+        return redirect(url_for('login'))
+    return render_template('problem_list_for_udebug.html', obj=list)
+
+
+def runForUbebug(inputs, text):
+    makeSubmissionFolders()
+    fout = open(getProgramFileName("C"), "w")
+    print(text, file=fout)
+    fout.close()
+    # compiling the program
+    os.system(" g++ -o " + getExecutibleFileName("C") + " " + getProgramFileName("C") + " 2>" + getErrorFileName())
+    # reading errors
+    finputs = open(getErrorFileName(), "r")
+    errors = finputs.readlines()
+    finputs.close()
+    print(errors)
+    # running with user defined inputs
+    if True:
+        finputs = open(getCustomInputsFileName(), "w")
+        print(inputs, file=finputs)
+        finputs.close()
+        # checking for compile errors
+        if len(errors) == 0:
+
+            os.system(" ./" + getExecutibleFileName("C") + " < " + getCustomInputsFileName() +
+                      " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+
+
+        else:
+            # os.system("rm -r submissions/" + getUserId())
+            return errors
+
+    # reading program outputs
+    finputs = open(getOutputFileName(), "r")
+    outputs = finputs.readlines()
+    finputs.close()
+    # reading RTE
+    finputs = open(getErrorFileName(), "r")
+    errors = finputs.readlines()
+    finputs.close()
+    # os.system("rm -r submissions/" + getUserId())
+    # checking for RTE
+    output = ""
+    cleanup()
+    for x in outputs:
+        output += x
+    if len(errors) == 0:
+        print(output)
+        return output
+    else:
+        print(errors)
+        return errors
+
+
+def getCode(filename):
+    codelist = open(filename).readlines()
+    code = ""
+    for x in codelist:
+        code += x + "\n"
+    return code
+
+
+def getInputFileListForUdebug(problemId):
+    os.system("cd static/inputs_for_udebug &&ls | grep " + problemId + ">" + getUserId() + ".txt")
+    return open("static/inputs_for_udebug/" + getUserId() + ".txt").readlines()
+
+
+def getInputsForUdebug(filename):
+    codelist = open(filename).readlines()
+    code = ""
+    for x in codelist:
+        code += x
+    return code
+
+
+def extractInputName(x, problemId):
+    return x.replace(problemId, "").replace(".txt", "")
+
+
+@app.route('/udebug/<problemId>', methods=['GET', 'POST'])
+def udebug(problemId):
+    acceptedOutput = ""
+    yourOutputs = ""
+    inputs = ""
+    mismatchNumber = -1
+    results = list()
+    inputFiles = getInputFileListForUdebug(problemId)
+    selectedinputFile = ""
+    usableInputFiles = list()
+    for x in inputFiles:
+        usableInputFiles.append(extractInputName(x, problemId))
+    print(inputFiles)
+    if "get_accepted_output_button" in request.form:
+        acceptedOutput = request.form["accepted_output_textarea"]
+        inputs = request.form["input_textarea"]
+        code = getCode("static/solutions/" + problemId + ".c")
+        acceptedOutput = runForUbebug(inputs, code)
+        print(code)
+        print(acceptedOutput)
+
+    elif "compare_outputs_button" in request.form:
+        print(request.form)
+        acceptedOutput = request.form["accepted_output_textarea"]
+        inputs = request.form["input_textarea"]
+        yourOutputs = request.form["your_output_textarea"]
+        code = getCode("static/solutions/" + problemId + ".c")
+        acceptedOutput = runForUbebug(inputs, code)
+        # print(code)
+        # print(acceptedOutput)
+        yourOutputList = list()
+        acceptedOutputList = list()
+        for x in acceptedOutput.split("\n"):
+            if x == None:
+                acceptedOutputList.append("")
+            else:
+                acceptedOutputList.append(x)
+        for x in yourOutputs.split("\n"):
+            if x == None:
+                yourOutputList.append("")
+            else:
+                yourOutputList.append(x)
+        acceptedOutputLineNumber = len(acceptedOutputList)
+        yourOutputLineNumber = len(yourOutputList)
+        if (len(acceptedOutputList) > len(yourOutputList)):
+            for i in range(len(acceptedOutputList) - len(yourOutputList)):
+                yourOutputList.append("")
+        elif (len(acceptedOutputList) < len(yourOutputList)):
+            for i in range(-len(acceptedOutputList) + len(yourOutputList)):
+                acceptedOutputList.append("")
+        outputpair = zip(acceptedOutputList, yourOutputList)
+        mismatchNumber = 0
+        for i, (x, y) in enumerate(outputpair):
+            if x != y[:-1]:
+                mismatchNumber += 1
+                if (i < acceptedOutputLineNumber and i < yourOutputLineNumber):
+                    results.append((int(i + 1), x, int(i + 1), y))
+                elif (i < acceptedOutputLineNumber):
+                    results.append((int(i + 1), x, "", y))
+                else:
+                    results.append(("", x, int(i + 1), y))
+    if "inputstorer" in request.form and len(request.form["inputstorer"]) > 0:
+        selectedinputFile = "static/inputs_for_udebug/" + problemId + str(request.form["inputstorer"]).replace("\n",
+                                                                                                               "").replace(
+            "\r", "").strip(" ") + ".txt"
+        inputs = getInputsForUdebug(selectedinputFile)
+    return render_template('udebug.html', selectedinput=inputs, acceptedOutput=acceptedOutput, yourOutput=yourOutputs,
+                           results=results, mismatchNumber=mismatchNumber, inputs=usableInputFiles)
+
+
+
+
+
 # *****************************************************************************************
+
 class Facade:
 
     def __init__(self):
@@ -1070,10 +1282,18 @@ def contest():
             return redirect(url_for('contests'))
 
     return render_template('create_contest.html',obj=facade.getProblemList(),form=form)
-
 @app.route('/currentcontest/<contestID>/ranklist')
 def ranklist(contestID):
-
+    # #total_problem=['A','B','C','D','E','F']
+    # submission_history=[{'name':'A','status':'AC','total_submission':3}]
+    # submission_history.append({'name':'B','status':'WA','total_submission':2})
+    # submission_history.append({'name': 'E', 'status': 'RTE', 'total_submission': 6})
+    # submission_history.append({'name': 'C', 'status': 'WA', 'total_submission': 2})
+    # submission_history.append({'name': 'D', 'status': 'TLE', 'total_submission': 2})
+    # submission_history.append({'name': 'F', 'status': 'NS', 'total_submission': 0})
+    # contestant1={'name':'SALAM','acc':3,'penalty':120,'submission_history':submission_history}
+    # contestant2 = {'name': 'Borkot', 'acc': 2, 'penalty': 110, 'submission_history': submission_history}
+    # Total_contestant=[contestant1,contestant2]
     Total_contestant=[]
     submission=mongo.db.submissions
     contestant_wise_submission=submission_formatter(submission,contestID)
@@ -1226,7 +1446,6 @@ def contests():
         return redirect(url_for('login'))
     return render_template('contests.html', obj=contest_list)
 
-
 class PasswordForm(Form):
     password = StringField('Password')
 
@@ -1339,11 +1558,11 @@ def graphbuild():
             f1 = open('templates/'+'checker.txt', "w+")
             print(stst,file=f)
 
-            nd_list=node_list(st=form.nodes_desc.data.replace('\n',' '),nd_cnt=form.nodes_cnt.data)
-            ed_list=edge_list(st=form.ed_desc.data.replace('\n',' '),ed_cnt=form.ed_cnt.data)
-            gp=graph(nd_list,ed_list)
-            ad=adapter(gp)
-            js=jsonstring(ad)
+            nd_list=FunctionList.node_list(st=form.nodes_desc.data.replace('\n', ' '), nd_cnt=form.nodes_cnt.data)
+            ed_list=FunctionList.edge_list(st=form.ed_desc.data.replace('\n', ' '), ed_cnt=form.ed_cnt.data)
+            gp=FunctionList.graph(nd_list, ed_list)
+            ad=FunctionList.adapter(gp)
+            js=FunctionList.jsonstring(ad)
             print(js.getstring(),file=f)
 
             print(sted,file=f)
@@ -1360,17 +1579,17 @@ def graphbuild():
             f1 = open('templates/' + 'checker.txt', "w+")
             print(stst, file=f)
 
-            nd_list = node_list(st=form.nodes_desc.data.replace('\n', ' '), nd_cnt=form.nodes_cnt.data)
-            ed_list = edge_list(st=form.ed_desc.data.replace('\n', ' '), ed_cnt=form.ed_cnt.data)
+            nd_list = FunctionList.node_list(st=form.nodes_desc.data.replace('\n', ' '), nd_cnt=form.nodes_cnt.data)
+            ed_list = FunctionList.edge_list(st=form.ed_desc.data.replace('\n', ' '), ed_cnt=form.ed_cnt.data)
             sz=len(ed_list)
             for i in range(0,sz,2):
                 if ed_list[i]<=ed_list[i+1]:
                     xx=ed_list[i]
                     ed_list[i]=ed_list[i+1]
                     ed_list[i+1]=xx
-            gp = graph(nd_list, ed_list)
-            ad = adapter(gp)
-            js = jsonstring(ad)
+            gp = FunctionList.graph(nd_list, ed_list)
+            ad = FunctionList.adapter(gp)
+            js = FunctionList.jsonstring(ad)
             print(js.getstring(), file=f)
 
             print(sted, file=f)
