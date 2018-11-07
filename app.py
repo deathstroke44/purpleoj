@@ -17,6 +17,7 @@ from wtforms.fields.html5 import EmailField
 from FunctionList import giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair
 from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
 from ClassesList import problem,postob
+from CreateContest import *
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
@@ -870,71 +871,42 @@ def onlineide():
 
 
 # *****************************************************************************************
+class Facade:
 
-class lol:
-    def __init__(self,id,name,acc,sc,box):
-        self.id=id
-        self.name=name
-        self.acc=acc
-        self.sc=sc
-        self.box=box
+    def __init__(self):
+        self.contest = Contest()
 
-class create_contest_form(Form):
-    contestname=TextAreaField("Contest Name",[validators.DataRequired()])
+    def createContest(self,form,list):
+        list=self.getProblemList()
+        return self.contest.createContest(mongo,form,list)
 
-def forward_letter(letter, positions):
-    if letter.islower():
-        unicode_point = ord('a')
-    else:
-        unicode_point = ord('A')
-    start = ord(letter) - unicode_point
-    offset = ((start + positions)) + unicode_point
-    current_letter = chr(offset)
-    return current_letter
+    def getProblemList(self):
+        problemdb = mongo.db.problems
+        list = []
+        existing_pbs = problemdb.find({})
+        for existing_pb in existing_pbs:
+            list.append(Create(existing_pb['myid'], existing_pb['name'], existing_pb['acsub'], existing_pb['sub'],
+                                existing_pb['myid']))
+        return list
+
 
 @app.route('/contest',methods=['GET', 'POST'])
 def contest():
     form = create_contest_form(request.form)
+    facade= Facade()
 
-    problemdb=mongo.db.problems
-    list=[]
-    existing_pbs=problemdb.find({})
-    for existing_pb in existing_pbs:
-        list.append(lol(existing_pb['myid'],existing_pb['name'],existing_pb['acsub'],existing_pb['sub'],existing_pb['myid']))
     if request.method == 'POST':
-        print(request.form[form.contestname.name])
-        cnt=0;
-        selected_problem_id=[]
-        name='A'
-        for prblm in list:
-            if request.form.get(prblm.id):
-                cnt+=1
-                selected_problem_id.append({forward_letter(name,cnt-1):prblm.id});
-                print(prblm.name)
-        if cnt==0:
+        if facade.createContest(form,facade.getProblemList())==0:
             flash('You have to Choose at least 1 problem to set a contest.','failure')
-            return render_template('create_contest.html',obj=list,form=form)
+            return render_template('create_contest.html',obj=facade.getProblemList(),form=form)
         else:
-            contests=mongo.db.contests
-            contests.insert({'Contest Title':form.contestname.data,'Start Date':request.form['date'],
-                             'Start Time':request.form['start_time'],'End Time':request.form['end_time'],
-                             'Password':request.form['password'],'Problem Count':cnt,'Problem ID':selected_problem_id})
             return redirect(url_for('contests'))
 
-    return render_template('create_contest.html',obj=list,form=form)
+    return render_template('create_contest.html',obj=facade.getProblemList(),form=form)
 
 @app.route('/currentcontest/<contestID>/ranklist')
 def ranklist(contestID):
-    # #total_problem=['A','B','C','D','E','F']
-    # submission_history=[{'name':'A','status':'AC','total_submission':3}]
-    # submission_history.append({'name':'B','status':'WA','total_submission':2})
-    # submission_history.append({'name': 'E', 'status': 'RTE', 'total_submission': 6})
-    # submission_history.append({'name': 'C', 'status': 'WA', 'total_submission': 2})
-    # submission_history.append({'name': 'D', 'status': 'TLE', 'total_submission': 2})
-    # submission_history.append({'name': 'F', 'status': 'NS', 'total_submission': 0})
-    # contestant1={'name':'SALAM','acc':3,'penalty':120,'submission_history':submission_history}
-    # contestant2 = {'name': 'Borkot', 'acc': 2, 'penalty': 110, 'submission_history': submission_history}
-    # Total_contestant=[contestant1,contestant2]
+
     Total_contestant=[]
     submission=mongo.db.submissions
     contestant_wise_submission=submission_formatter(submission,contestID)
