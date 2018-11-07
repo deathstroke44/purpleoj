@@ -14,7 +14,7 @@ from werkzeug.utils import secure_filename
 from wtforms import Form, IntegerField, StringField, PasswordField, validators
 from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
-from FunctionList import allowed_file1,giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair
+from FunctionList import allowed_file1,giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair,valid,valid1
 from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
 from ClassesList import *
 app = Flask(__name__)
@@ -56,7 +56,7 @@ def upload_file():
         checkerd =False
         if valid1(strr='checker',request=request):
             checkerd=True
-        gpb = uuid.uuid4().__str__()
+        gpb = 'samin'+uuid.uuid4().__str__()
         file = request.files['file']
         filename = gpb + '.pdf'  # secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -108,52 +108,6 @@ def upload_file():
         return redirect(url_for('login'))
     return render_template('upload_problem.html', nameform=nameform)
 
-
-def valid(strr, request):
-    if strr not in request.files:
-        return False
-    filee = request.files[strr]
-    if filee.filename == '':
-        return False
-    if filee and allowed_file(filee.filename):
-        print("Something")
-        return True
-    return False
-
-def valid1(strr, request):
-    if strr not in request.files:
-        return False
-    filee = request.files[strr]
-    if filee.filename == '':
-        return False
-    if filee and allowed_file1(filee.filename):
-        print("Something")
-        return True
-    return False
-
-
-def upload_prev():
-    nameform = UploadForm(request.form)
-    if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit an empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('upload_file', filename=filename))
-    return render_template('upload_problem.html', nameform=nameform)
-
-
-
-
 @app.route('/')
 def index():
     contest_db = mongo.db.contests
@@ -183,14 +137,10 @@ def index():
         xx=dt.strftime("%Y-%m-%d %H:%M")
 
         cd = datetime.datetime.strptime(xx,"%Y-%m-%d %H:%M")
-        print(ending_date)
-        print(ds)
-        print(cd)
         if ds>=dt:
             pclist.append(tripled(starting_datetime,ending_date,id,name))
     i = 0
     for posts in existing_post:
-        print(posts)
         posttitle = posts['TITLE']
         posttext = posts['TEXT']
         postuser = posts['USER']
@@ -198,10 +148,8 @@ def index():
         postid = posts['_id']
         ppp = postob(posttitle, posttext, postdate, postuser, postid)
         list.append(ppp)
-        print(list[i].dt)
         i = i + 1
     list.reverse()
-    print(len(list))
 
     error = 'You are not logged in'
     dumb = 'dumb'
@@ -213,13 +161,14 @@ def index():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm(request.form)
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST':
         names = form.name.data
         emails = form.email.data
         usernames = form.username.data
         passwords = form.password.data
         user = mongo.db.userlist
         existing_user = user.find_one({'USERNAME': usernames})
+        print('lolllllllllll')
         dialoge = 'Your Account Is created Successfully'
         if existing_user:
             dialoge = 'There is alredy an account in this username'

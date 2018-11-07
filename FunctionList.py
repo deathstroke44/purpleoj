@@ -118,3 +118,25 @@ def problem_user_submissions(mongo,user_name,problem_id):
     print(len(submissions))
     print('omi')
     return submissions
+
+def valid(strr, request):
+    if strr not in request.files:
+        return False
+    filee = request.files[strr]
+    if filee.filename == '':
+        return False
+    if filee and allowed_file(filee.filename):
+        print("Something")
+        return True
+    return False
+
+def valid1(strr, request):
+    if strr not in request.files:
+        return False
+    filee = request.files[strr]
+    if filee.filename == '':
+        return False
+    if filee and allowed_file1(filee.filename):
+        print("Something")
+        return True
+    return False
