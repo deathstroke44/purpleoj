@@ -1094,7 +1094,7 @@ class PasswordForm(Form):
 # Password check for contest
 @app.route('/contest/<id>/verify', methods=['GET', 'POST'])
 def verify_contest(id):
-    form = PasswordForm(request.form)
+    form = PasswordField(request.form)
     contest_db = mongo.db.contests
     contest_now = contest_db.find({"_id": ObjectId(id)})[0]
     c_pass = contest_now.get('Password')
@@ -1113,7 +1113,7 @@ def verify_contest(id):
             return  redirect(url, 302)
         else:
             error = "You need to enter the password for this contest"
-            return render_template('contest_verify.html', error=error, form=form)
+            return render_template('contest_verify.html', error=error, form=form, name=c_name)
     else:
         return render_template('contest_verify.html', form=form, name=c_name)
 
@@ -1156,6 +1156,18 @@ def load_contest_problem(contest_id, id2):
     if not ('username' in session):
         return redirect(url_for('login'))
     return render_template("problem_viewer.html", pdf_src='/static/uploads/' + id2 + '.pdf', pbds=pbds, cid=contest_id,
+                           et=end_time)
+
+
+# landing page if contest is not started yet
+@app.route('/currentcontest/<contst_id>/landing')
+def check_contest(contst_id):
+    contest_db = mongo.db.contests
+    contest_now = contest_db.find({"_id": ObjectId(contst_id)})[0]
+    starting_datetime = contest_now.get('Start Date') + "T" + contest_now.get('Start Time') + ":00+06:00"
+    if not ('username' in session):
+        return redirect(url_for('login'))
+    return render_template("contest_landing.html", pdf_src='/static/uploads/' + id2 + '.pdf', pbds=pbds, cid=contest_id,
                            et=end_time)
 
 

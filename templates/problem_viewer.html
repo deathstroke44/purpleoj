@@ -61,16 +61,18 @@
         <P>
             Accepted Languages:C, C++ , Python, Java
         </P>
-       <a class="btn btn-default pull-right" id='bs' href="/editor/{{ cid }}/{{ pbds.id }}">
+       <a class="btn btn-default pull-right" id="bs" href="/editor/{{ cid }}/{{ pbds.id }}">
            <font color="white">
                Submit
            </font>
        </a>
+       <p id="tt">{{ et }}</p>
 
-        <script>
+        <script type="text/javascript">
+            document.getElementById('tt').style.display='none';
             var bt = document.getElementById("bs");
-            var ed_string = {{ et }}
-            var countDownDate = new Date("2018-10-26T12:00:00+06:00").getTime();
+            var ed_string = document.getElementById("tt").innerText;
+            var countDownDate = new Date(ed_string).getTime();
             var x = setInterval(function() {
                 var now = new Date().getTime();
                 distance = countDownDate - now;
@@ -80,12 +82,10 @@
                 var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-
-
-                document.getElementById("bs").style.visibility = 'visible';
+                bt.style.display = 'block';
                 if (distance < 0) {
                     clearInterval(x);
-                    document.getElementById("bs").style.visibility = 'hidden';
+                    bt.style.display = 'none';
                 }
             }, 1000);
 
