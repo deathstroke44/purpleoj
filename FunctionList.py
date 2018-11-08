@@ -65,12 +65,26 @@ class pair:
             th+='.'
         self.third=third
 
-class graph:
+class graphInterface:
+    def getNodes(self):
+        pass
+    def getEdge(self):
+        pass
+
+class graph(graphInterface):
     def __init__(self,nodelist,edgelist):
         self.nodelist=nodelist
         self.edgelist=edgelist
+    def getNodes(self):
+        return self.nodelist
+    def getEdge(self):
+        return self.edgelist
 
-class adapter:
+class adapterInterface:
+    def getjson(self):
+        pass
+
+class adapter(adapterInterface):
     graphh=None
     def __init__(self,graphh):
         self.graphh=graphh
