@@ -2,6 +2,7 @@ from app import *
 from Submission import *
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
 A_CAT=set(['cpp'])
+SC=set(['jpeg'])
 def givenode(node_name):
     node_name = node_name.replace('\n','')
     print(repr(node_name),end=' ')
@@ -65,12 +66,26 @@ class pair:
             th+='.'
         self.third=third
 
-class graph:
+class graphInterface:
+    def getNodes(self):
+        pass
+    def getEdge(self):
+        pass
+
+class graph(graphInterface):
     def __init__(self,nodelist,edgelist):
         self.nodelist=nodelist
         self.edgelist=edgelist
+    def getNodes(self):
+        return self.nodelist
+    def getEdge(self):
+        return self.edgelist
 
-class adapter:
+class adapterInterface:
+    def getjson(self):
+        pass
+
+class adapter(adapterInterface):
     graphh=None
     def __init__(self,graphh):
         self.graphh=graphh
@@ -137,6 +152,23 @@ def valid1(strr, request):
     if filee.filename == '':
         return False
     if filee and allowed_file1(filee.filename):
+        print("Something")
+        return True
+    return False
+
+def allowed_file2(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in SC
+
+def valid2(strr, request):
+    #lol
+    if strr not in request.files:
+        return False
+    filee = request.files[strr]
+    print(filee.filename+'omi')
+    if filee.filename == '':
+        return False
+    if filee and allowed_file2(filee.filename):
         print("Something")
         return True
     return False

@@ -1,9 +1,8 @@
-{#{% extends 'index.html' %}#}
+{% extends 'index.html' %}
 {% block head %}
 {% endblock head %}
 {% block content %}
 <head>
-
     <script src="/static/vendor/codemirror/js/codemirror.js"></script>
     <link rel="stylesheet" href="/static/vendor/codemirror/css/codemirror.css">
     <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/base16-dark.css">
@@ -20,8 +19,6 @@
     <script src="/static/Patterns/MediatorForEditor/AddThemeSelect.js"></script>
     <link rel="stylesheet" href="/static/vendor/codemirror/css/show-hint.css">
     <link rel="stylesheet" href="/static/css/editor.css">
-
-
     <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/3024-day.css">
     <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/3024-night.css">
     <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/abcdef.css">
@@ -127,192 +124,199 @@
     <script src="/static/vendor/codemirror/coffeelint.js"></script>
     <script src="/static/vendor/codemirror/addon/lint/coffeescript-lint.js"></script>
     <script src="/static/vendor/codemirror/mode/stylus/stylus.js"></script>
-    <style>
-        .lol {
-            width: 90%;
-        }
-    </style>
-
 </head>
-<body>
-{% include 'layout.html' %}
-{% from "includes/_formhelpers.html" import render_field %}
-<h1 class="lead" align="center"><font size="10px">Code and Compile</font></h1>
-<br>
-<br>
-
-<div class="container">
-    <form method="POST" action="">
-        <div class="container">
-            <div>
-                <select id="languages" name=languages method="GET" action="">
-                    {% for language in languages %}
-                    <option value="{{ language }}" SELECTED>{{ language }}</option>
-
-                    {% endfor %}
-                </select>
+<main role="main" >
+    <div class="row">
+       <div class="col-md-12">
+        <div class="offset-1 col-md-11">
+           <h1 class="lead"><font size="20px"><strong>Code and Compile</strong></font></h1>
+        </div>
+        <br>
+       </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% from "includes/_formhelpers.html" import render_field %}
+            <br>
+            <div class="offset-1 col-md-10">
+                <form method="POST" action="">
+                    <span>
+                        <select id="languages" name=languages method="GET" action="">
+                            {% for language in languages %}
+                            <option value="{{ language }}" SELECTED>{{ language }}</option>
+                            "
+                            {% endfor %}
+                        </select>
+                    </span>
+                    <span style="margin-left:70%;">
+                        <select id="themes" name=themes method="GET" action="">
+                            <option value='3024-day'>3024-day</option>
+                            <option value='3024-night'>3024-night</option>
+                            <option value='abcdef'>abcdef</option>
+                            <option value='ambiance'>ambiance</option>
+                            <option value='ambiance-mobile'>ambiance-mobile</option>
+                            <option value='base16-dark' SELECTED>base16-dark</option>
+                            <option value='base16-light'>base16-light</option>
+                            <option value='bespin'>bespin</option>
+                            <option value='blackboard'>blackboard</option>
+                            <option value='cobalt'>cobalt</option>
+                            <option value='colorforth'>colorforth</option>
+                            <option value='darcula'>darcula</option>
+                            <option value='dracula'>dracula</option>
+                            <option value='duotone-dark'>duotone-dark</option>
+                            <option value='duotone-light'>duotone-light</option>
+                            <option value='eclipse'>eclipse</option>
+                            <option value='elegant'>elegant</option>
+                            <option value='erlang-dark'>erlang-dark</option>
+                            <option value='gruvbox-dark'>gruvbox-dark</option>
+                            <option value='hopscotch'>hopscotch</option>
+                            <option value='icecoder'>icecoder</option>
+                            <option value='idea'>idea</option>
+                            <option value='isotope'>isotope</option>
+                            <option value='lesser-dark'>lesser-dark</option>
+                            <option value='liquibyte'>liquibyte</option>
+                            <option value='lucario'>lucario</option>
+                            <option value='material'>material</option>
+                            <option value='mbo'>mbo</option>
+                            <option value='mdn-like'>mdn-like</option>
+                            <option value='midnight'>midnight</option>
+                            <option value='monokai'>monokai</option>
+                            <option value='neat'>neat</option>
+                            <option value='neo'>neo</option>
+                            <option value='night'>night</option>
+                            <option value='oceanic-next'>oceanic-next</option>
+                            <option value='panda-syntax'>panda-syntax</option>
+                            <option value='paraiso-dark'>paraiso-dark</option>
+                            <option value='paraiso-light'>paraiso-light</option>
+                            <option value='pastel-on-dark'>pastel-on-dark</option>
+                            <option value='railscasts'>railscasts</option>
+                            <option value='rubyblue'>rubyblue</option>
+                            <option value='seti'>seti</option>
+                            <option value='shadowfox'>shadowfox</option>
+                            <option value='solarized'>solarized</option>
+                            <option value='ssms'>ssms</option>
+                            <option value='the-matrix'>the-matrix</option>
+                            <option value='themes'>themes</option>
+                            <option value='tomorrow-night-bright'>tomorrow-night-bright</option>
+                            <option value='tomorrow-night-eighties'>tomorrow-night-eighties</option>
+                            <option value='ttcn'>ttcn</option>
+                            <option value='twilight'>twilight</option>
+                            <option value='vibrant-ink'>vibrant-ink</option>
+                            <option value='xq-dark'>xq-dark</option>
+                            <option value='xq-light'>xq-light</option>
+                            <option value='yeti'>yeti</option>
+                            <option value='zenburn'>zenburn</option>
+                        </select>
+                    </span>
+                   <br><br>
+                    <script src="/static/vendor/codemirror/js/codemirror.js"></script>
+                    <link rel="stylesheet" href="/static/vendor/codemirror/css/codemirror.css">
+                    <script src="/static/vendor/codemirror/js/python.js"></script>
+                    <link rel="stylesheet" href="/static/vendor/codemirror/css/base16-light.css">
+                    <script src="/static/vendor/codemirror/js/placeholder.js"></script>
+                    <script src="/static/vendor/codemirror/js/anyword-hint.js"></script>
+                    <script src="/static/vendor/codemirror/js/show-hint.js"></script>
+                    <link rel="stylesheet" href="/static/vendor/codemirror/css/show-hint.css">
+                    <div class="form-group">
+                        <textarea class="form_control" id="flask-codemirror-source_code" name="source_code">{{form.source_code.data}}</textarea>
+                    </div>
+                    <p>
+                        <input type="submit" class="btn btn-dark" name="run" value="Run" id="run_button"/>
+                        <input type="submit" class="btn btn-dark" name="submit" value="Submit" id="submit_button"/>
+                        <input type="checkbox" class="checkbox-inline" id="custom_input" name="custom_input"
+                            value="custom inputs"/>
+                        <label for="custom_input"><font color="black">Custom Inputs</font></label>
+                    </p>
+                    <div id="inputdiv" class="form-group">
+                        {{ render_field(form.inputs, class_="form-control",id="inputs") }}
+                    </div>
+                    <table class="table table-striped table-hover table-bordered" id="mydata">
+                        <p><font size="12"> <b><i> {{ status }}</i></b></font></p>
+                        <hr>
+                        <thead>
+                            <tr>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr></tr>
+                        </tfoot>
+                        {% for output in outputs %}
+                        <tr>
+                            <td>
+                                <p> {{ output }} </p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <table class="table table-striped table-hover table-bordered" id="data">
+                        <hr>
+                        <thead>
+                            <tr>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr></tr>
+                        </tfoot>
+                        <tr>
+                            <td>
+                                <p><a href="/submissions">{{ check_submissions }}</a></p>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
             </div>
-            <div style="padding-left:80%">
-                <select id="themes" name=themes method="GET" action="">
-                    <option value='3024-day'>3024-day</option>
-                    <option value='3024-night'>3024-night</option>
-                    <option value='abcdef'>abcdef</option>
-                    <option value='ambiance'>ambiance</option>
-                    <option value='ambiance-mobile'>ambiance-mobile</option>
-                    <option value='base16-dark' SELECTED>base16-dark</option>
-                    <option value='base16-light'>base16-light</option>
-                    <option value='bespin'>bespin</option>
-                    <option value='blackboard'>blackboard</option>
-                    <option value='cobalt'>cobalt</option>
-                    <option value='colorforth'>colorforth</option>
-                    <option value='darcula'>darcula</option>
-                    <option value='dracula'>dracula</option>
-                    <option value='duotone-dark'>duotone-dark</option>
-                    <option value='duotone-light'>duotone-light</option>
-                    <option value='eclipse'>eclipse</option>
-                    <option value='elegant'>elegant</option>
-                    <option value='erlang-dark'>erlang-dark</option>
-                    <option value='gruvbox-dark'>gruvbox-dark</option>
-                    <option value='hopscotch'>hopscotch</option>
-                    <option value='icecoder'>icecoder</option>
-                    <option value='idea'>idea</option>
-                    <option value='isotope'>isotope</option>
-                    <option value='lesser-dark'>lesser-dark</option>
-                    <option value='liquibyte'>liquibyte</option>
-                    <option value='lucario'>lucario</option>
-                    <option value='material'>material</option>
-                    <option value='mbo'>mbo</option>
-                    <option value='mdn-like'>mdn-like</option>
-                    <option value='midnight'>midnight</option>
-                    <option value='monokai'>monokai</option>
-                    <option value='neat'>neat</option>
-                    <option value='neo'>neo</option>
-                    <option value='night'>night</option>
-                    <option value='oceanic-next'>oceanic-next</option>
-                    <option value='panda-syntax'>panda-syntax</option>
-                    <option value='paraiso-dark'>paraiso-dark</option>
-                    <option value='paraiso-light'>paraiso-light</option>
-                    <option value='pastel-on-dark'>pastel-on-dark</option>
-                    <option value='railscasts'>railscasts</option>
-                    <option value='rubyblue'>rubyblue</option>
-                    <option value='seti'>seti</option>
-                    <option value='shadowfox'>shadowfox</option>
-                    <option value='solarized'>solarized</option>
-                    <option value='ssms'>ssms</option>
-                    <option value='the-matrix'>the-matrix</option>
-                    <option value='themes'>themes</option>
-                    <option value='tomorrow-night-bright'>tomorrow-night-bright</option>
-                    <option value='tomorrow-night-eighties'>tomorrow-night-eighties</option>
-                    <option value='ttcn'>ttcn</option>
-                    <option value='twilight'>twilight</option>
-                    <option value='vibrant-ink'>vibrant-ink</option>
-                    <option value='xq-dark'>xq-dark</option>
-                    <option value='xq-light'>xq-light</option>
-                    <option value='yeti'>yeti</option>
-                    <option value='zenburn'>zenburn</option>
-                </select>
-            </div>
+            <script>
+                var previouscode = document.getElementById("flask-codemirror-source_code").value
+                var mediator;
+                mediator = new Mediator();
+                checkbox = new AddCheckbox(mediator, "custom_input").checkbox;
+                inputTextArea = new AddInputsTextArea(mediator, "inputs").inputTextArea;
+                inputDiv = new AddInputDiv(mediator, "inputdiv").inputDiv;
+                runButton = new AddRunButton(mediator, "run_button").button;
+                submitButton = new AddSubmitButton(mediator, "submit_button").button;
+
+                editor_for_source_code = new AddEditor(mediator, "flask-codemirror-source_code", {
+                        "extraKeys": {
+                            "Ctrl-Space": "autocomplete",
+
+                        },
+                        "mode": "python",
+                        "theme": getTheme(),
+                        "lineWrapping": "true",
+                    "lineNumbers": "true",
+                        "autoCloseTags": "true",
+                        "foldGutter": "true",
+                        "dragDrop": "true",
+                        "lint": "true",
+                        "gutters": ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],
+                        "matchBrackets": "true"
+                    }
+                ).editor;
+
+                dropDown = new AddDropdown(mediator, "languages").select;
+                themeSelect = new AddThemeSelect(mediator, "themes").select
+                mediator.init(previouscode,getTheme());
+                function getTheme() {
+                var cname="theme"
+                var name = cname + "=";
+                var decodedCookie = decodeURIComponent(document.cookie);
+                var ca = decodedCookie.split(';');
+                for(var i = 0; i <ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                document.cookie="theme=base16-dark"
+                return "base16-dark";
+                }
+            </script>
         </div>
-        <script src="/static/vendor/codemirror/js/codemirror.js"></script>
-        <link rel="stylesheet" href="/static/vendor/codemirror/css/codemirror.css">
-        <script src="/static/vendor/codemirror/js/python.js"></script>
-        <link rel="stylesheet" href="/static/vendor/codemirror/css/base16-light.css">
-        <script src="/static/vendor/codemirror/js/placeholder.js"></script>
-        <script src="/static/vendor/codemirror/js/anyword-hint.js"></script>
-        <script src="/static/vendor/codemirror/js/show-hint.js"></script>
-        <link rel="stylesheet" href="/static/vendor/codemirror/css/show-hint.css">
-
-        <div class="form-group">
-
-
-            <textarea class="form_control" id="flask-codemirror-source_code" name="source_code">{{form.source_code.data}}</textarea>
-
-        </div>
-
-        <p>
-            <input type="submit" class="btn btn-primary" name="run" value="Run" id="run_button"/>
-            <input type="submit" class="btn btn-primary" name="submit" value="Submit" id="submit_button"/>
-            <input type="checkbox" class="checkbox-inline" id="custom_input" name="custom_input"
-                   value="custom inputs"/>
-            <label for="custom_input"><font color="black">Custom Inputs</font></label>
-
-        </p>
-        <div id="inputdiv" class="form-group">
-
-            {{ render_field(form.inputs, class_="form-control",id="inputs") }}
-        </div>
-        <table class="table table-striped table-hover table-bordered" id="mydata">
-            <p><font size="12"> <b><i> {{ status }}</i></b></font></p>
-
-
-            {% for output in outputs %}
-            <tr>
-                <td>
-                    {{ output[:-1] }}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-        <table class="table table-striped table-hover table-bordered" id="data">
-                <td>
-                    <p><a href="/submissions">{{ check_submissions }}</a></p>
-                </td>
-            </tr>
-        </table>
-
-
-    </form>
-</div>
-<script>
-    var previouscode = document.getElementById("flask-codemirror-source_code").value
-    var mediator;
-    mediator = new Mediator();
-    checkbox = new AddCheckbox(mediator, "custom_input").checkbox;
-    inputTextArea = new AddInputsTextArea(mediator, "inputs").inputTextArea;
-    inputDiv = new AddInputDiv(mediator, "inputdiv").inputDiv;
-    runButton = new AddRunButton(mediator, "run_button").button;
-    submitButton = new AddSubmitButton(mediator, "submit_button").button;
-
-    editor_for_source_code = new AddEditor(mediator, "flask-codemirror-source_code", {
-            "extraKeys": {
-                "Ctrl-Space": "autocomplete",
-
-            },
-            "mode": "python",
-            "theme": getTheme(),
-            "lineWrapping": "true",
-        "lineNumbers": "true",
-            "autoCloseTags": "true",
-            "foldGutter": "true",
-            "dragDrop": "true",
-            "lint": "true",
-            "gutters": ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],
-            "matchBrackets": "true"
-        }
-    ).editor;
-
-    dropDown = new AddDropdown(mediator, "languages").select;
-    themeSelect = new AddThemeSelect(mediator, "themes").select
-    mediator.init(previouscode,getTheme());
-function getTheme() {
-    var cname="theme"
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    document.cookie="theme=base16-dark"
-    return "base16-dark";
-}
-</script>
-
-</body>
-
+    </div>
+</main>
 {% endblock content %}

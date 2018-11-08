@@ -15,7 +15,7 @@ from wtforms import Form, IntegerField, StringField, PasswordField, validators
 from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
 import FunctionList
-from FunctionList import allowed_file1,giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair,valid,valid1
+from FunctionList import allowed_file1,giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair,valid,valid1,valid2
 from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
 from ClassesList import *
 from CreateContest import *
@@ -36,6 +36,16 @@ mongo = PyMongo(app)
 
 app.secret_key = "super secret key"
 sess = Session()
+
+def upload_picture(request,user):
+    print('reach')
+    if valid2(strr='userpic',request=request):
+        print('reach')
+        file = request.files['userpic']
+        print(file.filename)
+        filename = user + '.jpeg'  # secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -126,6 +136,7 @@ def valid(strr, request):
 
 
 def upload_prev():
+    print("lllllllllllllllll")
     nameform = UploadForm(request.form)
     if request.method == 'POST':
         # check if the post request has the file part
@@ -155,7 +166,7 @@ def index():
     postdb = mongo.db.posts
     existing_post = postdb.find({}).sort('_id')
     contest_db = mongo.db.contests
-    contest_cursor=contest_db.find({}).sort('Start Date')
+    contest_cursor=contest_db.find({}).sort([['Start Date', 1], ['Start Time', 1]])
     pclist=[]
     for pc in contest_cursor:
         starting_datetime = pc['Start Date']+"T"+pc['Start Time']+":00+06:00"
@@ -288,7 +299,6 @@ def post():
         f = open(gpb, "w")
         print(text, file=f)
         f.close()
-        # postt = postob(title=title,text=text,dt=dt,user_=user_)
         ppt.insert({
             'TITLE': title,
             'TEXT': gpb,
@@ -314,7 +324,6 @@ def pdfviewers(id):
     Previous = problem_user_submissions(mongo,session['username'],id)
     for i in range(0,len(Previous)):
         print(Previous[i].first)
-    #Previous=[]
     Previous.reverse()
     return render_template("pdfviewer.html", pdf_src='/static/uploads/' + id + '.pdf', pbds=pbds,Previous=Previous)
 
@@ -340,20 +349,18 @@ def postab():
                       existing_post['setter'])
         list.append(ppp)
         i = i + 1
-    print(len(list))
-    # lol
     if not ('username' in session):
         return redirect(url_for('login'))
     return render_template('problem_list.html', obj=list)
 
 #*******************************************
 #   ASIF AHMED*******************************
-@app.route('/profile/<id>')
+@app.route('/profile/<id>',methods=['GET', 'POST'])
 def profile(id):
     from profile import profileCall
     if not ('username' in session):
         return redirect(url_for("login"))
-    user,form=profileCall(id)
+    user,form,request=profileCall(id)
     userNow = session['username']
     canEdit = 0
     if userNow == id or id == 'myself':
@@ -406,7 +413,7 @@ def submissions(id):
 @app.route('/contests/<id>')
 def userContests(id):
     from profile import profileContestsCall
-    user= profileContestsCall(id)
+    user,contest_array= profileContestsCall(id)
     return render_template('user_contests.html',user=user)
 
 @app.route('/issue/<id>')
@@ -1286,14 +1293,14 @@ def verify_contest(id):
     contest_now = contest_db.find({"_id": ObjectId(id)})[0]
     c_pass = contest_now.get('Password')
     c_name = contest_now.get('Contest Title')
-    print("p : " + c_pass)
+    # print("p : " + c_pass)
     if not c_pass:
-        print("no password")
+        # print("no password")
         url = "http://127.0.0.1:5000/currentcontest/" + id + "/landing"
         return redirect(url, 302)
     if request.method == 'POST':
         password = request.form['password']
-        print(password)
+        # print(password)
         print(c_pass)
         if c_pass == password:
             url = "http://127.0.0.1:5000/currentcontest/" + id + "/landing"

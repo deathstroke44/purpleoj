@@ -1,6 +1,6 @@
 {% block head %}
 {% endblock head %}
-{%  extends 'index.html' %}
+{%  extends 'index1.html' %}
 {% block content %}
 <head>
     <title>Tutorial 1: Getting Started</title>

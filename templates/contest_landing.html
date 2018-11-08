@@ -8,9 +8,9 @@
    <meta http-equiv="x-ua-compatible" content="IE-edge">
    <meta name="viewport" content="width-device-width, initial-scale=1">
    <link href="/static/For%20Table/dataTables.bootstrap.min.css" rel="stylesheet">
-    <script src="/static/Patterns/ObserverForTimer/Observer.js"></script>
-    <script src="/static/Patterns/ObserverForTimer/Subject.js"></script>
-    <script src="/static/Patterns/ObserverForTimer/TimerObserver.js"></script>
+   <script src="/static/Patterns/ObserverForTimer/Observer.js"></script>
+   <script src="/static/Patterns/ObserverForTimer/Subject.js"></script>
+   <script src="/static/Patterns/ObserverForTimer/TimerObserver.js"></script>
 </head>
 <style>
    .main-wrap{
@@ -79,55 +79,52 @@
    {#    padding: 3%;#}
    {#    padding-top: 5%;#}
 </style>
-   <div class="main-wrap col-md-12">
-      <p><center><font size="12"> <b><i>{{ name }}</i></b></font></center></p>
+<div class="main-wrap col-md-12">
+   <p>
+   <center><font size="12"> {{ name }}</font></center>
+   </p>
+</div>
+<center>
+   <div class="h3">
+      <small>Starts in</small>
    </div>
-    <br><br><br>
+   <h2>
+      <p id="timer" >{{ st }}</p>
+      <p style="display: none" id="url">{{ cid }}</p>
+      <script>
+         var ed_string = document.getElementById("timer").innerText;
+         var contestID = document.getElementById("url").innerText;
+         var url= "http://127.0.0.1:5000/currentcontest/"+contestID;
+         var countDownDate = new Date(ed_string).getTime();
+         var subject=new Subject();
+         var timer=new TimerObserver(countDownDate,url,"timer");
+         subject.attach(timer);
+         var x =setInterval(function () {
+             subject.changeState(new Date().getTime());
+         },1000);
 
-    <center>
-    <div class="h3">
-        <small>Starts in</small>
-    </div>
+         {#var x = setInterval(function() {#}
+         {#    var now = new Date().getTime();#}
+         {#    distance = countDownDate - now;#}
+         {##}
+         {#    var days = Math.floor(distance / (1000 * 60 * 60 * 24));#}
+         {#    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));#}
+         {#    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));#}
+         {#    var seconds = Math.floor((distance % (1000 * 60)) / 1000);#}
+         {##}
+         {#    if(days>0){#}
+         {#        document.getElementById("timer").innerHTML = days + " Day " + hours + ":" + minutes + ":" + seconds;#}
+         {#    }#}
+         {#    else if(days==0){#}
+         {#        document.getElementById("timer").innerHTML = hours + ":" + minutes + ":" + seconds;#}
+         {#    }#}
+         {#    else if (distance < 0) {#}
+         {#        clearInterval(x);#}
+         {#        document.getElementById("timer").innerHTML = "CONTEST STARTED";#}
+         {#        window.location = url;#}
+         {#    }}, 1000);#}
 
-    <h2>
-        <p id="timer" >{{ st }}</p>
-        <p style="display: none" id="url">{{ cid }}</p>
-    <script>
-        var ed_string = document.getElementById("timer").innerText;
-        var contestID = document.getElementById("url").innerText;
-        var url= "http://127.0.0.1:5000/currentcontest/"+contestID;
-        var countDownDate = new Date(ed_string).getTime();
-        var subject = new Subject();
-        var timer = new TimerObserver(countDownDate, url, "timer");
-        subject.attach(timer);
-        var x = setInterval(function () {
-            subject.changeState(new Date().getTime());
-        }, 1000);
-
-        {#var x = setInterval(function() {#}
-        {#    var now = new Date().getTime();#}
-        {#    distance = countDownDate - now;#}
-        {##}
-        {#    var days = Math.floor(distance / (1000 * 60 * 60 * 24));#}
-        {#    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));#}
-        {#    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));#}
-        {#    var seconds = Math.floor((distance % (1000 * 60)) / 1000);#}
-        {##}
-        {#    if(days>0){#}
-        {#        document.getElementById("timer").innerHTML = days + " Day " + hours + ":" + minutes + ":" + seconds;#}
-        {#    }#}
-        {#    else if(days==0){#}
-        {#        document.getElementById("timer").innerHTML = hours + ":" + minutes + ":" + seconds;#}
-        {#    }#}
-        {#    else if (distance < 0) {#}
-        {#        clearInterval(x);#}
-        {#        document.getElementById("timer").innerHTML = "CONTEST STARTED";#}
-        {#        window.location = url;#}
-        {#    }}, 1000);#}
-
-    </script>
-    </h2>
-    </center>
-
-
+      </script>
+   </h2>
+</center>
 {% endblock content %}

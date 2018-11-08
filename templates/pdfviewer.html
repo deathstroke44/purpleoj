@@ -2,105 +2,95 @@
 {% block head %}
 {% endblock head %}
 {% block content %}
-    <head>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
+<head>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <style>
+      #bs
+      {
+      margin-top: 2px;
+      width: 40%;
+      margin-left: 30%;
+      alignment: center;
+      align-content: center;
+      background-color: black;
+      }
+      #first
+      {
+      width: 50%;
+      float: left;
+      }
+      #second
+      {
+      width: 20%;
+      float: right;
+      }
+      #third
+      {
+      height: 10px;
+      background-color: black;
+      }
+      .lol
+      {
+      margin: 4px;
+      padding: 4px;
+      }
 
-        #bs
-{
-    margin-top: 2px;
-    width: 40%;
-            margin-left: 30%;
-            alignment: center;
-    align-content: center;
-    background-color: black;
-}
-#first
-{
-    width: 50%;
-    float: left;
-
-}
-#second
-{
-    width: 20%;
-    float: right;
-}
-#third
-{
-    height: 10px;
-    background-color: black;
-}
-.lol
-{
-    margin: 4px;
-    padding: 4px;
-}
-            body{
-                text-emphasis-style: inherit;
-            }
-            .inner
-            {
-                background-color: whitesmoke;
-            }
-        </style>
-<body>
-    </head>
-            <div class="row mt-5">
-                <div class="col-md-3 shadow">
-                    <div class="lol" >
-                    <div class="card-header">
-                        <p align="center">
-
-                            <b class="lead">{{ pbds.pn }}</b>
-                        </p>
-                    </div>
-                    <hr>
-                        <p>
-                            {{ pbds.tl }}
-                        </p>
-                        <hr>
-                        <p>
-                            {{ pbds.ml }}
-                        </p>
-                        <hr>
-                        <P>
-                            Accepted Languages:C, C++ , Python, Java
-                        </P>
-                        <a class="btn btn-default pull-right" id='bs' href="/editor/{{ pbds.id }}">
-                        <font color="white">
-                        Submit
-                        </font>
-                        </a>
-                        <br><br>
-                    <div class="card-header">
-                        <p class="lead" align="center">Previous Submissions</p>
-                    </div>
-                        <hr>
-                        {% for previous in Previous %}
-
-                        <div>
-
-                            <div class="border-dark">
-
-                                <a href="/submissions/{{previous.first}}"><p align="center">{{ previous.third }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ previous.second }}</p></a>
-                                <hr>
-                            </div>
-
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="col-md-9">
-                    <div class="embed-responsive embed-responsive-1by1">
-                        <iframe src="{{ pdf_src }}" type="application/pdf"></iframe>
-                    </div>
-                </div>
+      .inner
+      {
+      background-color: whitesmoke;
+      }
+   </style>
+</head>
+<main role="main" >
+   <div class="row mt-5" style="margin-right:10px;">
+      <div class="offset-1 col-md-8">
+         <div class="embed-responsive embed-responsive-1by1">
+            <iframe src="{{ pdf_src }}" type="application/pdf"></iframe>
+         </div>
+      </div>
+      <div class="col-md-3">
+         <div class="lol jumbotron" >
+            <div class="card-header">
+               <p align="center">
+                  <b class="lead">{{ pbds.pn }}</b>
+               </p>
             </div>
-<script>
-    highlight("Problem Set")
-</script>
-</body>
+            <hr>
+            <p align="center">
+               {{ pbds.tl }}
+            </p>
+            <hr>
+            <p align="center">
+               {{ pbds.ml }}
+            </p>
+            <hr>
+            <P align="center">
+               Accepted Languages:C, C++ , Python, Java
+            </P>
+            <button  class="btn btn-dark" style="margin:auto;display:block;" onclick="location.href='/editor/{{ pbds.id }}'">
+               Submit
+            </button>
+            <br><br>
+            <div class="card-header">
+               <p class="lead" align="center">Previous Submissions</p>
+            </div>
+            <hr>
+            {% for previous in Previous %}
+            <div>
+               <div class="border-dark">
+                  <a href="/submissions/{{previous.first}}">
+                     <p align="center">{{ previous.third }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ previous.second }}</p>
+                  </a>
+                  <hr>
+               </div>
+            </div>
+            {% endfor %}
+         </div>
+      </div>
+   </div>
+   <script>
+      highlight("Problem Set")
+   </script>
+</main>
 {% endblock content %}
