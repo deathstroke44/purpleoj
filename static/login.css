@@ -8,12 +8,12 @@ body
 }
 .lohinbox
 {
-    width: 620px;
+    width: 50%;
     height: 420px;
     background-color: #1d2124;
-    position: absolute;
+    position: relative;
     padding: 5%;
-    top:150px
+    top:70px
 
 }
 .coderavatar
@@ -25,5 +25,4 @@ body
     top:-50px
 }
 h1   {color: white}
-p    {color: red;}
 
