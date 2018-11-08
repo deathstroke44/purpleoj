@@ -14,9 +14,13 @@ from werkzeug.utils import secure_filename
 from wtforms import Form, IntegerField, StringField, PasswordField, validators
 from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
+import FunctionList
 from FunctionList import allowed_file1,giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair,valid,valid1
 from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
 from ClassesList import *
+from CreateContest import *
+from UtilityFunctionsForEditor import *
+from strategypatternforsubmission import *
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '/static/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
@@ -402,7 +406,7 @@ def submissions(id):
 @app.route('/contests/<id>')
 def userContests(id):
     from profile import profileContestsCall
-    user= profileContestsCall(id)
+    user,contest_array= profileContestsCall(id)
     return render_template('user_contests.html',user=user)
 
 @app.route('/issue/<id>')
@@ -432,330 +436,341 @@ languages = ["Java", "C", "Python"]
 from codemirrorform import CodemirrorForm
 
 def runPython(auxForm):
-    form = CodemirrorForm(auxForm)
-    text = form.source_code.data
-    now=time.time()
-    then=time.time()
-    fout = open(getProgramFileName("Python"), "w")
-    print(text, file=fout)
-    fout.close()
-
-    if auxForm.get("custom_input") != None:
-        inputs = form.inputs.data
-        finputs = open(getCustomInputsFileName(), "w")
-        print(inputs, file=finputs)
-        finputs.close()
-        now=time.time()
-        os.system("python3 "+ getProgramFileName("Python")+" < "+getCustomInputsFileName()+" 1>"+
-                  getOutputFileName()+ " 2>"
-                  +getErrorFileName())
-        then=time.time()
-
-    else:
-        now = time.time()
-        os.system("python3 " + getProgramFileName(
-            "Python") + " 1>" + getOutputFileName() + " 2>"
-                  + getErrorFileName())
-        then = time.time()
-    finputs = open(getOutputFileName(), "r")
-    timeElapsed = then - now
-    outputs = finputs.readlines()
-    outputs.append("Time elapsed during execution: " + str(round(timeElapsed, 3)) + " s")
-    finputs.close()
-    finputs = open(getErrorFileName(), "r")
-    errors = finputs.readlines()
-    finputs.close()
-    #os.system("rm -r submissions/" + getUserId())
-    if len(errors) == 0:
-        # print(outputs)
-        return render_template('editor.html', form=form, status="Program Output", outputs=outputs, languages=languages)
-    else:
-        print(errors)
-        return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
-                               languages=languages)
+    pass
+    # form = CodemirrorForm(auxForm)
+    # text = form.source_code.data
+    # now=time.time()
+    # then=time.time()
+    # fout = open(getProgramFileName("Python"), "w")
+    # print(text, file=fout)
+    # fout.close()
+    #
+    # if auxForm.get("custom_input") != None:
+    #     inputs = form.inputs.data
+    #     finputs = open(getCustomInputsFileName(), "w")
+    #     print(inputs, file=finputs)
+    #     finputs.close()
+    #     now=time.time()
+    #     os.system("python3 "+ getProgramFileName("Python")+" < "+getCustomInputsFileName()+" 1>"+
+    #               getOutputFileName()+ " 2>"
+    #               +getErrorFileName())
+    #     then=time.time()
+    #
+    # else:
+    #     now = time.time()
+    #     os.system("python3 " + getProgramFileName(
+    #         "Python") + " 1>" + getOutputFileName() + " 2>"
+    #               + getErrorFileName())
+    #     then = time.time()
+    # finputs = open(getOutputFileName(), "r")
+    # timeElapsed = then - now
+    # outputs = finputs.readlines()
+    # outputs.append("Time elapsed during execution: " + str(round(timeElapsed, 3)) + " s")
+    # finputs.close()
+    # finputs = open(getErrorFileName(), "r")
+    # errors = finputs.readlines()
+    # finputs.close()
+    # #os.system("rm -r submissions/" + getUserId())
+    # if len(errors) == 0:
+    #     # print(outputs)
+    #     return render_template('editor.html', form=form, status="Program Output", outputs=outputs, languages=languages)
+    # else:
+    #     print(errors)
+    #     return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
+    #                            languages=languages)
 
 
 def runJava(auxForm):
-    form = CodemirrorForm(auxForm)
-    text = form.source_code.data
-    now = time.time()
-    then = time.time()
-    fout = open(getProgramFileName("Java"), "w")
-    print(text, file=fout)
-    fout.close()
-    # compiling the program
-    os.system("javac "  + getProgramFileName("Java") + " 2>" + getErrorFileName())
-    # reading errors
-    finputs = open(getErrorFileName(), "r")
-    errors = finputs.readlines()
-    finputs.close()
-    print(errors)
-    # running with user defined inputs
-    if auxForm.get("custom_input") != None:
-        inputs = form.inputs.data
-        finputs = open(getCustomInputsFileName(), "w")
-        print(inputs, file=finputs)
-        finputs.close()
-        if len(errors)==0:
-            now = time.time()
-            os.system("java -cp "+getExecutibleFileName("Java")+" Main <"+ getCustomInputsFileName() +
-                      " 1> "+getOutputFileName()+ " 2> " +getErrorFileName())
-            then= time.time()
-        else:
-            print(errors)
-            #os.system("rm -r submissions/" + getUserId())
-            return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
-                                   languages=languages)
-    # running without inputs
-    else:
-        if len(errors)==0:
-            now = time.time()
-            os.system("java -cp " + getExecutibleFileName("Java") + " Main " +" 1> " +
-                      getOutputFileName() + " 2> " + getErrorFileName())
-            then = time.time()
-
-        else:
-            print(errors)
-            #os.system("rm -r submissions/" + getUserId())
-            return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
-                                   languages=languages)
-    finputs = open(getOutputFileName(), "r")
-    outputs = finputs.readlines()
-    finputs.close()
-    timeElapsed = then - now
-    # outputs=list("")
-    outputs.append("Time elapsed during execution: " + str(round(timeElapsed, 3)) + " s")
-    finputs = open(getErrorFileName(), "r")
-    # print(finputs)
-    errors = finputs.readlines()
-    finputs.close()
-    #os.system("rm -r submissions/" + getUserId())
-    if len(errors) == 0:
-        print(outputs)
-        return render_template('editor.html', form=form, status="Program Output", outputs=outputs, languages=languages)
-    else:
-        print(errors)
-        return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
-                               languages=languages)
-
+    pass
+    # form = CodemirrorForm(auxForm)
+    # text = form.source_code.data
+    # now = time.time()
+    # then = time.time()
+    # fout = open(getProgramFileName("Java"), "w")
+    # print(text, file=fout)
+    # fout.close()
+    # # compiling the program
+    # os.system("javac "  + getProgramFileName("Java") + " 2>" + getErrorFileName())
+    # # reading errors
+    # finputs = open(getErrorFileName(), "r")
+    # errors = finputs.readlines()
+    # finputs.close()
+    # print(errors)
+    # # running with user defined inputs
+    # if auxForm.get("custom_input") != None:
+    #     inputs = form.inputs.data
+    #     finputs = open(getCustomInputsFileName(), "w")
+    #     print(inputs, file=finputs)
+    #     finputs.close()
+    #     if len(errors)==0:
+    #         now = time.time()
+    #         os.system("java -cp "+getExecutibleFileName("Java")+" Main <"+ getCustomInputsFileName() +
+    #                   " 1> "+getOutputFileName()+ " 2> " +getErrorFileName())
+    #         then= time.time()
+    #     else:
+    #         print(errors)
+    #         #os.system("rm -r submissions/" + getUserId())
+    #         return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
+    #                                languages=languages)
+    # # running without inputs
+    # else:
+    #     if len(errors)==0:
+    #         now = time.time()
+    #         os.system("java -cp " + getExecutibleFileName("Java") + " Main " +" 1> " +
+    #                   getOutputFileName() + " 2> " + getErrorFileName())
+    #         then = time.time()
+    #
+    #     else:
+    #         print(errors)
+    #         #os.system("rm -r submissions/" + getUserId())
+    #         return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
+    #                                languages=languages)
+    # finputs = open(getOutputFileName(), "r")
+    # outputs = finputs.readlines()
+    # finputs.close()
+    # timeElapsed = then - now
+    # # outputs=list("")
+    # outputs.append("Time elapsed during execution: " + str(round(timeElapsed, 3)) + " s")
+    # finputs = open(getErrorFileName(), "r")
+    # # print(finputs)
+    # errors = finputs.readlines()
+    # finputs.close()
+    # #os.system("rm -r submissions/" + getUserId())
+    # if len(errors) == 0:
+    #     print(outputs)
+    #     return render_template('editor.html', form=form, status="Program Output", outputs=outputs, languages=languages)
+    # else:
+    #     print(errors)
+    #     return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
+    #                            languages=languages)
+    #
 
 def runC(auxForm):
-    form = CodemirrorForm(auxForm)
-    text = form.source_code.data
-    now = time.time()
-    then = time.time()
-    fout = open(getProgramFileName("C"), "w")
-    print(text, file=fout)
-    fout.close()
-    # compiling the program
-    os.system(" g++ -o " + getExecutibleFileName("C") + " " + getProgramFileName("C") + " 2>" + getErrorFileName())
-    # reading errors
-    finputs = open(getErrorFileName(), "r")
-    errors = finputs.readlines()
-    finputs.close()
-    print(errors)
-    # running with user defined inputs
-    if auxForm.get("custom_input") != None:
-        inputs = form.inputs.data
-        finputs = open(getCustomInputsFileName(), "w")
-        print(inputs, file=finputs)
-        finputs.close()
-        # checking for compile errors
-        if len(errors) == 0:
-            now=time.time()
-            os.system(" ./"+ getExecutibleFileName("C") +" < "+getCustomInputsFileName()+
-                      " 1> "+getOutputFileName()+" 2> "+getErrorFileName())
-            then=time.time()
-
-        else:
-            #os.system("rm -r submissions/" + getUserId())
-            return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
-                                   languages=languages)
-    # running without inputs
-    else:
-        if len(errors) == 0:
-            now=time.time()
-            os.system(" ./" + getExecutibleFileName("C") +" 1> " + getOutputFileName() + " 2> " + getErrorFileName())
-            then=time.time()
-        else:
-            #os.system("rm -r submissions/" + getUserId())
-            return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
-                                   languages=languages)
-    # reading program outputs
-    finputs = open(getOutputFileName(), "r")
-    outputs = finputs.readlines()
-    finputs.close()
-    timeElapsed = then - now
-    outputs.append("Time elapsed during execution: " + str(round(timeElapsed, 3)) + " s")
-    # reading RTE
-    finputs = open(getErrorFileName(), "r")
-    errors = finputs.readlines()
-    finputs.close()
-    #os.system("rm -r submissions/" + getUserId())
-    # checking for RTE
-    if len(errors) == 0:
-        print(outputs)
-        return render_template('editor.html', form=form, status="Program Output", outputs=outputs, languages=languages)
-    else:
-        print(errors)
-        return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
-                               languages=languages)
-
-def getProblemSolution():
-    return 12
-
-def getProgramFileName(language):
-    if language=="Python":
-        return "submissions/" + getUserId() + "/" + getProblemId()+"/1.py"
-    elif language=="Java":
-        return "submissions/" + getUserId() + "/" + getProblemId() + "/Main.java"
-    else:
-        return "submissions/" + getUserId() + "/" + getProblemId()+"/1.cpp"
-
-def getExecutibleFileName(language):
-    if language=="Python":
-        return "submissions/" + getUserId() + "/" + getProblemId()+"/a"
-    elif language=="Java":
-        return "submissions/" + getUserId() + "/" + getProblemId()
-    else:
-        return "submissions/" + getUserId() + "/" + getProblemId()+"/a"
-
-def getOutputFileName():
-    return "submissions/" + getUserId() + "/" + getProblemId()+"/outputs/1.txt"
-def getErrorFileName():
-    return "submissions/" + getUserId() + "/" + getProblemId()+"/outputs/error.txt"
-
-def getCustomInputsFileName():
-    return "submissions/" + getUserId() + "/" + getProblemId()+"/custom_inputs/1.txt"
-
-def getUserId():
-    return session['username']
-
-def getProblemId():
-    return "TestProblem"
-
-def getExpectedOutputFileName(problemId):
-    return "static/uploads/"+problemId+"out1.txt"
-
-def getTestCaseFileName(problemId):
-    return "static/uploads/" + problemId + "in1.txt"
+    pass
+    # form = CodemirrorForm(auxForm)
+    # text = form.source_code.data
+    # now = time.time()
+    # then = time.time()
+    # fout = open(getProgramFileName("C"), "w")
+    # print(text, file=fout)
+    # fout.close()
+    # # compiling the program
+    # os.system(" g++ -o " + getExecutibleFileName("C") + " " + getProgramFileName("C") + " 2>" + getErrorFileName())
+    # # reading errors
+    # finputs = open(getErrorFileName(), "r")
+    # errors = finputs.readlines()
+    # finputs.close()
+    # print(errors)
+    # # running with user defined inputs
+    # if auxForm.get("custom_input") != None:
+    #     inputs = form.inputs.data
+    #     finputs = open(getCustomInputsFileName(), "w")
+    #     print(inputs, file=finputs)
+    #     finputs.close()
+    #     # checking for compile errors
+    #     if len(errors) == 0:
+    #         now=time.time()
+    #         os.system(" ./"+ getExecutibleFileName("C") +" < "+getCustomInputsFileName()+
+    #                   " 1> "+getOutputFileName()+" 2> "+getErrorFileName())
+    #         then=time.time()
+    #
+    #     else:
+    #         #os.system("rm -r submissions/" + getUserId())
+    #         return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
+    #                                languages=languages)
+    # # running without inputs
+    # else:
+    #     if len(errors) == 0:
+    #         now=time.time()
+    #         os.system(" ./" + getExecutibleFileName("C") +" 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+    #         then=time.time()
+    #     else:
+    #         #os.system("rm -r submissions/" + getUserId())
+    #         return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
+    #                                languages=languages)
+    # # reading program outputs
+    # finputs = open(getOutputFileName(), "r")
+    # outputs = finputs.readlines()
+    # finputs.close()
+    # timeElapsed = then - now
+    # outputs.append("Time elapsed during execution: " + str(round(timeElapsed, 3)) + " s")
+    # # reading RTE
+    # finputs = open(getErrorFileName(), "r")
+    # errors = finputs.readlines()
+    # finputs.close()
+    # #os.system("rm -r submissions/" + getUserId())
+    # # checking for RTE
+    # if len(errors) == 0:
+    #     print(outputs)
+    #     return render_template('editor.html', form=form, status="Program Output", outputs=outputs, languages=languages)
+    # else:
+    #     print(errors)
+    #     return render_template('editor.html', form=form, status="Program Compiled with errors", outputs=errors,
+    #                            languages=languages)
 
 
-def doesOutputMatch(userOutputFile,expectedOutputFile):
-    try:
-        userOutput=open(userOutputFile)
-    except:
-        return False
-    expectedOutput=open(expectedOutputFile)
-    for (x,y) in zip(userOutput.readlines(),expectedOutput.readlines()):
-        if x !=y:
-            userOutput.close()
-            expectedOutput.close()
-            return False
-    userOutput.close()
-    expectedOutput.close()
-    return True
-
-
-def makeSubmissionFolders():
-    os.system("mkdir submissions/" + getUserId())
-    os.system("mkdir submissions/" + getUserId() + "/" + getProblemId())
-    os.system("mkdir submissions/" + getUserId() + "/" + getProblemId()+"/outputs")
-    os.system("mkdir submissions/" + getUserId() + "/" + getProblemId() + "/custom_inputs")
-
-def runCode(form):
-    selectedLanguage = form.get('languages')
-    print(selectedLanguage)
-    makeSubmissionFolders()
-    if selectedLanguage == "Python":
-        return runPython(form)
-    elif selectedLanguage == "C":
-        return runC(form)
-    elif selectedLanguage == "Java":
-        return runJava(form)
-
-def submitCode(auxform,problemId):
-    selectedLanguage = auxform.get('languages')
-    print(selectedLanguage)
-    makeSubmissionFolders()
-    submissionInfo=dict()
-    submissionInfo["Language"]=selectedLanguage
-    submissionInfo["Submission Time"]=datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-    form = CodemirrorForm(auxform)
-    text = form.source_code.data.replace("\t","    ")
-    submissionInfo["Code"] = text
-    now=time.time()
-    then=time.time()
-    fout = open(getProgramFileName(selectedLanguage), "w")
-    print(text, file=fout)
-    fout.close()
-    #compiling
-    if selectedLanguage=="Java":
-        os.system("javac " + getProgramFileName("Java") + " 2>" + getErrorFileName())
-    elif selectedLanguage=="C":
-        os.system(" g++ -o " + getExecutibleFileName("C") + " " + getProgramFileName("C") + " 2>" + getErrorFileName())
-    # reading compile errors
-    if selectedLanguage!="Python":
-        finputs = open(getErrorFileName(), "r")
-        errors = finputs.readlines()
-        finputs.close()
-
-        if (len(errors) != 0):
-            print(errors)
-            submissionInfo["Comilation Status"] = "CE"
-            return submissionInfo
-    # running the program
-    if selectedLanguage=="Python":
-        now = time.time()
-        os.system("python3 " + getProgramFileName("Python") + " < " + getTestCaseFileName(problemId) + " 1>" +
-                  getOutputFileName() + " 2>" + getErrorFileName())
-        then = time.time()
-    elif selectedLanguage=="Java":
-        now = time.time()
-        os.system("java -cp " + getExecutibleFileName("Java") + " Main <" + getTestCaseFileName(problemId) +
-                  " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
-        then = time.time()
-    elif selectedLanguage=="C":
-        now = time.time()
-        os.system(" ./" + getExecutibleFileName("C") + " < " + getTestCaseFileName(problemId) +
-                  " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
-        then = time.time()
-
-    # reading runtime errors
-    finputs = open(getErrorFileName(), "r")
-    errors = finputs.readlines()
-    finputs.close()
-    if len(errors)!=0:
-        submissionInfo["Run Status"]="RTE"
-        return submissionInfo
-    timeElapsed=then-now
-    submissionInfo["Execution Time"]=timeElapsed
-    # if timeElapsed>2:
-    #     return "TLE"
-    if doesOutputMatch(getExpectedOutputFileName(problemId),getOutputFileName()) == False :
-        submissionInfo["Result Verdict"]="WA"
-        return submissionInfo
-    else:
-        submissionInfo["Result Verdict"] ="Passed"
-        return submissionInfo
-
-
-def cleanup():
-    os.system("rm -r submissions/" + getUserId())
-
-from bson.objectid import ObjectId
-def getProblemNumber(problemId,contestId):
-    print(ObjectId(contestId))
-    contest=mongo.db.contests.find({"_id": ObjectId(contestId)})[0]
-    problemList=contest.get('Problem ID')
-    for x in problemList:
-        for y,z in x.items():
-            if z==problemId:
-                return y
-        # return x
-    print(problemList)
+#
+# def getProblemSolution():
+#     return 12
+#
+# def getProgramFileName(language):
+#     if language=="Python":
+#         return "submissions/" + getUserId() + "/" + getProblemId()+"/1.py"
+#     elif language=="Java":
+#         return "submissions/" + getUserId() + "/" + getProblemId() + "/Main.java"
+#     else:
+#         return "submissions/" + getUserId() + "/" + getProblemId()+"/1.cpp"
+#
+# def getExecutibleFileName(language):
+#     if language=="Python":
+#         return "submissions/" + getUserId() + "/" + getProblemId()+"/a"
+#     elif language=="Java":
+#         return "submissions/" + getUserId() + "/" + getProblemId()
+#     else:
+#         return "submissions/" + getUserId() + "/" + getProblemId()+"/a"
+#
+# def getOutputFileName():
+#     return "submissions/" + getUserId() + "/" + getProblemId()+"/outputs/1.txt"
+# def getErrorFileName():
+#     return "submissions/" + getUserId() + "/" + getProblemId()+"/outputs/error.txt"
+#
+# def getCustomInputsFileName():
+#     return "submissions/" + getUserId() + "/" + getProblemId()+"/custom_inputs/1.txt"
+#
+# def getUserId():
+#     return session['username']
+#
+# def getProblemId():
+#     return "TestProblem"
+#
+# def getExpectedOutputFileName(problemId):
+#     return "static/uploads/"+problemId+"out1.txt"
+#
+# def getTestCaseFileName(problemId):
+#     return "static/uploads/" + problemId + "in1.txt"
+#
+#
+# def doesOutputMatch(userOutputFile,expectedOutputFile):
+#     try:
+#         userOutput=open(userOutputFile)
+#     except:
+#         return False
+#     expectedOutput=open(expectedOutputFile)
+#     for (x,y) in zip(userOutput.readlines(),expectedOutput.readlines()):
+#         if x !=y:
+#             userOutput.close()
+#             expectedOutput.close()
+#             return False
+#     userOutput.close()
+#     expectedOutput.close()
+#     return True
+#
+#
+# def makeSubmissionFolders():
+#     os.system("mkdir submissions/" + getUserId())
+#     os.system("mkdir submissions/" + getUserId() + "/" + getProblemId())
+#     os.system("mkdir submissions/" + getUserId() + "/" + getProblemId()+"/outputs")
+#     os.system("mkdir submissions/" + getUserId() + "/" + getProblemId() + "/custom_inputs")
+#
+# def runCode(form):
+#     selectedLanguage = form.get('languages')
+#     print(selectedLanguage)
+#     makeSubmissionFolders()
+#     from strategypatternforsubmission import RunJava,RunPython,RunC
+#     if selectedLanguage == "Python":
+#         runMode=RunPython()
+#         # return runPython(form)
+#     elif selectedLanguage == "C":
+#         runMode=RunC()
+#         # return runC(form)
+#     elif selectedLanguage == "Java":
+#         runMode=RunJava()
+#         # return runJava(form)
+#     return runMode.performRun(form)
+#
+# def submitCode(auxform,problemId):
+#     selectedLanguage = auxform.get('languages')
+#     print(selectedLanguage)
+#     makeSubmissionFolders()
+#     submissionInfo=dict()
+#     submissionInfo["Language"]=selectedLanguage
+#     submissionInfo["Submission Time"]=datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+#     form = CodemirrorForm(auxform)
+#     text = form.source_code.data.replace("\t","    ")
+#     submissionInfo["Code"] = text
+#     now=time.time()
+#     then=time.time()
+#     fout = open(getProgramFileName(selectedLanguage), "w")
+#     print(text, file=fout)
+#     fout.close()
+#     #compiling
+#     if selectedLanguage=="Java":
+#         os.system("javac " + getProgramFileName("Java") + " 2>" + getErrorFileName())
+#     elif selectedLanguage=="C":
+#         os.system(" g++ -o " + getExecutibleFileName("C") + " " + getProgramFileName("C") + " 2>" + getErrorFileName())
+#     # reading compile errors
+#     if selectedLanguage!="Python":
+#         finputs = open(getErrorFileName(), "r")
+#         errors = finputs.readlines()
+#         finputs.close()
+#
+#         if (len(errors) != 0):
+#             print(errors)
+#             submissionInfo["Comilation Status"] = "CE"
+#             return submissionInfo
+#     # running the program
+#     if selectedLanguage=="Python":
+#         now = time.time()
+#         os.system("python3 " + getProgramFileName("Python") + " < " + getTestCaseFileName(problemId) + " 1>" +
+#                   getOutputFileName() + " 2>" + getErrorFileName())
+#         then = time.time()
+#     elif selectedLanguage=="Java":
+#         now = time.time()
+#         os.system("java -cp " + getExecutibleFileName("Java") + " Main <" + getTestCaseFileName(problemId) +
+#                   " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+#         then = time.time()
+#     elif selectedLanguage=="C":
+#         now = time.time()
+#         os.system(" ./" + getExecutibleFileName("C") + " < " + getTestCaseFileName(problemId) +
+#                   " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+#         then = time.time()
+#
+#     # reading runtime errors
+#     finputs = open(getErrorFileName(), "r")
+#     errors = finputs.readlines()
+#     finputs.close()
+#     if len(errors)!=0:
+#         submissionInfo["Run Status"]="RTE"
+#         return submissionInfo
+#     timeElapsed=then-now
+#     submissionInfo["Execution Time"]=timeElapsed
+#     # if timeElapsed>2:
+#     #     return "TLE"
+#     if doesOutputMatch(getExpectedOutputFileName(problemId),getOutputFileName()) == False :
+#         submissionInfo["Result Verdict"]="WA"
+#         return submissionInfo
+#     else:
+#         submissionInfo["Result Verdict"] ="Passed"
+#         return submissionInfo
+#
+#
+# def cleanup():
+#     os.system("rm -r submissions/" + getUserId())
+#
+# from bson.objectid import ObjectId
+# def getProblemNumber(problemId,contestId):
+#     print(ObjectId(contestId))
+#     contest=mongo.db.contests.find({"_id": ObjectId(contestId)})[0]
+#     problemList=contest.get('Problem ID')
+#     for x in problemList:
+#         for y,z in x.items():
+#             if z==problemId:
+#                 return y
+#         # return x
+#     print(problemList)
 @app.route('/editor/<problemId>', methods=['GET', 'POST'])
 def editor(problemId):
+
     print("not for contest")
     problemsDatabase=mongo.db.problems
     submissionDatabase=mongo.db.submissions
@@ -767,37 +782,9 @@ def editor(problemId):
             return template
 
         elif "submit" in request.form:
-            submissionInfo=submitCode(request.form,problemId)
-            problemsdb.incrementSumissionCount(problemsDatabase, problemId)
-            print(submissionInfo)
-            problemTimeLimit=problemsDatabase.find_one({"myid":problemId}).get("time_limit")
-            verdict=dict()
-            verdict["Submission Time"]=submissionInfo.get("Submission Time")
-            verdict["Language"]=submissionInfo.get("Language")
-            if submissionInfo.get("Compilation Status") !=None:
-                verdict["Status"]=submissionInfo.get("Compilation Status")
-            elif submissionInfo.get("Run Status")!=None:
-                verdict["Status"]=submissionInfo.get("Run Status")
-            else:
-                if float(problemTimeLimit)<float(submissionInfo.get("Execution Time")):
-                    verdict["Status"]="TLE"
-                else:
-                    if submissionInfo.get("Result Verdict")=="Passed":
-                        verdict["Status"]="AC"
-                        problemsdb.incrementSumissionCount(problemsDatabase, problemId)
-                    else:
-                        verdict["Status"]="WA"
-            verdict["Execution Time"]=submissionInfo.get("Execution Time")
-            verdict["Problem Id"]=problemId
-            verdict["User Id"]=session["username"]
-            verdict["Code"]=submissionInfo.get("Code")
-            verdict["Contest Id"]=""
-            verdict["Submission Id"]=uuid.uuid4().__str__()
-            print(submissionDatabase.insert(verdict))
-            print(verdict)
-            cleanup()
-            return render_template('editor.html', form=CodemirrorForm(request.form), status=verdict.get("Status"),
-                                   languages=languages,check_submissions="Check Submissions")
+            submitNormal = SubmitNormal()
+            return submitNormal.performSubmit(problemId, request.form)
+
     return render_template('editor.html', form=CodemirrorForm(request.form), languages=languages)
 @app.route('/editor/<contestId>/<problemId>', methods=['GET', 'POST'])
 def contestEditor(problemId, contestId):
@@ -812,36 +799,43 @@ def contestEditor(problemId, contestId):
             return template
 
         elif "submit" in request.form:
-            submissionInfo=submitCode(request.form,problemId)
-            problemsdb.incrementSumissionCount(problemsDatabase,problemId)
-            print(submissionInfo)
-            problemTimeLimit=problemsDatabase.find_one({"myid":problemId}).get("time_limit")
-            verdict=dict()
-            verdict["Submission Time"]=submissionInfo.get("Submission Time")
-            verdict["Language"]=submissionInfo.get("Language")
-            if submissionInfo.get("Compilation Status") !=None:
-                verdict["Status"]=submissionInfo.get("Compilation Status")
-            elif submissionInfo.get("Run Status")!=None:
-                verdict["Status"]=submissionInfo.get("Run Status")
-            else:
-                if float(problemTimeLimit)<float(submissionInfo.get("Execution Time")):
-                    verdict["Status"]="TLE"
-                else:
-                    if submissionInfo.get("Result Verdict")=="Passed":
-                        verdict["Status"]="AC"
-                        problemsdb.incrementAcSumissionCount(problemsDatabase, problemId)
-                    else:
-                        verdict["Status"]="WA"
-            verdict["Execution Time"]=submissionInfo.get("Execution Time")
-            verdict["Problem Id"]=problemId
-            verdict["Problem Number"]=getProblemNumber(problemId,contestId)
-            verdict["User Id"]=session["username"]
-            verdict["Code"]=submissionInfo.get("Code")
-            verdict["Contest Id"]=contestId
-            verdict["Submission Id"]=uuid.uuid4().__str__()
-            submissionDatabase.insert(verdict)
-            return render_template('editor.html', form=CodemirrorForm(request.form), status=verdict.get("Status"),
-                                   languages=languages, check_submissions="Check Submissions")
+            from strategypatternforsubmission import SubmitContest
+            id = list()
+            id.append(problemId)
+            id.append(contestId)
+            submitContest = SubmitContest()
+            print("submitting")
+            return submitContest.performSubmit(id, request.form)
+            # submissionInfo=submitCode(request.form,problemId)
+            # problemsdb.incrementSumissionCount(problemsDatabase,problemId)
+            # print(submissionInfo)
+            # problemTimeLimit=problemsDatabase.find_one({"myid":problemId}).get("time_limit")
+            # verdict=dict()
+            # verdict["Submission Time"]=submissionInfo.get("Submission Time")
+            # verdict["Language"]=submissionInfo.get("Language")
+            # if submissionInfo.get("Compilation Status") !=None:
+            #     verdict["Status"]=submissionInfo.get("Compilation Status")
+            # elif submissionInfo.get("Run Status")!=None:
+            #     verdict["Status"]=submissionInfo.get("Run Status")
+            # else:
+            #     if float(problemTimeLimit)<float(submissionInfo.get("Execution Time")):
+            #         verdict["Status"]="TLE"
+            #     else:
+            #         if submissionInfo.get("Result Verdict")=="Passed":
+            #             verdict["Status"]="AC"
+            #             problemsdb.incrementAcSumissionCount(problemsDatabase, problemId)
+            #         else:
+            #             verdict["Status"]="WA"
+            # verdict["Execution Time"]=submissionInfo.get("Execution Time")
+            # verdict["Problem Id"]=problemId
+            # verdict["Problem Number"]=getProblemNumber(problemId,contestId)
+            # verdict["User Id"]=session["username"]
+            # verdict["Code"]=submissionInfo.get("Code")
+            # verdict["Contest Id"]=contestId
+            # verdict["Submission Id"]=uuid.uuid4().__str__()
+            # submissionDatabase.insert(verdict)
+            # return render_template('editor.html', form=CodemirrorForm(request.form), status=verdict.get("Status"),
+            #                        languages=languages, check_submissions="Check Submissions")
     return render_template('editor.html', form=CodemirrorForm(request.form), languages=languages,check_submissions="Check Submissions")
 
 
@@ -853,11 +847,13 @@ def view_submissions():
     submissionsDatabase=mongo.db.submissions
     problemsDatabase=mongo.db.problems
     print(submissionsDatabase)
-    submissionsCursor=submissionsDatabase.find({}).limit(50) .sort([('Submission Time',1)])
+    submissionsCursor = submissionsDatabase.find({}).limit(50).sort([('Submission Time', -1)])
+
     submissions=list()
     for submission in submissionsCursor:
         submissions.append(Submission(submission,problemsDatabase))
-        print(submissions[0].submissionId)
+    for submission in submissions:
+        print(submission.submissionTime)
 
     return render_template('submissions.html',submissions=submissions)
 
@@ -930,80 +926,80 @@ def problemList():
     return render_template('problem_list_for_udebug.html', obj=list)
 
 
-def runForUbebug(inputs, text):
-    makeSubmissionFolders()
-    fout = open(getProgramFileName("C"), "w")
-    print(text, file=fout)
-    fout.close()
-    # compiling the program
-    os.system(" g++ -o " + getExecutibleFileName("C") + " " + getProgramFileName("C") + " 2>" + getErrorFileName())
-    # reading errors
-    finputs = open(getErrorFileName(), "r")
-    errors = finputs.readlines()
-    finputs.close()
-    print(errors)
-    # running with user defined inputs
-    if True:
-        finputs = open(getCustomInputsFileName(), "w")
-        print(inputs, file=finputs)
-        finputs.close()
-        # checking for compile errors
-        if len(errors) == 0:
-
-            os.system(" ./" + getExecutibleFileName("C") + " < " + getCustomInputsFileName() +
-                      " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
-
-
-        else:
-            # os.system("rm -r submissions/" + getUserId())
-            return errors
-
-    # reading program outputs
-    finputs = open(getOutputFileName(), "r")
-    outputs = finputs.readlines()
-    finputs.close()
-    # reading RTE
-    finputs = open(getErrorFileName(), "r")
-    errors = finputs.readlines()
-    finputs.close()
-    # os.system("rm -r submissions/" + getUserId())
-    # checking for RTE
-    output = ""
-    cleanup()
-    for x in outputs:
-        output += x
-    if len(errors) == 0:
-        print(output)
-        return output
-    else:
-        print(errors)
-        return errors
-
-
-def getCode(filename):
-    codelist = open(filename).readlines()
-    code = ""
-    for x in codelist:
-        code += x + "\n"
-    return code
-
-
-def getInputFileListForUdebug(problemId):
-    os.system("cd static/inputs_for_udebug &&ls | grep " + problemId + ">" + getUserId() + ".txt")
-    return open("static/inputs_for_udebug/" + getUserId() + ".txt").readlines()
-
-
-def getInputsForUdebug(filename):
-    codelist = open(filename).readlines()
-    code = ""
-    for x in codelist:
-        code += x
-    return code
-
-
-def extractInputName(x, problemId):
-    return x.replace(problemId, "").replace(".txt", "")
-
+# def runForUbebug(inputs, text):
+#     makeSubmissionFolders()
+#     fout = open(getProgramFileName("C"), "w")
+#     print(text, file=fout)
+#     fout.close()
+#     # compiling the program
+#     os.system(" g++ -o " + getExecutibleFileName("C") + " " + getProgramFileName("C") + " 2>" + getErrorFileName())
+#     # reading errors
+#     finputs = open(getErrorFileName(), "r")
+#     errors = finputs.readlines()
+#     finputs.close()
+#     print(errors)
+#     # running with user defined inputs
+#     if True:
+#         finputs = open(getCustomInputsFileName(), "w")
+#         print(inputs, file=finputs)
+#         finputs.close()
+#         # checking for compile errors
+#         if len(errors) == 0:
+#
+#             os.system(" ./" + getExecutibleFileName("C") + " < " + getCustomInputsFileName() +
+#                       " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+#
+#
+#         else:
+#             # os.system("rm -r submissions/" + getUserId())
+#             return errors
+#
+#     # reading program outputs
+#     finputs = open(getOutputFileName(), "r")
+#     outputs = finputs.readlines()
+#     finputs.close()
+#     # reading RTE
+#     finputs = open(getErrorFileName(), "r")
+#     errors = finputs.readlines()
+#     finputs.close()
+#     # os.system("rm -r submissions/" + getUserId())
+#     # checking for RTE
+#     output = ""
+#     cleanup()
+#     for x in outputs:
+#         output += x
+#     if len(errors) == 0:
+#         print(output)
+#         return output
+#     else:
+#         print(errors)
+#         return errors
+#
+#
+# def getCode(filename):
+#     codelist = open(filename).readlines()
+#     code = ""
+#     for x in codelist:
+#         code += x + "\n"
+#     return code
+#
+#
+# def getInputFileListForUdebug(problemId):
+#     os.system("cd static/inputs_for_udebug &&ls | grep " + problemId + ">" + getUserId() + ".txt")
+#     return open("static/inputs_for_udebug/" + getUserId() + ".txt").readlines()
+#
+#
+# def getInputsForUdebug(filename):
+#     codelist = open(filename).readlines()
+#     code = ""
+#     for x in codelist:
+#         code += x
+#     return code
+#
+#
+# def extractInputName(x, problemId):
+#     return x.replace(problemId, "").replace(".txt", "")
+#
 
 @app.route('/udebug/<problemId>', methods=['GET', 'POST'])
 def udebug(problemId):
@@ -1077,61 +1073,40 @@ def udebug(problemId):
 
 
 
-
 # *****************************************************************************************
 
-class lol:
-    def __init__(self,id,name,acc,sc,box):
-        self.id=id
-        self.name=name
-        self.acc=acc
-        self.sc=sc
-        self.box=box
+class Facade:
 
-class create_contest_form(Form):
-    contestname=StringField("Contest Name",[validators.DataRequired()])
+    def __init__(self):
+        self.contest = Contest()
 
-def forward_letter(letter, positions):
-    if letter.islower():
-        unicode_point = ord('a')
-    else:
-        unicode_point = ord('A')
-    start = ord(letter) - unicode_point
-    offset = ((start + positions)) + unicode_point
-    current_letter = chr(offset)
-    return current_letter
+    def createContest(self,form,list):
+        list=self.getProblemList()
+        return self.contest.createContest(mongo,form,list)
+
+    def getProblemList(self):
+        problemdb = mongo.db.problems
+        list = []
+        existing_pbs = problemdb.find({})
+        for existing_pb in existing_pbs:
+            list.append(Create(existing_pb['myid'], existing_pb['name'], existing_pb['acsub'], existing_pb['sub'],
+                                existing_pb['myid']))
+        return list
+
 
 @app.route('/contest',methods=['GET', 'POST'])
 def contest():
     form = create_contest_form(request.form)
+    facade= Facade()
 
-    problemdb=mongo.db.problems
-    list=[]
-    existing_pbs=problemdb.find({})
-    for existing_pb in existing_pbs:
-        list.append(lol(existing_pb['myid'],existing_pb['name'],existing_pb['acsub'],existing_pb['sub'],existing_pb['myid']))
     if request.method == 'POST':
-        print(request.form[form.contestname.name])
-        cnt=0;
-        selected_problem_id=[]
-        name='A'
-        for prblm in list:
-            if request.form.get(prblm.id):
-                cnt+=1
-                selected_problem_id.append({forward_letter(name,cnt-1):prblm.id});
-                print(prblm.name)
-        if cnt==0:
+        if facade.createContest(form,facade.getProblemList())==0:
             flash('You have to Choose at least 1 problem to set a contest.','failure')
-            return render_template('create_contest.html',obj=list,form=form)
+            return render_template('create_contest.html',obj=facade.getProblemList(),form=form)
         else:
-            contests=mongo.db.contests
-            contests.insert({'Contest Title':form.contestname.data,'Start Date':request.form['date'],
-                             'Start Time':request.form['start_time'],'End Time':request.form['end_time'],
-                             'Password':request.form['password'],'Problem Count':cnt,'Problem ID':selected_problem_id})
             return redirect(url_for('contests'))
 
-    return render_template('create_contest.html',obj=list,form=form)
-
+    return render_template('create_contest.html',obj=facade.getProblemList(),form=form)
 @app.route('/currentcontest/<contestID>/ranklist')
 def ranklist(contestID):
     # #total_problem=['A','B','C','D','E','F']

@@ -56,7 +56,7 @@ def profilePostCall(id):
     posts = mongo.db.posts.find({})
     for post in posts:
         if post['USER'] == user_name:
-            post_array.append(post_object(post['TITLE'], post['TEXT']))
+            post_array.append(post_object(post['TITLE'], "/"+post['TEXT']))
 
     return post_array,user
 
@@ -110,13 +110,14 @@ def profileContestsCall(id):
 
     submissions = mongo.db.submissions.find({})
     contests = mongo.db.contests
+    contestId_array=[]
     for submission in submissions:
-        if submission['Contest Id'] != '' and submission['User Id'] == id:
+        if submission['Contest Id'] != '' and submission['User Id'] == id and  submission['Contest Id'] not in contestId_array:
             contestId = submission['Contest Id']
-            print(contestId)
             contestTitle = contests.find({"_id": ObjectId(contestId)})[0].get('Contest Title')
-            print(contestTitle)
-            contest_array.append(contest_object(contestTitle,contestId))
+            contest = contest_object(contestTitle,contestId)
+            contest_array.append(contest)
+            contestId_array.append(contestId)
 
     return user,contest_array
 

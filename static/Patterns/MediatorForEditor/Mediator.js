@@ -94,6 +94,28 @@ class Mediator {
 
     setEditorBoilerPlateCode(string) {
         this._editor.getDoc().setValue(string);
+        if (this._inputDiv.style.display == "none") {
+            if (this._editor.getValue().length > 0) {
+                this._runButton.disabled = false;
+                this._submitButton.disabled = false;
+            }
+            else {
+                this._runButton.disabled = true;
+                this._submitButton.disabled = true;
+            }
+
+        }
+        else if (this._editor.getValue().length > 0 &&
+            (this._inputsTextArea.value == NaN || this._inputsTextArea.value.length != 0)) {
+            this._runButton.disabled = false;
+            this._submitButton.disabled = false;
+        }
+        else {
+
+            this._runButton.disabled = true;
+            this._submitButton.disabled = true;
+
+        }
 
     }
 
@@ -109,8 +131,10 @@ class Mediator {
     checkboxAction() {
         if (this._checkbox.checked) {
             this._inputDiv.style.display = "block";
-             this._runButton.disabled = true;
-            this._submitButton.disabled = true;
+            if (this._inputsTextArea.length == 0) {
+                this._runButton.disabled = true;
+                this._submitButton.disabled = true;
+            }
         }
         else {
             this._inputDiv.style.display = "none";
@@ -133,22 +157,25 @@ class Mediator {
             this._submitButton.disabled = true;
         }
         else {
-            this._runButton.disabled = false;
-            this._submitButton.disabled = false;
+            if (this._editor.getValue().length > 0) {
+                this._runButton.disabled = false;
+                this._submitButton.disabled = false;
+            }
         }
     }
 
 
     editorKeyUp(cm, event) {
         this._edited=true;
-        if (!cm.state.completionActive && /*Enables keyboard navigation in autocomplete list*/
-            event.keyCode != 13 && event.code != "Backspace") {
+
+        if ((!cm.state.completionActive && /*Enables keyboard navigation in autocomplete list*/
+            event.keyCode != 13 && event.code != "Backspace")) {
             /*Enter - do not open autocomplete list just after item has been selected in it*/
             CodeMirror.commands.autocomplete(cm, null, {completeSingle: false});
 
         }
 
-        if (this._inputDiv.style.display == "None") {
+        if (this._inputDiv.style.display == "none") {
             if (this._editor.getValue().length > 0) {
                 this._runButton.disabled = false;
                 this._submitButton.disabled = false;
@@ -160,7 +187,7 @@ class Mediator {
 
         }
         else if (this._editor.getValue().length > 0 &&
-            this._inputsTextArea.value != NaN || this._inputsTextArea.value.length != 0) {
+            (this._inputsTextArea.value == NaN || this._inputsTextArea.value.length != 0)) {
             this._runButton.disabled = false;
             this._submitButton.disabled = false;
         }
