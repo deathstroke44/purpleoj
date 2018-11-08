@@ -11,7 +11,11 @@
         </style>
     </head>
     <body>
-    {% include 'layout.html' %}
+    <br>
+    {% if problemTitle!=None %}
+        <p><b>{{ problemTitle }}</b></p>
+    {% endif %}
+    {#    {% include 'layout.html' %}#}
     {% from "includes/_formhelpers.html" import render_field %}
     <div class="form-group">
         <form id="form" method="POST" action="">
@@ -61,16 +65,18 @@
                 </div>
 
 
+
                 <div style="padding-left: 2%">
                     <label for="your_output_textarea"><font color="black">Your Outputs</font></label>
                     <br>
                     <textarea id="your_output_textarea" name="your_output_textarea" cols="50"
                               rows="10">{{ yourOutput }}</textarea>
                 </div>
-
             </div>
+
+
             <input type="submit" class="btn btn-primary center-block" name="compare_outputs_button"
-                   value="Compare Outputs" id="compare_outputs_button"/>
+                   value="Compare Outputs" id="compare_outputs_button" align="center"/>
 
             {% if mismatchNumber>0 %}
                 <p style="padding-top: 2%" align="center">
@@ -82,11 +88,13 @@
                     <font color="green">Woohoo! Your output is identical to the accepted output!</font>
                 </p>
             {% endif %}
-            <label style="padding-top: 2%" for="inputs_table"><font color="black">Select An Input</font></label>
+            {#            <label style="padding-top: 2%" for="inputs_table"><font color="black">Select An Input</font></label>#}
             <br>
             <table class="table table-striped table-hover table-bordered" width="1000" id="inputs_table">
                 {#            <p><font size="8"> <b> </b></font></p>#}
+                {% if  mismatchNumber>=0 %}
                 <thead>
+
                 <tr>
                     <th>Line No.</th>
                     <th>Accepted Output</th>
@@ -94,7 +102,7 @@
                     <th>Yours Output</th>
                 </tr>
                 </thead>
-
+                {% endif %}
                 {% for acceptedOutputlineNo,acceptedOutput,yourOutputlineNo,yourOutput in results %}
                     <tr>
                         <td>
