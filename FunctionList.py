@@ -161,6 +161,7 @@ def allowed_file2(filename):
            filename.rsplit('.', 1)[1].lower() in SC
 
 def valid2(strr, request):
+    #lol
     if strr not in request.files:
         return False
     filee = request.files[strr]
