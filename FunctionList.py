@@ -2,6 +2,7 @@ from app import *
 from Submission import *
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
 A_CAT=set(['cpp'])
+SC=set(['jpeg'])
 def givenode(node_name):
     node_name = node_name.replace('\n','')
     print(repr(node_name),end=' ')
@@ -151,6 +152,22 @@ def valid1(strr, request):
     if filee.filename == '':
         return False
     if filee and allowed_file1(filee.filename):
+        print("Something")
+        return True
+    return False
+
+def allowed_file2(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in SC
+
+def valid2(strr, request):
+    if strr not in request.files:
+        return False
+    filee = request.files[strr]
+    print(filee.filename+'omi')
+    if filee.filename == '':
+        return False
+    if filee and allowed_file2(filee.filename):
         print("Something")
         return True
     return False

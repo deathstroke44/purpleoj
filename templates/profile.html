@@ -1,16 +1,31 @@
 {% extends "profile_layout.html" %}
+<style>
+    .picbox
+    {
+        height: 3px;
+        width: 3px;
+        background-size: cover;
+    }
+    .la
+    {
+        float: right;
+    }
+</style>
 {% block content2 %}
         <div class="card">
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>{{user.username}}'s Profile</h4>
+                        <div class="picbox" id="lol">
+
+                        </div>
+                        <p id="usn" class="la">{{user.username}}</p>
                         <hr>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <form method="POST" action="">
+                        <form method="POST" action="" enctype="multipart/form-data">
                             {{ form.hidden_tag() }}
                           <div class="form-group row">
                             <label for="username" class="col-2 col-form-label">User Name</label>
@@ -36,6 +51,7 @@
                                 {{ form.email(class="form-control form-control-lg",placeholder=user.mail,disabled=True) }}
                             </div>
                           </div>
+
                             <div class="form-group row" id="hide0">
                             <label for="pass" class="col-2 col-form-label">Password</label>
                             <div class="col-5" id="pass">
@@ -48,11 +64,18 @@
                               {{ form.confirm(class="form-control form-control-lg") }}
                             </div>
                           </div>
+                        <div>
+                            <div><p>Upload Profile Picture:</p></div>
+                            <div class="la">
+                                <input type="file" name="userpic" class="la"></div>
+                            <br>
+                        </div>
                           <div class="form-group row hide" id="hide2">
                             <div class="offset-2 col-5 ">
                               {{ form.submit(class="btn btn-outline-info") }}
                             </div>
                           </div>
+
                         </form>
                     </div>
                 </div>
@@ -73,4 +96,11 @@
 
 
 </script>
+    <script>
+        var x="/static/uploads/"+document.getElementById("usn").innerHTML;
+
+        x="\<img src="+"\""+x+".jpeg\""+" height=\"100\" width=\"100\""+"\>";
+       // alert(x);
+        document.getElementById("lol").innerHTML=x;
+    </script>
 {% endblock content2 %}

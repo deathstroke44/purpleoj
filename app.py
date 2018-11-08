@@ -15,7 +15,7 @@ from wtforms import Form, IntegerField, StringField, PasswordField, validators
 from wtforms.fields import SubmitField, TextAreaField
 from wtforms.fields.html5 import EmailField
 import FunctionList
-from FunctionList import allowed_file1,giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair,valid,valid1
+from FunctionList import allowed_file1,giveedge,givenode,edge_list,node_list,f,allowed_file,graph,adapter,jsonstring,problem_user_submissions,pair,valid,valid1,valid2
 from forms import IssueForm, CommentForm,UploadForm,graph_input,create_article_form,LoginForm,RegisterForm
 from ClassesList import *
 from CreateContest import *
@@ -36,6 +36,16 @@ mongo = PyMongo(app)
 
 app.secret_key = "super secret key"
 sess = Session()
+
+def upload_picture(request,user):
+    print('reach')
+    if valid2(strr='userpic',request=request):
+        print('reach')
+        file = request.files['userpic']
+        print(file.filename)
+        filename = user + '.jpeg'  # secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -344,12 +354,12 @@ def postab():
 
 #*******************************************
 #   ASIF AHMED*******************************
-@app.route('/profile/<id>')
+@app.route('/profile/<id>',methods=['GET', 'POST'])
 def profile(id):
     from profile import profileCall
     if not ('username' in session):
         return redirect(url_for("login"))
-    user,form=profileCall(id)
+    user,form,request=profileCall(id)
     userNow = session['username']
     canEdit = 0
     if userNow == id or id == 'myself':
