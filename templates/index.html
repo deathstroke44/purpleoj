@@ -4,7 +4,7 @@
       <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
       <style>
          .mc
          {
@@ -118,41 +118,41 @@
       <ul class="sidenav"  style="list-style-type:none">
          <li class="sidebar-brand">
             <a href="/">
-            <b>CodeFlask<sub>&Beta;</sub></b>
+            <b>CodeFlask<sub>&Beta;</sub></b><i class="fa fa-cubes"></i>
             </a>
          </li>
-         <li>
-            <a href="/profile/myself">Profile</a>
-         </li>
          <li id="Problem Set">
-            <a href="/about"> Problem Set</a>
+            <a href="/about"><i class="fa fa-book"></i>          Problem Set</a>
          </li>
          <li>
-            <a href="/contests">Contest</a>
+            <a href="/contests"><i class="fa fa-rocket"></i>          Contest</a>
          </li>
          <li id="blog">
-            <a href="/">Blog</a>
+            <a href="/"><i class="fa fa-bullhorn"></i>           Blog</a>
          </li>
          <li id="News">
-            <a href="/news">News</a>
+             <a href="/news"><i class="fa fa-newspaper-o"></i>            News</a>
          <li id="Issue">
-            <a href="/issues">Issues</a>
+            <a href="/issues"><i class="fa fa-times-rectangle-o"></i>            Issues</a>
          </li>
          <li id="subs">
-            <a href="/submissions">Submissions</a>
+            <a href="/submissions"><i class="fa fa-code"></i>            Submissions</a>
          </li>
       </ul>
       <ul class="sidebar-nav-bottom" style="list-style-type:none" >
          {% if not session.logged_in %}
          <li  id="login">
-            <a href="/login">Login</a>
+            <a href="/login"><i class="fa fa-sign-in"></i>          Login</a>
          </li>
          <li id="register">
-            <a href="/register">Sign Up</a>
+            <a href="/register"><i class="fa fa-university"></i>           Sign Up</a>
          </li>
          {% else %}
+          <li id="user">
+            <a href="/profile/myself"><i id="profile" class="fa fa-user-circle-o"></i>         {{session['username']}}</a>
+         </li>
          <li>
-            <a href="/logout">Sign Out</a>
+             <a href="/logout"><i class="fa fa-sign-out"></i>         Sign Out</a>
          </li>
          {% endif %}
       </ul>
