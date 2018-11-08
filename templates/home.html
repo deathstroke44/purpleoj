@@ -4,39 +4,29 @@
 {%  extends 'index.html' %}
 {% block content %}
 <head>
+<style>
+.float{
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:40px;
+	right:40px;
+	background-color:black;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+
+.my-float{
+	margin-top:22px;
+}
+</style>
    <!--<meta http-equiv="x-ua-compatible" content="IE-edge">-->
    <!--<meta name="viewport" content="width-device-width, initial-scale=1">-->
    <script src="/static/w3.js"></script>
 </head>
-<!--<style>-->
-<!--&lt;!&ndash;body {background-color: powderblue;}&ndash;&gt;-->
-<!--&lt;!&ndash;h1   {color: blue;}&ndash;&gt;-->
-<!--&lt;!&ndash;.seethis&ndash;&gt;-->
-<!--&lt;!&ndash;{&ndash;&gt;-->
-<!--&lt;!&ndash;}&ndash;&gt;-->
-<!--&lt;!&ndash;#lt&ndash;&gt;-->
-<!--&lt;!&ndash;{&ndash;&gt;-->
-<!--&lt;!&ndash;width: 80%;&ndash;&gt;-->
-<!--&lt;!&ndash;background-color: white;&ndash;&gt;-->
-<!--&lt;!&ndash;}&ndash;&gt;-->
-<!--#block-->
-<!--&lt;!&ndash;{&ndash;&gt;-->
-<!--&lt;!&ndash;margin: 16px;&ndash;&gt;-->
-<!--&lt;!&ndash;padding: 2px;&ndash;&gt;-->
-<!--&lt;!&ndash;box-shadow: 10px 10px;&ndash;&gt;-->
-<!--&lt;!&ndash;}&ndash;&gt;-->
-<!--&lt;!&ndash;#hh&ndash;&gt;-->
-<!--&lt;!&ndash;{&ndash;&gt;-->
-<!--&lt;!&ndash;padding: 2px;&ndash;&gt;-->
-<!--&lt;!&ndash;background-color: #00ffff;&ndash;&gt;-->
-<!--&lt;!&ndash;margin: 8px;&ndash;&gt;-->
-<!--&lt;!&ndash;box-shadow: 5px 5px;&ndash;&gt;-->
-<!--&lt;!&ndash;}&ndash;&gt;-->
-<!--&lt;!&ndash;#logo {&ndash;&gt;-->
-<!--&lt;!&ndash;color: white;&ndash;&gt;-->
-<!--&lt;!&ndash;text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;&ndash;&gt;-->
-<!--&lt;!&ndash;}&ndash;&gt;-->
-<!--</style>-->
+
     <style>
         #upper
         {
@@ -44,7 +34,7 @@
             margin-bottom: 5px;
         }
         .mr{
-            margin-right: 4px;
+
         }
         .equal{
             margin-top: 2px;
@@ -68,9 +58,9 @@
       <div class="row">
       <div class="col-md-1"></div>
          <div class="col-md-7 shadow">
-             <a href="/post"><button class="btn btn-dark">Post Something</button></a>
+             <a href="/post" class="float"><i class="fa fa-plus my-float"></i></a>
             {%  for post in posts %}
-            <div class="card mt-3">
+            <div class="card mt-3 shadow">
                <div class="card-header" id="block">
                   <p id="hh"> <b> {{ post.title }} </b><sub>{{ post.user_ }}
                       {{ post.dt }}</sub>
@@ -86,10 +76,12 @@
          </div>
         <div class="col-md-3 shadow equal">
             <br>
+        <div class="shadow">
             <h3 align="center" class="lead"><b>Upcoming Contests</b></h3>
             <hr>
+        </div>
              {% for pc in PC %}
-            <div class="card mt-3">
+            <div class="card mt-3 shadow">
 
                 <div class="card-header">
                     <a href="/contest/{{ pc.id }}/verify"><p class="lead" align="center">{{ pc.name }}</p></a>
@@ -100,9 +92,8 @@
                     <p align="center" class="lead"><font size="6px"><strong class="times">{{ pc.ed }}</strong></font></p>
                     <P align="center"><font>Start Time:</font><strong class="sttimes">{{ pc.st }}</strong></P>
 
-                    <P align="center"><font>End Time:</font>{{ pc.ed }}</P>
+                    <P align="center">End Time:<strong>{{ pc.ed }}</strong></P>
                     <br>
-                    <a href="/contest/{{ pc.id }}/verify"><p class="lead" align="center">Enter</p></a>
                 </div>
 
             </div>
