@@ -1,4 +1,4 @@
-{% extends 'index.html' %}
+
 {% block head %}
 {% endblock head %}
 {% block content %}
@@ -9,7 +9,7 @@
    <script type="text/javascript"></script>
 </head>
 <body>
-
+    {% include 'index1.html' %}
    <main role="main" class="container shadow">
       <div class="row mt-5">
          <div class="col-md-1">
@@ -204,7 +204,9 @@
             </form>
          </div>
       </div>
+
    </main>
+    {% include 'index2.html' %}
    <script src="/static/For%20Table/jquery.js"></script>
    <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
    <script src="//cdn.ckeditor.com/4.6.2/basic/ckeditor.js"></script>
