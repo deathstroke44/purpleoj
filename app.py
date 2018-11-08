@@ -136,6 +136,7 @@ def valid(strr, request):
 
 
 def upload_prev():
+    print("lllllllllllllllll")
     nameform = UploadForm(request.form)
     if request.method == 'POST':
         # check if the post request has the file part
