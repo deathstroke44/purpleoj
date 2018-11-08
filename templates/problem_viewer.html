@@ -61,7 +61,7 @@
         <P>
             Accepted Languages:C, C++ , Python, Java
         </P>
-       <a class="btn btn-default pull-right" id="bs" href="/editor/{{ cid }}/{{ pbds.id }}">
+       <a style="display: none" class="btn btn-default pull-right" id="bs" href="/editor/{{ cid }}/{{ pbds.id }}">
            <font color="white">
                Submit
            </font>
@@ -83,9 +83,12 @@
                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
                 bt.style.display = 'block';
-                if (distance < 0) {
+                if (distance <= 0) {
                     clearInterval(x);
                     bt.style.display = 'none';
+                }
+                else {
+                    bt.style.display = 'block';
                 }
             }, 1000);
 

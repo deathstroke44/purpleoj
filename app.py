@@ -1283,14 +1283,14 @@ def verify_contest(id):
     contest_now = contest_db.find({"_id": ObjectId(id)})[0]
     c_pass = contest_now.get('Password')
     c_name = contest_now.get('Contest Title')
-    print("p : " + c_pass)
+    # print("p : " + c_pass)
     if not c_pass:
-        print("no password")
+        # print("no password")
         url = "http://127.0.0.1:5000/currentcontest/" + id + "/landing"
         return redirect(url, 302)
     if request.method == 'POST':
         password = request.form['password']
-        print(password)
+        # print(password)
         print(c_pass)
         if c_pass == password:
             url = "http://127.0.0.1:5000/currentcontest/" + id + "/landing"
