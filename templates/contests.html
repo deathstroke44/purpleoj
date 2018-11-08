@@ -1,120 +1,56 @@
 {% block head %}
-    <link rel="shortcut icon" href="/static/favicon.ico"/>
-    <title>Contests</title>
+<link rel="shortcut icon" href="/static/favicon.ico"/>
+<title>Contests</title>
 {% endblock head %}
 {% extends 'index.html' %}
 {% block content %}
-    <head>
-        <meta http-equiv="x-ua-compatible" content="IE-edge">
-        <meta name="viewport" content="width-device-width, initial-scale=1">
-        <link href="/static/For%20Table/dataTables.bootstrap.min.css" rel="stylesheet">
-    </head>
-    <style>
-    .main-wrap{
-        padding:3%;
-        max-width:1200px;
-        display:block;
-        margin: 10px auto;
-    }
-    .table.table-striped {
-      width:100%;
-        border-collapse: collapse;
-          background: #fff;
-        overflow: hidden;
-        box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
-        -moz-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
-        -webkit-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
-        -o-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
-        -ms-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
-    }
-
-    .table.table-striped thead {
-        background: #fff;
-        box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
-        -moz-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
-        -webkit-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
-        -o-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
-        -ms-box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.1);
-    }
-
-    .table.table-striped th {
-        padding: 0.9rem 0.5rem;
-        font-weight: bold;
-          border: 1px solid #efefef;
-        text-align: left;
-        border-top: 0px;
-    }
-
-    .table.table-striped tbody tr:nth-child(odd){
-        background-color: rgba(0,0,0,.02);
-    }
-
-    .table.table-striped tbody tr td a {
-        color: #3c2f17;
-        font-size: 15px;
-        text-decoration:none;
-      font-weight:500;
-    }
-
-    .table.table-striped tr:nth-child(even) {
-        background-color: #fff;
-    }
-
-    .table.table-striped tbody tr td {
-        border: 1px solid #efefef;
-        padding: 0.7rem;
-        text-align: left;
-        border-top: 0px;
-    }
-
-
-    .ftr{
-        text-align: center;
-        margin-top: 20px;
-        font-weight: bold;
-    }
-
-    .ftr a{
-        color: #fff;
-    }
-
-    {
-        background-color: #1b6d85;
-    }
+<head>
+   <meta http-equiv="x-ua-compatible" content="IE-edge">
+   <meta name="viewport" content="width-device-width, initial-scale=1">
+   <link href="/static/For%20Table/dataTables.bootstrap.min.css" rel="stylesheet">
+</head>
+<style>
+   .main-wrap{
+   padding:3%;
+   max-width:1200px;
+   display:block;
+   margin: 10px auto;
+   }
+   a{
+   color:black;
+   }
+   a:hover {
+    color: black;
+    text-decoration: none;
+}
+#div:hover{
+color:#98978b;
+}
 </style>
 <body>
-
-<main role="main" class="container">
+   <main role="main" class="container">
       <div class="row">
          <div class="col-md-0">
          </div>
          <div class="col-md-12">
-<p><font size="12"> <b><i>Contests</i></b></font></p>
-
-<hr>
-<div class="main-wrap">
-
-    <table class="table table-striped" id="myTable">
-
-{#    <thead>
-        <tr>
-            <th data-sort="name">Contests</th>
-        </tr>
-    <tbody>#}
-    {% for contest in obj %}
-        <tr>
-            <td>
-                <a href="contest/{{contest.c_id}}/verify">{{ contest.title }}</a>
-                <br>
-                    {{ contest.time }}
-                <br/>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-    </table>
-</div>
- </div>
+            <p><font size="12"> <b><i>Contests</i></b></font></p>
+            <hr>
+            <div class="main-wrap">
+                <div class="card mt-1" style="background-color:#98978b;padding:15px;">
+                    <strong>Contests</strong>
+                </div>
+                {% for contest in obj %}
+                <a href="contest/{{contest.c_id}}/verify">
+                <div class="card mt-1" id="div">
+                    <div class="card-header">
+                        <h6>{{contest.title}}</h6>
+                        {{ contest.time }}
+                    </div>
+                </div>
+                </a>
+                {% endfor %}
+            </div>
+         </div>
       </div>
    </main>
 </body>
