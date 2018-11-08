@@ -1,10 +1,11 @@
-from flask import session, url_for
+from flask import session, url_for,request
 from werkzeug.utils import redirect
 from forms import UpdateProfileForm
 
 from app import mongo
 from issue import Issue
 from bson.objectid import ObjectId
+import app
 
 
 class User:
@@ -24,7 +25,7 @@ def profileCall(id):
     else:
         user = User(exiting_user['NAMES'], exiting_user['USERNAME'], exiting_user['MAIL'])
 
-    form = UpdateProfileForm()
+    form = UpdateProfileForm(request.form)
     if form.validate_on_submit():
         users.update_one(
             {'USERNAME':user_name},
@@ -36,9 +37,10 @@ def profileCall(id):
                     }
             }
         )
+        #print(request.files['userpic'])
+        app.upload_picture(request=request,user=session['username'])
 
-
-    return user,form
+    return user,form,request
 
 
 def profilePostCall(id):
