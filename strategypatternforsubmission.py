@@ -193,7 +193,7 @@ class SubmitNormalStrategy(SubmitStrategy):
             else:
                 if submissionInfo.get("Result Verdict") == "Passed":
                     verdict["Status"] = "AC"
-                    problemsdb.incrementSumissionCount(problemsDatabase, problemId)
+                    problemsdb.incrementAcSumissionCount(problemsDatabase, problemId)
                 else:
                     verdict["Status"] = "WA"
         verdict["Execution Time"] = submissionInfo.get("Execution Time")

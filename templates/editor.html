@@ -1,3 +1,4 @@
+{#{% extends 'index.html' %}#}
 {% block head %}
 {% endblock head %}
 {% block content %}
@@ -126,7 +127,11 @@
     <script src="/static/vendor/codemirror/coffeelint.js"></script>
     <script src="/static/vendor/codemirror/addon/lint/coffeescript-lint.js"></script>
     <script src="/static/vendor/codemirror/mode/stylus/stylus.js"></script>
-
+    <style>
+        .lol {
+            width: 90%;
+        }
+    </style>
 
 </head>
 <body>
@@ -143,7 +148,7 @@
                 <select id="languages" name=languages method="GET" action="">
                     {% for language in languages %}
                     <option value="{{ language }}" SELECTED>{{ language }}</option>
-                    "
+
                     {% endfor %}
                 </select>
             </div>
@@ -239,36 +244,16 @@
         <table class="table table-striped table-hover table-bordered" id="mydata">
             <p><font size="12"> <b><i> {{ status }}</i></b></font></p>
 
-            <hr>
-            <thead>
-            <tr>
-                <th></th>
-            </tr>
-            </thead>
-            <tfoot>
-            <tr></tr>
-            </tfoot>
+
             {% for output in outputs %}
             <tr>
                 <td>
-                    <p> {{ output }} </p>
+                    {{ output[:-1] }}
                 </td>
             </tr>
             {% endfor %}
         </table>
         <table class="table table-striped table-hover table-bordered" id="data">
-
-
-            <hr>
-            <thead>
-            <tr>
-                <th></th>
-            </tr>
-            </thead>
-            <tfoot>
-            <tr></tr>
-            </tfoot>
-            <tr>
                 <td>
                     <p><a href="/submissions">{{ check_submissions }}</a></p>
                 </td>

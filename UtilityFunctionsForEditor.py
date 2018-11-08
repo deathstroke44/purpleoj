@@ -70,6 +70,7 @@ def doesOutputMatch(userOutputFile, expectedOutputFile):
 
 
 def makeSubmissionFolders():
+    os.system("mkdir submissions")
     os.system("mkdir submissions/" + getUserId())
     os.system("mkdir submissions/" + getUserId() + "/" + getProblemId())
     os.system("mkdir submissions/" + getUserId() + "/" + getProblemId() + "/outputs")
