@@ -87,7 +87,7 @@
 <script src="/static/For%20Table/dataTables.bootstrap4.min.js"></script>
 <script>
 
-    $('#mydata').dataTable()
+    {#$('#mydata').dataTable()#}
 
        highlight("subs");
 
@@ -110,6 +110,9 @@
                 one from current row and one from the next:*/
                 x = rows[i].getElementsByTagName("TD")[6];
                 y = rows[i + 1].getElementsByTagName("TD")[6];
+                window.alert(Number(x.innerHTML)
+                "<"
+                Number(y.innerHTML);
 
                 //check if the two rows should switch place:
                 if (Number(x.innerHTML) < Number(y.innerHTML)) {

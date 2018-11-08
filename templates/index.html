@@ -138,6 +138,10 @@
          <li id="subs">
             <a href="/submissions"><i class="fa fa-code"></i>            Submissions</a>
          </li>
+          <li id="online_ide">
+              <a href="/onlineide"><i class="fa fa-edit"></i> OnlineIde</a>
+          </li>
+
       </ul>
       <ul class="sidebar-nav-bottom" style="list-style-type:none" >
          {% if not session.logged_in %}
@@ -198,7 +202,11 @@
                <script src="/static/For%20Table/jquery.js"></script>
                <script src="//cdn.ckeditor.com/4.6.2/basic/ckeditor.js"></script>
                <script type="text/javascript">
-                  CKEDITOR.replace('editor')
+
+                   if (window.location.href.includes("onlineide") || window.location.href.includes("editor")) {
+                       document.getElementById("footer").parentNode.removeChild(document.getElementById("footer"));
+                   }
+                   {#CKEDITOR.replace('editor');#}
                </script>
             </div>
    </body>

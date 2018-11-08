@@ -902,7 +902,8 @@ def onlineide():
             cleanup()
             print(CodemirrorForm(request.form).source_code.data)
             return template
-    return render_template('editor.html', form=CodemirrorForm(request.form), languages=languages)
+    return render_template('editor.html', form=CodemirrorForm(request.form), languages=languages,
+                           check_submissions="false")
 
 
 @app.route('/udebug', methods=['GET', 'POST'])
