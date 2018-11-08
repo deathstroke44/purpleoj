@@ -16,7 +16,7 @@
    display:block;
    margin: 10px auto;
    }
-   a{
+   #links{
    color:black;
    }
    a:hover {
@@ -29,18 +29,20 @@ color:#98978b;
 </style>
 <body>
    <main role="main" class="container">
+        <div class="row" style="margin-top:10px;">
+            <div class="offset-11 col-md-1" >
+                <button class="btn btn-dark" onclick="location.href='/contest'">
+                Create Contest</button>
+            </div>
+        </div>
       <div class="row">
-         <div class="col-md-0">
-         </div>
          <div class="col-md-12">
-            <p><font size="12"> <b><i>Contests</i></b></font></p>
-            <hr>
             <div class="main-wrap">
                 <div class="card mt-1" style="background-color:#98978b;padding:15px;">
                     <strong>Contests</strong>
                 </div>
                 {% for contest in obj %}
-                <a href="contest/{{contest.c_id}}/verify">
+                <a href="contest/{{contest.c_id}}/verify" id="links">
                 <div class="card mt-1" id="div">
                     <div class="card-header">
                         <h6>{{contest.title}}</h6>

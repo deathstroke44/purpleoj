@@ -10,7 +10,7 @@
          {
          color: rgba(255, 255, 255, 0.2);
          }
-         footer{background-color: #eee; padding: 25px;margin-top: 100px;}
+         footer{background-color: #eee; padding-top:10px;margin-top: 0px;}
          ul, li{list-style-type: none;}
          .list{margin-top: 15px;}
       </style>
@@ -72,10 +72,9 @@
          }
          .main {
          margin-left: 250px;
-         /* Same as the width of the sidenav */
          font-size: 15px;
-         /* Increased text to enable scrolling */
          padding: 0px 0px;
+         margin-bottom:350px;
          }
          @media screen and (max-height: 450px) {
          .sidenav {
@@ -97,6 +96,22 @@
          color: #fff;
          background: none;
          }
+         html{
+           position:relative;
+           min-height: 100%;
+         }
+         /*Normalize html and body elements,this style is just good to have*/
+         html,body{
+           margin:0;
+           padding:0;
+         }
+         #footer{
+          position: absolute;
+          bottom: 0;
+          left: 250px;
+          right: 0;
+          height:250px;
+}
       </style>
    </head>
    <body>
@@ -115,14 +130,8 @@
          <li>
             <a href="/contests">Contest</a>
          </li>
-         <li>
-            <a href="/contest">Create Contest</a>
-         </li>
          <li id="blog">
             <a href="/">Blog</a>
-         </li>
-         <li>
-            <a href="/post">Post Something</a>
          </li>
          <li id="News">
             <a href="/news">News</a>
@@ -179,20 +188,18 @@
                      </div>
                   </div>
                </div>
-            </div>
-            <div class="container">
                <div class="row">
                   <div class="col-md text-center">
                      © 2018 - CodeFlask - All Rights Reserved
                   </div>
                </div>
+            </div>
+         </footer>
                <script src="/static/For%20Table/jquery.js"></script>
                <script src="//cdn.ckeditor.com/4.6.2/basic/ckeditor.js"></script>
                <script type="text/javascript">
                   CKEDITOR.replace('editor')
                </script>
             </div>
-         </footer>
-      </div>
    </body>
 </html>
