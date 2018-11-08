@@ -25,27 +25,48 @@
     <body>
     </head>
     <div class="row mt-5">
-        <div class="col-md-3">
-            <div id="first" class="jumbotron">
-                <p>
-                    Problem Title: <a href=/about/{{ submission.problemId }}/> <b>{{ submission.problemName }}</b></a>
-                </p>
-                <hr>
-                <p>
-                    Submitted by: <a href=/user/{{ submission.userName }}>{{ submission.userName }}</a>
-                </p>
-                <hr>
-                <p>
-                    Language: {{ submission.language }}
-                </p>
-                <hr>
-                <P>
-                    Time of Submission: {{ submission.submissionTime }}
-                </P>
-                <hr>
-                <P>
-                    Verdict:
-                    {% if submission.verdict=="AC" %}
+        <div class="offset-1 col-md11">
+            <div id="first">
+                <table>
+                    <thead>
+                    <th>
+                        Problem Title:
+                    </th>
+                    <th>
+                        Submitted by:
+                    </th>
+                    <th>
+                        Language:
+                    </th>
+                    <th>
+                        Time of Submission:
+                    </th>
+                    <th>
+                        Verdict:
+                    </th>
+                    <th>Ecexcution Time:</th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <a href=/about/{{ submission.problemId }}/> <b>{{ submission.problemName }}</b></a>
+                        </td>
+
+                        <td>
+                            <a href=/user/{{ submission.userName }}>{{ submission.userName }}</a>
+                        </td>
+
+                        <td>
+                            {{ submission.language }}
+                        </td>
+
+                        <td>
+                            {{ submission.submissionTime }}
+                        </td>
+
+                        <td>
+
+                            {% if submission.verdict=="AC" %}
                         <font color="green">
                             {{ submission.verdict }}
                         </font>
@@ -55,16 +76,17 @@
                             {{ submission.verdict }}
                         </font>
                     {% endif %}
-                </P>
-                <P>
-                    Ecexcution Time: {{ submission.executionTime }}s
-                </P>
-                <hr>
-
+                        </td>
+                        <td>
+                            {{ submission.executionTime }}s
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <div class="col-md-9">
+        <div class="offset-1 col-md-10">
             <p>
             <form id="form" method="POST" action="">
                 <select id="themes" name=themes method="GET" action="">

@@ -24,59 +24,113 @@
       <table id="mydata" class="table table-striped table-bordered table-hover">
          <thead>
             <tr>
-               <th>Problem Name</th>
-               <th>Submission Id</th>
-               <th>Submitted by</th>
-               <th>Language</th>
-               <th>Verdict</th>
-               <th>Execution Time</th>
-               <th>Submission Time</th>
-            </tr>
-         </thead>
-         <tbody>
-            {% for submission in submissions %}
-            <tr>
-               <td>
-                  <a href="about/{{submission.problemId}}">
-                  {{ submission.problemName }}
-                  </a>
-               <td>
-                  <a href="submissions/{{submission.submissionId}}">
-                  {{ submission.submissionId }}
-                  </a>
-               </td>
-               <td>
-                  <a href="profile/{{submission.userName}}">
-                  {{ submission.userName }}
-                  </a>
-               </td>
-               <td>
-                  {{ submission.language }}
-               </td>
-               <td>
-                  {{ submission.verdict }}
-               </td>
-               <td>
-                  {{ submission.executionTime }}
-               </td>
-               <td>
-                  {{ submission.submissionTime }}
-               </td>
-            </tr>
-            {% endfor %}
-         </tbody>
-      </table>
-       </div>
-   </div>
-   <script src="/static/For%20Table/jquery.js"></script>
-   <script src="/static/For%20Table/jquery.dataTables.min.js"></script>
-   <script src="/static/For%20Table/dataTables.bootstrap4.min.js"></script>
-   <script>
-      $('#mydata').dataTable()
-   </script>
-   <script>
-      highlight("subs");
+                <th>Problem Name</th>
+                <th>Submission Id</th>
+                <th>Submitted by</th>
+                <th>Language</th>
+                <th>Verdict</th>
+                <th>Execution Time</th>
+                <th>Submission Time</th>
 
-   </script>
+            </tr>
+    </thead>
+
+
+    <tbody>
+    {% for submission in submissions %}
+        <tr>
+        <td>
+                <a href="about/{{submission.problemId}}">
+                {{ submission.problemName }}
+                </a>
+            <td>
+                <a href="submissions/{{submission.submissionId}}">
+                {{ submission.submissionId }}
+                </a>
+            </td>
+            <td>
+                <a href="user/{{submission.userName}}">
+                {{ submission.userName }}
+                </a>
+            </td>
+            <td>
+                {{ submission.language }}
+            </td>
+            <td>
+                {% if submission.verdict=="AC" %}
+                    <font color="green">{{ submission.verdict }}</font>
+                {% elif submission.verdict=="WA" %}
+                    <font color="red">{{ submission.verdict }}</font>
+                {% elif submission.verdict=="RTE" %}
+                    <font color="#8b4513">{{ submission.verdict }}</font>
+                {% elif submission.verdict=="TLE" %}
+                    <font color="blue">{{ submission.verdict }}</font>
+                {% endif %}
+            </td>
+            <td>
+                {{ submission.executionTime }}
+            </td>
+            <td>
+                {{ submission.submissionTime }}
+            </td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+
+
+    </table>
+       </div>
+</div>
+<script src="/static/For%20Table/jquery.js"></script>
+<script src="/static/For%20Table/jquery.dataTables.min.js"></script>
+<script src="/static/For%20Table/dataTables.bootstrap4.min.js"></script>
+<script>
+
+    {#$('#mydata').dataTable()#}
+
+       highlight("subs");
+
+    function sortTable() {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("mydata");
+        switching = true;
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TD")[6];
+                y = rows[i + 1].getElementsByTagName("TD")[6];
+                window.alert(Number(x.innerHTML)
+                "<"
+                Number(y.innerHTML);
+
+                //check if the two rows should switch place:
+                if (Number(x.innerHTML) < Number(y.innerHTML)) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+    }
+
+ </script>
 </main>
 {% endblock content %}

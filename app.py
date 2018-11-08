@@ -136,6 +136,7 @@ def valid(strr, request):
 
 
 def upload_prev():
+    print("lllllllllllllllll")
     nameform = UploadForm(request.form)
     if request.method == 'POST':
         # check if the post request has the file part
@@ -901,14 +902,16 @@ def onlineide():
             cleanup()
             print(CodemirrorForm(request.form).source_code.data)
             return template
-    return render_template('editor.html', form=CodemirrorForm(request.form), languages=languages)
+    return render_template('editor.html', form=CodemirrorForm(request.form), languages=languages,
+                           check_submissions="false")
 
 
 @app.route('/udebug', methods=['GET', 'POST'])
 def problemList():
     problemsdb = mongo.db.problems
     list = []
-    existing_posts = problemsdb.find({})
+    existing_posts = problemsdb.find({'checker': True})
+    print(existing_posts)
     i = 0
     for existing_post in existing_posts:
         ppp = problem(existing_post['sub_task_count'],
@@ -1014,6 +1017,7 @@ def udebug(problemId):
     inputs = ""
     mismatchNumber = -1
     results = list()
+    problemTitle = mongo.db.problems.find_one({'myid': problemId}).get('name')
     inputFiles = getInputFileListForUdebug(problemId)
     selectedinputFile = ""
     usableInputFiles = list()
@@ -1023,7 +1027,7 @@ def udebug(problemId):
     if "get_accepted_output_button" in request.form:
         acceptedOutput = request.form["accepted_output_textarea"]
         inputs = request.form["input_textarea"]
-        code = getCode("static/solutions/" + problemId + ".c")
+        code = getCode("static/uploads/" + problemId + "sol.cpp")
         acceptedOutput = runForUbebug(inputs, code)
         print(code)
         print(acceptedOutput)
@@ -1033,7 +1037,7 @@ def udebug(problemId):
         acceptedOutput = request.form["accepted_output_textarea"]
         inputs = request.form["input_textarea"]
         yourOutputs = request.form["your_output_textarea"]
-        code = getCode("static/solutions/" + problemId + ".c")
+        code = getCode("static/uploads/" + problemId + "sol.cpp")
         acceptedOutput = runForUbebug(inputs, code)
         # print(code)
         # print(acceptedOutput)
@@ -1074,7 +1078,8 @@ def udebug(problemId):
             "\r", "").strip(" ") + ".txt"
         inputs = getInputsForUdebug(selectedinputFile)
     return render_template('udebug.html', selectedinput=inputs, acceptedOutput=acceptedOutput, yourOutput=yourOutputs,
-                           results=results, mismatchNumber=mismatchNumber, inputs=usableInputFiles)
+                           results=results, mismatchNumber=mismatchNumber, inputs=usableInputFiles,
+                           problemTitle=problemTitle)
 
 
 
