@@ -155,7 +155,7 @@ def index():
     postdb = mongo.db.posts
     existing_post = postdb.find({}).sort('_id')
     contest_db = mongo.db.contests
-    contest_cursor=contest_db.find({}).sort('Start Date')
+    contest_cursor=contest_db.find({}).sort([['Start Date', 1], ['Start Time', 1]])
     pclist=[]
     for pc in contest_cursor:
         starting_datetime = pc['Start Date']+"T"+pc['Start Time']+":00+06:00"
@@ -288,7 +288,6 @@ def post():
         f = open(gpb, "w")
         print(text, file=f)
         f.close()
-        # postt = postob(title=title,text=text,dt=dt,user_=user_)
         ppt.insert({
             'TITLE': title,
             'TEXT': gpb,
@@ -314,7 +313,6 @@ def pdfviewers(id):
     Previous = problem_user_submissions(mongo,session['username'],id)
     for i in range(0,len(Previous)):
         print(Previous[i].first)
-    #Previous=[]
     Previous.reverse()
     return render_template("pdfviewer.html", pdf_src='/static/uploads/' + id + '.pdf', pbds=pbds,Previous=Previous)
 
@@ -340,8 +338,6 @@ def postab():
                       existing_post['setter'])
         list.append(ppp)
         i = i + 1
-    print(len(list))
-    # lol
     if not ('username' in session):
         return redirect(url_for('login'))
     return render_template('problem_list.html', obj=list)
