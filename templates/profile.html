@@ -5,6 +5,7 @@
         height: 3px;
         width: 3px;
         background-size: cover;
+        float:right;
     }
     .la
     {
@@ -12,17 +13,18 @@
     }
 </style>
 {% block content2 %}
-        <div class="card">
+        <div class="card col-md-12">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="picbox" id="lol">
-
+                    <div class="col-md-8">
+                        <div class="col-md-12" >
+                            <div class="picbox" style="float:left;" id="lol">
+                            </div>
+                            <span class="la offset-0" style="margin-left:20px;margin:50px;"><font size="6"><strong id="usn" >{{user.username}}</strong></font></span>
                         </div>
-                        <p id="usn" class="la">{{user.username}}</p>
-                        <hr>
                     </div>
                 </div>
+                <hr>
                 <div class="row">
                     <div class="col-md-12">
                         <form method="POST" action="" enctype="multipart/form-data">
@@ -64,9 +66,9 @@
                               {{ form.confirm(class="form-control form-control-lg") }}
                             </div>
                           </div>
-                        <div>
-                            <div><p>Upload Profile Picture:</p></div>
-                            <div class="la">
+                        <div class="form-group row hide" id="hide3">
+                             <label for="newpass" class="col-2 col-form-label">Upload Pic</label>
+                            <div class="la col-5">
                                 <input type="file" name="userpic" class="la"></div>
                             <br>
                         </div>
@@ -92,15 +94,16 @@
 
         var sub = document.getElementById("hide2");
         sub.style.display = "none";
+
+        var sub = document.getElementById("hide3");
+        sub.style.display = "none";
     }
 
 
 </script>
     <script>
         var x="/static/uploads/"+document.getElementById("usn").innerHTML;
-
-        x="\<img src="+"\""+x+".jpeg\""+" height=\"100\" width=\"100\""+"\>";
-       // alert(x);
+        x="\<img src="+"\""+x+".jpeg\""+ " width=\"150\""+"\>";
         document.getElementById("lol").innerHTML=x;
     </script>
 {% endblock content2 %}
