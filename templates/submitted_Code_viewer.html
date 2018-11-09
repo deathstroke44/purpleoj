@@ -47,19 +47,19 @@
                </thead>
                <tbody>
                   <tr>
-                     <td>
+                      <td align="center">
                         <a href=/about/{{ submission.problemId }}/> <b>{{ submission.problemName }}</b></a>
                      </td>
-                     <td>
+                      <td align="center">
                         <a href=/user/{{ submission.userName }}>{{ submission.userName }}</a>
                      </td>
-                     <td>
+                      <td align="center">
                         {{ submission.language }}
                      </td>
-                     <td>
+                      <td align="center">
                         {{ submission.submissionTime }}
                      </td>
-                     <td>
+                      <td align="center">
                         {% if submission.verdict=="AC" %}
                         <font color="green">
                         {{ submission.verdict }}
@@ -70,8 +70,8 @@
                         </font>
                         {% endif %}
                      </td>
-                     <td>
-                        {{ submission.executionTime }}s
+                      <td align="center">
+                          {{ submission.executionTime }} s
                      </td>
                   </tr>
                </tbody>
@@ -101,7 +101,7 @@
 
          </script>
          </p>
-         <pre><code class={{ language }}>{{ submission.Code }}</code></pre>
+          <pre><code class={{ language }}>{{ "\n"+submission.Code+"\n\n\n\n\n\n\n\n\n" }}</code></pre>
       </div>
    </div>
 </body>

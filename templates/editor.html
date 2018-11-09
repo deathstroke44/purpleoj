@@ -245,15 +245,15 @@
                     <table class="table table-striped table-hover table-bordered" id="mydata">
                         <font size="12"> <b><i>
                             {% if status=="RTE" %}
-                                <a href="/submissions"><font color="#8b4513">{{ status }}</font></a>
+                                <a href="/submissions/{{ submissionId }}"><font color="#8b4513">{{ status }}</font></a>
                             {% elif status=="AC" %}
-                                <a href="/submissions"> <font color=green>{{ status }}</font></a>
+                                <a href="/submissions/{{ submissionId }}"> <font color=green>{{ status }}</font></a>
                             {% elif status=="CE" %}
-                                <a href="/submissions"><font color="#a52a2a">{{ status }}</font></a>
+                                <a href="/submissions/{{ submissionId }}"><font color="#a52a2a">{{ status }}</font></a>
                             {% elif status=="TLE" %}
-                                <a href="/submissions"><font color="blue">{{ status }}</font></a>
+                                <a href="/submissions/{{ submissionId }}"><font color="blue">{{ status }}</font></a>
                             {% elif status=="WA" %}
-                                <a href="/submissions"><font color="red">{{ status }}</font></a>
+                                <a href="/submissions/{{ submissionId }}"><font color="red">{{ status }}</font></a>
                             {% else %}
                                 <a>{{ status }}</a>
                             {% endif %}
