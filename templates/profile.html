@@ -81,7 +81,6 @@
                         </form>
                     </div>
                 </div>
-
             </div>
         </div>
 <script >
@@ -101,9 +100,36 @@
 
 
 </script>
+    <script type="text/javascript">
+        function doesFileExist(urlToFile) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('HEAD', urlToFile, false);
+            xhr.send();
+            //alert(xhr.status);
+            if (xhr.status === 404) {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+    </script>
     <script>
-        var x="/static/uploads/"+document.getElementById("usn").innerHTML;
-        x="\<img src="+"\""+x+".jpeg\""+ " width=\"150\""+"\>";
-        document.getElementById("lol").innerHTML=x;
+        var result = doesFileExist("/static/uploads/"+document.getElementById("usn").innerText+".jpeg");
+        //alert(result);
+        if(result===true){
+            var x="/static/uploads/"+document.getElementById("usn").innerHTML;
+            x="\<img src="+"\""+x+".jpeg\""+ " height=\"150\" width=\"150\""+"\>";
+            //alert(x);
+            document.getElementById("lol").innerHTML=x;
+        }
+        else
+            {
+            var x="/static/uploads/"+"coder_avatar";
+            x="\<img src="+"\""+x+".jpeg\""+ " height=\"150\" width=\"150\""+"\>";
+            //alert(x);
+            document.getElementById("lol").innerHTML=x;
+        }
     </script>
 {% endblock content2 %}
