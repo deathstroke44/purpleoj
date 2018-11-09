@@ -1,10 +1,14 @@
 from app import *
+import datetime
 from Submission import *
+from bson import ObjectId
 import app
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
 import ClassesList
 A_CAT=set(['cpp'])
 SC=set(['jpeg'])
+
+
 def givenode(node_name):
     node_name = node_name.replace('\n','')
     print(repr(node_name),end=' ')
@@ -189,7 +193,7 @@ def problem_status(submission,contest_id, problem_id, user_id):
 
 
 def get_my_submissions(submission_db,problems_db,contests_db,contestID,problemID,userID):
-    my_submissions = submission_db.find({'Contest Id':contestID,"Problem Id":problemID,'User Id':userID})
+    my_submissions = submission_db.find({'Contest Id':contestID,"Problem Id":problemID,'User Id':userID}).sort([('Submission Time', -1)])
     submission_list = []
     for i in my_submissions:
         submission_list.append(ContestSubmission(i))
@@ -197,10 +201,82 @@ def get_my_submissions(submission_db,problems_db,contests_db,contestID,problemID
     return name , submission_list
 
 
+def get_contest_submissions(submission_db,problems_db,contests_db,contestID):
+    submissions = submission_db.find({'Contest Id':contestID}).limit(50)
+    # limit(50).sort([('Submission Time', -1)])
+    submission_list = []
+    for i in submissions:
+        submission_list.append(Submission(i,problems_db))
+    submission_list.sort(key=lambda d: datetime.datetime.strptime(d.submissionTime, '%Y-%m-%d %H:%M'), reverse=True)
+    # print(submission_list)
+    cursor = contests_db.find({"_id": ObjectId(contestID)})[0]
+    name = cursor.get('Contest Title') + " Submissions"
+    return name, submission_list
+
+
 def get_clarifications(cntst_id):
-    clarification_db = mongo.db.clarification
-    clarifications = clarification_db.find_one({'Contest Id':cntst_id})
-    pass
+    form = IssueForm()
+    return "a"
+
+    # problemsdb = mongo.db.problems
+    # contestsdb = mongo.db.contests
+    # clarificationsdb = mongo.db.clarifications
+    #
+    # existing_posts = problemsdb.find({}).sort('name')
+    # i = 0;
+    # list = []
+    # problem_id_array = []
+    # pair = (i, 'None')
+    # list.append(pair)
+    # problem_id_array.append('Contest')
+    # contest_now = contestsdb.find({"_id": ObjectId(cntst_id)})[0]
+    # problems = contest_now.get('Problem ID')
+    # for p in problems:
+    #     i = i + 1
+    #     for x,y in p.items():
+    #         prob = problemsdb.find_one({'myid': y})
+    #         pair1 = (i, prob['name'])
+    #         list.append(pair1)
+    #         problem_id_array.append(y)
+    #
+    # form.problemName.choices = list
+    #
+    # if form.validate_on_submit():
+    #     title = form.title.data
+    #     problemName = form.problemName.data
+    #     problemID = problem_id_array[problemName]
+    #     print(problemID)
+    #     text = form.text.data
+    #     user_name = session['username']
+    #     issueID = uuid.uuid1().__str__()
+    #
+    #     clarificationsdb.insert({'IssueID': issueID,
+    #                              'UserName': user_name,
+    #                              'Title': title,
+    #                              'ProblemID': problemID,
+    #                              'text': text,
+    #                              'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
+    #                   'commentNumber': 0})
+    #     # return redirect(url_for('issues'))
+    #
+    # issue_array = []
+    # i = mongo.db.Issues
+    # issuelist = i.find({}).sort('date', -1)
+    # for issue in issuelist:
+    #     if issue['ProblemID'] != 'CodeFlask':
+    #         pb = problemsdb.find_one({'myid': issue['ProblemID']})
+    #         issue_array.append(
+    #             Issue(issue['IssueID'], issue['UserName'], issue['Title'], issue['ProblemID'], pb['name'],
+    #                   issue['text'], issue['date'] , issue['commentNumber']))
+    #     else:
+    #         issue_array.append(
+    #             Issue(issue['IssueID'], issue['UserName'], issue['Title'], issue['ProblemID'], 'CodeFlask',
+    #                   issue['text'], issue['date'],issue['commentNumber']))
+    #
+    # return form,issue_array
+
+
+
 
 def UpcomingContests():
     contest_db = app.mongo.db.contests
