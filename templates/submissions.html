@@ -13,6 +13,12 @@
    {
    background-color: #1b6d85;
    }
+   a{
+   color:black;
+   }
+   a:hover{
+   text-decoration:none;
+   }
 </style>
 <main role="main">
     <div class="row offset-1 col-md-11">
@@ -33,7 +39,7 @@
                 <th>Submission Time</th>
 
             </tr>
-    </thead>
+        </thead>
 
 
     <tbody>
@@ -87,49 +93,49 @@
 <script src="/static/For%20Table/dataTables.bootstrap4.min.js"></script>
 <script>
 
-    {#$('#mydata').dataTable()#}
+    $('#mydata').dataTable()
 
        highlight("subs");
 
-    function sortTable() {
-        var table, rows, switching, i, x, y, shouldSwitch;
-        table = document.getElementById("mydata");
-        switching = true;
-        /*Make a loop that will continue until
-        no switching has been done:*/
-        while (switching) {
-            //start by saying: no switching is done:
-            switching = false;
-            rows = table.rows;
-            /*Loop through all table rows (except the
-            first, which contains table headers):*/
-            for (i = 1; i < (rows.length - 1); i++) {
-                //start by saying there should be no switching:
-                shouldSwitch = false;
-                /*Get the two elements you want to compare,
-                one from current row and one from the next:*/
-                x = rows[i].getElementsByTagName("TD")[6];
-                y = rows[i + 1].getElementsByTagName("TD")[6];
-                window.alert(Number(x.innerHTML)
-                "<"
-                Number(y.innerHTML);
+    <!--function sortTable() {-->
+        <!--var table, rows, switching, i, x, y, shouldSwitch;-->
+        <!--table = document.getElementById("mydata");-->
+        <!--switching = true;-->
+        <!--/*Make a loop that will continue until-->
+        <!--no switching has been done:*/-->
+        <!--while (switching) {-->
+            <!--//start by saying: no switching is done:-->
+            <!--switching = false;-->
+            <!--rows = table.rows;-->
+            <!--/*Loop through all table rows (except the-->
+            <!--first, which contains table headers):*/-->
+            <!--for (i = 1; i < (rows.length - 1); i++) {-->
+                <!--//start by saying there should be no switching:-->
+                <!--shouldSwitch = false;-->
+                <!--/*Get the two elements you want to compare,-->
+                <!--one from current row and one from the next:*/-->
+                <!--x = rows[i].getElementsByTagName("TD")[6];-->
+                <!--y = rows[i + 1].getElementsByTagName("TD")[6];-->
+                <!--window.alert(Number(x.innerHTML)-->
+                <!--"<"-->
+                <!--Number(y.innerHTML);-->
 
-                //check if the two rows should switch place:
-                if (Number(x.innerHTML) < Number(y.innerHTML)) {
-                    //if so, mark as a switch and break the loop:
-                    shouldSwitch = true;
-                    break;
-                }
+                <!--//check if the two rows should switch place:-->
+                <!--if (Number(x.innerHTML) < Number(y.innerHTML)) {-->
+                    <!--//if so, mark as a switch and break the loop:-->
+                    <!--shouldSwitch = true;-->
+                    <!--break;-->
+                <!--}-->
 
-            }
-            if (shouldSwitch) {
-                /*If a switch has been marked, make the switch
-                and mark that a switch has been done:*/
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-            }
-        }
-    }
+            <!--}-->
+            <!--if (shouldSwitch) {-->
+                <!--/*If a switch has been marked, make the switch-->
+                <!--and mark that a switch has been done:*/-->
+                <!--rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);-->
+                <!--switching = true;-->
+            <!--}-->
+        <!--}-->
+    <!--}-->
 
  </script>
 </main>

@@ -37,7 +37,7 @@
 
         }
         .equal{
-            margin-top: 2px;
+            margin-top: 0px;
         }
         .times
         {
@@ -57,12 +57,12 @@
 
       <div class="row">
       <div class="col-md-1"></div>
-         <div class="col-md-7 shadow">
+         <div class="col-md-7">
              <a href="/post" class="float"><i class="fa fa-plus my-float"></i></a>
             {%  for post in posts %}
             <div class="card mt-3 shadow">
                <div class="card-header" id="block">
-                  <p id="hh"> <b> {{ post.title }} </b><sub>{{ post.user_ }}
+                   <p id="hh"> <b> {{ post.title }} </b><sub><a href="/profile/{{ post.user_ }}"> {{ post.user_ }}</a>
                       {{ post.dt }}</sub>
                   </p>
                </div>
@@ -74,26 +74,30 @@
             </div>
              {% endfor %}
          </div>
-        <div class="col-md-3 shadow equal">
+        <div class="col-md-3 equal">
             <br>
         <div class="shadow">
-            <h3 align="center" class="lead"><b>Upcoming Contests</b></h3>
-            <hr>
+            <div class="card-header" align="center"><h5>Upcoming Contests</h5></div>
         </div>
              {% for pc in PC %}
             <div class="card mt-3 shadow">
 
                 <div class="card-header">
-                    <a href="/contest/{{ pc.id }}/verify"><p class="lead" align="center">{{ pc.name }}</p></a>
+                    <a href="/contest/{{ pc.id }}/verify"><h5 align="center" style="color:black;">{{ pc.name }}</h5></a>
                 </div>
 
                 <div class="card-body">
                     <p class="status" align="center"></p>
                     <p align="center" class="lead"><font size="6px"><strong class="times">{{ pc.ed }}</strong></font></p>
-                    <P align="center"><font>Start Time:</font><strong class="sttimes">{{ pc.st }}</strong></P>
-
-                    <P align="center">End Time:<strong>{{ pc.ed }}</strong></P>
+                    <div align="center"><font>Start Time</font></div>
+                    <div align="center">
+                        <strong class="sttimes">{{ pc.st }}</strong>
+                    </div>
                     <br>
+                    <div align="center"><font>End Time</font></div>
+                    <div align="center">
+                        <strong class="sttimes">{{ pc.ed }}</strong>
+                    </div>
                 </div>
 
             </div>

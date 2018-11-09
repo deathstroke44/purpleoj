@@ -19,17 +19,15 @@ td a {
 td {
   padding:0;
 }
+td a:hover{
+    text-decoration:none;
+    }
    </style>
 </head>
 <body background="../background1.png">
    <main role="main" class="container">
       <div class="row mt-3">
-         <div class="col-md-10">
-            <h4 style="margin-top:25px;"><strong>Issues</strong></h4>
-         </div>
-         <div class="col-md-2">
-            <button class="btn btn-dark" onclick="document.getElementById('modal-wrapper').style.display='block'">
-                New Issue</button>
+         <div class="offset-10 col-md-2">
              <span class="glyphicon glyphicon-plus"></span>
             <div id="modal-wrapper" class="modal">
                <form class="modal-content animate" method="POST" action="">
@@ -87,14 +85,16 @@ td {
             </div>
          </div>
       </div>
-      <hr>
+       <br>
       <div class="row">
          <div class="col-md-1"></div>
-         <div class="col-md-8">
+         <div class="col-md-9">
           <table class="table table-striped table-bordered table-hover" id="mydata">
              <thead>
             <tr>
-                <th>Issues</th>
+                <th style="background-color:#98978b;"><h4 style="display:inline-block;;padding:5px">Issues</h4>
+                <button class="btn btn-dark" style="float:right;" onclick="document.getElementById('modal-wrapper').style.display='block'">
+                New Issue</button></th>
             </tr>
              </thead>
              <tbody>

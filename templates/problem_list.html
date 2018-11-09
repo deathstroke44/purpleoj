@@ -48,10 +48,13 @@
         {
             background-color: #bee5eb;
         }
+        td a{
+        color:black;
+        }
     </style>
  <body>
 
-        <div class="shadow container mt">
+        <div class="shadow container mt" style="margin-top:40px;">
         <br>
         
         <section>
@@ -88,7 +91,7 @@
                                 </a>
                             </td>
                             <td>
-                                {{ problem.setter }}
+                                <a href="/profile/{{ problem.setter }}">{{ problem.setter }}</a>
                             </td>
                             <td>
                                 {{ problem.stylee }}
