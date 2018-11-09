@@ -2,22 +2,18 @@
 {% endblock head %}
 {%  extends 'index.html' %}
 {% block content %}
-    <body>
-    <br>
-    <div class="card-header"><strong>Input Graph</strong></div>
-    <hr>
-    <br>
     <main role="main" class="container">
     {%  from  "includes/_formhelpers.html" import render_field %}
         <div class="row mt-5">
             <div class="col-md-2"></div>
-        <div class="col-md-8 shadow">
-            <form method="post" action="">
+        <div class="col-md-8 shadow" style="padding:10px;">
+            <div class="card-header" style="margin:-10px;background-color:#98978b;"><strong>Input Graph</strong></div>
+            <form method="post" action="" style="padding:25px;">
                 <select name="choice" id="choice">
                     <option value="Directed">Directed Graph</option>
                     <option value="Undirected">Undirected Graph</option>
                 </select>
-
+                <br><br>
                 <div class="form-group">
                     {{ render_field(form.nodes_cnt, class_="form-control", id="he")}}
                 </div>
@@ -30,12 +26,15 @@
                 <div class="form-group">
                     {{ render_field(form.ed_desc, class_="form-control", id="he")}}
                 </div>
-                <p id="redd"><input type="submit" class="btn btn-primary" value="Create Graph"></p>
+                <p id="redd"><input type="submit" class="btn btn-dark" value="Create Graph"></p>
             </form>
+        </div>
         </div>
     </main>
      <script>
        highlight("graph");
    </script>
-    </body>
+    <script>
+                highlight("Problem Set");
+            </script>
 {%  endblock content %}

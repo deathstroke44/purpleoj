@@ -7,12 +7,11 @@
    {
    clear: both;
    }
-   #bs
+   #bss
    {
    margin-top: 2px;
    width: 100%;
    align-content: center;
-   background-color: blue;
    }
 </style>
 <main role="main" style="margin-top:20px;">
@@ -22,28 +21,24 @@
             <iframe src="{{ pdf_src }}" type="application/pdf"></iframe>
          </div>
       </div>
-      <div class="col-md-3">
-         <div id="first" class="jumbotron" >
-            <p>
+      <div class="col-md-3" >
+         <div id="first" class="jumbotron shadow" style="margin:15px;">
+            <p align="center" >
                <b>{{ pbds.pn }}</b>
             </p>
             <hr>
-            <p>
+            <p align="center" >
                {{ pbds.tl }}
             </p>
             <hr>
-            <p>
+            <p align="center" >
                {{ pbds.ml }}
             </p>
             <hr>
-            <P>
+            <P align="center" >
                Accepted Languages:C, C++ , Python, Java
             </P>
-            <a style="display: none" class="btn btn-default pull-right" id="bs" href="/editor/{{ cid }}/{{ pbds.id }}">
-            <font color="white">
-            Submit
-            </font>
-            </a>
+            <a class="btn btn-dark pull-right" id="bss" href="/editor/{{ cid }}/{{ pbds.id }}">Submit</a>
             <p id="tt">{{ et }}</p>
             <script type="text/javascript">
                document.getElementById('tt').style.display='none';
@@ -70,8 +65,12 @@
                }, 1000);
 
             </script>
+
          </div>
       </div>
    </div>
 </main>
+    <script>
+                highlight("Problem Set");
+            </script>
 {% endblock content %}

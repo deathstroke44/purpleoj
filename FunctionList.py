@@ -172,3 +172,60 @@ def valid2(strr, request):
         print("Something")
         return True
     return False
+
+def problem_status(submission,contest_id, problem_id, user_id):
+    any_submission=submission.find_one({'Contest Id':contest_id,"Problem Id":problem_id,'User Id':user_id})
+    # print(any_submission)
+    ac_submission=submission.find_one({'Contest Id':contest_id,"Problem Id":problem_id,'User Id':user_id,'Status': "AC"})
+    # print(ac_submission)
+    if any_submission == None:
+        return "none"
+    elif ac_submission == None:
+        return "null"
+    else:
+        return "AC"
+
+
+def get_my_submissions(submission_db,problems_db,contests_db,contestID,problemID,userID):
+    my_submissions = submission_db.find({'Contest Id':contestID,"Problem Id":problemID,'User Id':userID})
+    submission_list = []
+    for i in my_submissions:
+        submission_list.append(ContestSubmission(i))
+    name = problems_db.find({"myid":problemID})[0].get('name') + " Submissions"
+    return name , submission_list
+
+
+def get_clarifications(cntst_id):
+    clarification_db = mongo.db.clarification
+    clarifications = clarification_db.find_one({'Contest Id':cntst_id})
+    pass
+
+def UpcomingContests():
+    contest_db = mongo.db.contests
+    contest_cursor = contest_db.find({}).sort([['Start Date', 1], ['Start Time', 1]])
+    pclist = []
+    for pc in contest_cursor:
+        starting_datetime = pc['Start Date'] + "T" + pc['Start Time'] + ":00+06:00"
+        ending_date = pc['Start Date'] + "T" + pc['End Time'] + ":00+06:00"
+        id = pc['_id']
+        name = pc['Contest Title']
+        dt = datetime.datetime.now()
+        pcet = pc['End Time']
+        rep = ''
+        flag = 0
+        for i in range(0, len(pcet)):
+            if flag == 1:
+                rep += pcet[i]
+            if pcet[i] == '.':
+                flag = 1
+        pcet.replace(rep, '')
+        ds = datetime.datetime.strptime(pc['Start Date'] + ' ' + pcet, "%Y-%m-%d %H:%M")
+        xx = dt.strftime("%Y-%m-%d %H:%M")
+
+        cd = datetime.datetime.strptime(xx, "%Y-%m-%d %H:%M")
+        if ds >= dt:
+            pclist.append(tripled(starting_datetime, ending_date, id, name))
+
+    return pclist
+
+

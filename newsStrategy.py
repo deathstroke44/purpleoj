@@ -66,8 +66,11 @@ class LoadCodeForceStrategy(NewsStrategyAbstract):
 class LoadHackerRankStrategy(NewsStrategyAbstract):
     def Load(self, soup):
         title = soup.find('h3')
+        link = title.find("a")['href']
         x = str(title)
         x1 = str(title).find("</h3>")
+
+
 
         title2 = x[:x1] + '<sub>  HackerRank</sub>' + x[x1:]
         uid1 = uuid.uuid1()
@@ -77,6 +80,7 @@ class LoadHackerRankStrategy(NewsStrategyAbstract):
         f.close()
 
         content = soup.find('p')
+        content = str(content)+"<span class=\"read-more\"><a href=\""+link+"\">Read More »</a></span>"
         uid2 = uuid.uuid1()
         file_name_content = 'static/news/' + str(uid2) + '.html'
         f = open(file_name_content, 'w', encoding='utf8')
@@ -114,6 +118,7 @@ class LoadCrazyProgrammerStrategy(NewsStrategyAbstract):
 class LoadTopCoderStrategy(NewsStrategyAbstract):
     def Load(self, soup):
         title = soup.find('h3')
+        link = title.find("a")['href']
         content = soup.find('div')
 
         x = str(title)
@@ -127,6 +132,7 @@ class LoadTopCoderStrategy(NewsStrategyAbstract):
                 .replace('h3', 'h4'))
         f.close()
 
+        content = str(content) + "<span class=\"read-more\"><a href=\"" + link + "\">Read More »</a></span>"
         uid2 = uuid.uuid1()
         file_name_content = 'static/news/' + str(uid2) + '.html'
         f = open(file_name_content, 'a', encoding='utf8')

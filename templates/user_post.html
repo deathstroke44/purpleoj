@@ -6,7 +6,7 @@
     <script src="/static/w3.js"></script>
 </head>
 
-<div class="card">
+<div class="card shadow">
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
@@ -14,10 +14,10 @@
                         <hr>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row ">
                     <div class="col-md-12">
                             {% for post in post_array %}
-                        <div class="card mt-2">
+                        <div class="card mt-2 shadow">
                               <div class="card-header">{{post.title}}</div>
                             <div class="card-body" w3-include-html={{post.text}}>
                                   <script>
@@ -33,4 +33,7 @@
 <script>
       w3.includeHTML();
    </script>
+    <script>
+                highlight("user");
+            </script>
 {%endblock content2%}

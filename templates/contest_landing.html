@@ -92,8 +92,8 @@
       <p id="timer" >{{ st }}</p>
       <p style="display: none" id="url">{{ cid }}</p>
       <script>
-         var ed_string = document.getElementById("timer").innerText;
-         var contestID = document.getElementById("url").innerText;
+         var ed_string = ("{{ st }}");
+         var contestID = ("{{ cid }}");
          var url= "http://127.0.0.1:5000/currentcontest/"+contestID;
          var countDownDate = new Date(ed_string).getTime();
          var subject=new Subject();
@@ -127,4 +127,7 @@
       </script>
    </h2>
 </center>
+     <script>
+                highlight("contests");
+            </script>
 {% endblock content %}

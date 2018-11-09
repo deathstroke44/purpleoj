@@ -233,7 +233,7 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print('st')
+    print("hello world")
     form = LoginForm(request.form)
     if request.method == 'POST':
         username = form.username.data
@@ -397,9 +397,8 @@ def singleIssue(id):
 @app.route('/news')
 def news():
     from newsScrapping import newsCall
-    from newsStrategy import article_array
-    article_array = []
-    return render_template('news.html',article_array=newsCall())
+    article_array,pclist=newsCall()
+    return render_template('news.html',article_array=article_array,PC=pclist)
 
 
 @app.route('/submission/<id>')
@@ -1143,7 +1142,7 @@ def ranklist(contestID):
         problem_cnt=cont['Problem Count']
         contestant_start_date=cont['Start Date']
         contestant_start_time=cont['Start Time']
-    print(problem_cnt)
+    # print(problem_cnt)
     total_problem=problem_subname_generator(problem_cnt,submission.find({'Contest Id':contestID}))
 
     for eachcontestant in contestant_wise_submission:
@@ -1167,7 +1166,7 @@ def problem_subname_generator(problem_cnt,all_submission):
                 cnt+=1
                 if each['Status']=='AC':
                     ac_cnt+=1
-            print(eachproblem)
+            # print(eachproblem)
         total_with_cnt.append({'problem_name':eachproblem, 'ac_cnt':ac_cnt,'total_cnt':cnt})
     return total_with_cnt
 
@@ -1302,7 +1301,7 @@ def verify_contest(id):
     if request.method == 'POST':
         password = request.form['password']
         # print(password)
-        print(c_pass)
+        # print(c_pass)
         if c_pass == password:
             url = "http://127.0.0.1:5000/currentcontest/" + id + "/landing"
             return redirect(url, 302)
@@ -1318,20 +1317,22 @@ def verify_contest(id):
 def load_contest(cc_id):
     contest_db = mongo.db.contests
     problem_db = mongo.db.problems
+    all_submission = mongo.db.submissions
     contest_now = contest_db.find({"_id": ObjectId(cc_id)})[0]
     starting_datetime = contest_now.get('Start Date') + "T" + contest_now.get('Start Time') + ":00+06:00"
     ending_datetime = contest_now.get('Start Date') + "T" + contest_now.get('End Time') + ":00+06:00"
     cc_name = contest_now.get('Contest Title')
-    print(starting_datetime)
-    print(ending_datetime)
+    # print(starting_datetime)
+    # print(ending_datetime)
     problems = contest_now.get('Problem ID')
     problem_list = []
     for p in problems:
         for x, y in p.items():
             i = problem_db.find_one({'myid': y})
-            print(i)
+            # print(i)
+            status = FunctionList.problem_status(all_submission,cc_id,i['myid'],session["username"])
             new_prob = problem(i['sub_task_count'], i['myid'], i['pnt1'], i['pnt2'], i['pnt3'], i['time_limit'],
-                               i['memory_limit'], i['stylee'], i['name'], i['acsub'], i['sub'], i['setter'])
+                               i['memory_limit'], i['stylee'], x + ".    " + i['name'], i['acsub'], status, i['setter'])
             problem_list.append(new_prob)
     if not ('username' in session):
         return redirect(url_for('login'))
@@ -1359,7 +1360,7 @@ def load_contest_problem(contest_id, id2):
 @app.route('/currentcontest/<contst_id>/landing')
 def check_contest(contst_id):
     current_time = datetime.datetime.now()
-    print(current_time)
+    # print(current_time)
     contest_db = mongo.db.contests
     contest_now = contest_db.find({"_id": ObjectId(contst_id)})[0]
     cc_name = contest_now.get('Contest Title')
@@ -1373,6 +1374,29 @@ def check_contest(contst_id):
         return redirect(url, 302)
     else:
         return render_template("contest_landing.html", cid=contst_id, st=starting_datetime, name=cc_name)
+
+
+# clarification
+@app.route('/currentcontest/<cntst_id>/clarifications')
+def clarifications(cntst_id):
+    plist = FunctionList.get_clarifications(cntst_id)
+    return render_template("clarifications.html",selectmenu=plist,clarifications=plist)
+
+
+# add new clarification
+@app.route('/currentcontest/<cntest_id>/clarifications/add', methods=['GET', 'POST'])
+def new_clarification(cntest_id):
+    pass
+
+
+# submissions of an individual problem in a contest
+@app.route('/submissions/<contestID>/<problemID>')
+def show_my_contest(contestID,problemID):
+    submission_db = mongo.db.submissions
+    problems_db = mongo.db.problems
+    contests_db = mongo.db.contests
+    name, submission_list = FunctionList.get_my_submissions(submission_db,problems_db,contests_db,contestID,problemID,session["username"])
+    return render_template("contest_submissions.html",title=name, submissions=submission_list)
 
 
 ######################################################################################################

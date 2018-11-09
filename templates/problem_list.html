@@ -48,19 +48,21 @@
         {
             background-color: #bee5eb;
         }
+        td a{
+        color:black;
+        }
     </style>
  <body>
 
-        <div class="shadow container mt">
+        <div class="shadow container mt" style="margin-top:40px;">
         <br>
-        
+
         <section>
 
             <div class="shadow">
                 <P id="fl"><strong><font size="5px">Problem Set</font></strong></P>
                 <a class="btn btn-dark pull-right shadow" id='bs' href="/upload"><font color="white">Upload Problem</font></a>
                 <a class="btn btn-dark pull-right shadow" id='bs' href="/graph"><font color="white">Graph Visualization</font></a>
-                <a class="btn btn-dark pull-right shadow" id='bs' href="/onlineide"><font color="white">Code & Compile</font></a>
             </div>
         </section>
             <br>
@@ -88,7 +90,7 @@
                                 </a>
                             </td>
                             <td>
-                                {{ problem.setter }}
+                                <a href="/profile/{{ problem.setter }}">{{ problem.setter }}</a>
                             </td>
                             <td>
                                 {{ problem.stylee }}
@@ -116,5 +118,8 @@
                 $('#mydata').dataTable()
             </script>
         </div>
+    <script>
+                highlight("Problem Set");
+            </script>
 
 {% endblock content %}

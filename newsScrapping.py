@@ -1,6 +1,8 @@
 
+import newsStrategy
 from newsStrategy import LoadCodeForceStrategy, article_array, LoadHackerRankStrategy, LoadCrazyProgrammerStrategy,LoadTopCoderStrategy,LoadAtCoderStrategy
 from newsAdapter import Socket,Client,Adapter
+from FunctionList import UpcomingContests
 
 codeforce = LoadCodeForceStrategy()
 hackerrank = LoadHackerRankStrategy()
@@ -44,13 +46,14 @@ class AtCoder(NewsMain):
 
 def newsCall():
     socket = Socket()
-    # socket.getData()
+    #socket.getData()
     adapter = Adapter(socket)
     client = Client(adapter)
 
     atcoderMain, atcoderPage2, CodeForceMain, CodeForcePage2, \
     HackerRankMain, TopCoderMain, thecrazyprogrammerMain = client.getSoup()
 
+    newsStrategy.article_array=[]
     index = 0
     for i in CodeForceMain:
         instance = CodeFroce()
@@ -77,9 +80,10 @@ def newsCall():
     #     instance = AtCoder()
     #     instance.Load(i)
 
-    # import random
-    # random.shuffle(article_array)
-    # print(article_array.__len__())
-    return article_array
+    import random
+    random.shuffle(newsStrategy.article_array)
+
+    pclist = UpcomingContests()
+    return newsStrategy.article_array,pclist
 
 

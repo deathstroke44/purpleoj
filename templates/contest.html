@@ -13,57 +13,73 @@
    .main-wrap{
    padding:3%;
    max-width:1200px;
-   display:block;
    margin: 10px auto;
+   margin-left:20px;
    }
    #links{
    color:black;
    }
    a:hover {
-    color: black;
-    text-decoration: none;
-}
-#div:hover{
-color:#98978b;
-}
+   color: black;
+   text-decoration: none;
+   }
+   #div:hover{
+   color:#98978b;
+   }
 </style>
 <main role="main" >
    <div class="row" style="margin:20px;">
-      <div class="col-md-12" style="display:inline-block;">
-         <div style="display:inline-block;" class="col-md-5" ><font size="6"> <b>{{ name }}</b></font></div>
-         <div style="display:inline-block;;" class="offset-1 col-md-1">
-            <button class="btn btn-dark" onclick="location.href='/currentcontest/{{ id }}/ranklist'">
-            Standings</button>
-         </div>
-         <div style="display:inline-block;;" class="col-md-4">
-            <button id="timer"  class="btn btn-dark">
-            {{edto}}</button>
-         </div>
-      </div>
+   <div class="col-md-12" style="display:inline-block;">
+   <div style="display:inline-block;" class="col-md-5" ><font size="6"> <b>{{ name }}</b></font></div>
+   </div>
    </div>
    <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-8">
          <div class="main-wrap">
-            <div class="col-md-8">
-                <div class="card mt-1" style="background-color:#98978b;padding:15px;">
+            <div class="card mt-1" style="background-color:#98978b;padding:15px;">
                <strong>Problems</strong>
             </div>
             {% for problems in obj %}
-            <a href="/currentcontest/{{ id }}/{{ problems.id }}" id="links">
-               <div class="card mt-1" id="div">
-                  <div class="card-header">
-                     {{ problems.name }}<i style="float:right" class="fa fa-check"></i>
-                  </div>
+            <div class="card mt-1" id="div">
+               <div class="card-header">
+                  <a href="/currentcontest/{{ id }}/{{ problems.id }}" id="links" style="color: #0c5460">
+                  <b>{{ problems.name }}</b>
+                  </a>
+                  {% if problems.sub == "AC" %}
+                  <a href="/submissions/{{ id }}/{{ problems.id }}" style="color: darkgreen">
+                  <i href="/submissions/{{ id }}/{{ problems.id }}" style="float:right" class="fa fa-check"></i>
+                  </a>
+                  {% elif problems.sub == "null" %}
+                  <a href="/submissions/{{ id }}/{{ problems.id }}" style="color: #2d2006">
+                  <i style="float:right" class="fa fa-times-circle"></i>
+                  </a>
+                  {% endif %}
                </div>
-            </a>
+            </div>
             {% endfor %}
+         </div>
+
+      </div>
+       <div class="col-md-3" style="margin-left:20px;margin-top:20px;">
+            <div align="center" class="jumbotron shadow" >
+                <div align="center" id="timer">
+                    <b></b>
+                </div>
+                <hr>
+                <button class="btn btn-dark " onclick="location.href='/currentcontest/{{ id }}/ranklist'" style="width:100%">
+                    Standings</button>
+                <hr>
+                <button class="btn btn-dark" onclick="location.href='/currentcontest/{{ id }}/ranklist'" style="width:100%">
+                    Standings</button>
+                <hr>
+                <button class="btn btn-dark" onclick="location.href='/currentcontest/{{ id }}/ranklist'" style="width:100%">
+                    Standings</button>
             </div>
          </div>
-      </div>
    </div>
 </main>
 <script>
-   var ed_string = document.getElementById("timer").innerText;
+   var ed_string = ("{{edto}}");
    var countDownDate = new Date(ed_string).getTime();
    var x = setInterval(function() {
        var now = new Date().getTime();
@@ -76,17 +92,20 @@ color:#98978b;
 
 
        if(days>0){
-           document.getElementById("timer").innerHTML = days + " Day " + hours + " : " + minutes + " : " + seconds;
+           document.getElementById("timer").innerHTML = "<h3>"+days + " Day " + hours + " : " + minutes + " : " + seconds+"</h3>";
        }
        else if(days==0){
-           document.getElementById("timer").innerHTML = hours + ":" + minutes + ":" + seconds;
+           document.getElementById("timer").innerHTML = "<h3>"+hours + ":" + minutes + ":" + seconds+"</h3>";
        }
 
        else if (distance < 0) {
            clearInterval(x);
-           document.getElementById("timer").innerHTML = "EXPIRED";
+           document.getElementById("timer").innerHTML = "<h3>EXPIRED</h3>";
        }
    }, 1000);
 
 </script>
+     <script>
+                highlight("contests");
+            </script>
 {% endblock content %}

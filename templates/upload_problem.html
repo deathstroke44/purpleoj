@@ -7,9 +7,6 @@ h1 {
 	color: blue;
 }
 
-p {
-	color: red;
-}
 
 .dom {
 	padding-top: 40px
@@ -29,15 +26,10 @@ p {
 #first {
 	width: 90%;
 	margin: 2%;
-	float: left;
-	border: black;
 }
 
 #second {
-	width: 45%;
-	margin: 1%;
-	float: right;
-	border: #0b2e13;
+	margin: 2%;
 }
 
 #third {
@@ -67,60 +59,63 @@ p {
 
 </style>
 <body>
-    <main role="main" class="container shadow">
+    <main role="main" class="container" style="margin-top:25px;">
         <div class="row">
             <div class="col-md-0">
             </div>
-            <div class="col-md-12">
-                <h4 class="dom">Upload Problem</h4>
-                <hr>
+            <div class="offset-1 col-md-10 shadow" style="padding:10px;">
+                <div class="card-header" style="margin:-10px;background-color:#98978b;"><strong>Upload Problem</strong></div>
                 <form method=post enctype=multipart/form-data>
                     {%  from  "includes/_formhelpers.html" import render_field %}
                     <div class="form-group">
-
                         <div id="first">
-                            <p>Number Of Subtasks</p>
+                            <span>Number Of Subtasks</span>
                             <select name="cnt" id="cnt">
                                 <option value=3>3</option>
                                 <option value=2>2</option>
                                 <option value=1>1</option>
                             </select>
                         </div>
+                        <hr>
                         <div id="first">
                             {{ render_field(nameform.name,class_="form-control")}}
                         </div>
+                        <hr>
                         <div id="first">
-                            <p>Problem description(pdf)</p>
+                            <span>Problem description(pdf) : </span>
                             <input type=file name=file>
-                            <p>Problem Solution(.cpp)</p>
+                            <br><br>
+                            <span style="margin-top:5px;">Problem Solution(.cpp)    : </span>
                             <input type="file" name="checker">
                         </div>
+                        <hr>
                     </div>
-                    <hr>
                     <div class="form-group">
                         <div id="first">
                             {{ render_field(nameform.category,class_="form-control")}}
                         </div>
+                        <hr>
                         <div id="first">
                             {{ render_field(nameform.memory_limit,class_="form-control")}}
                         </div>
+                        <hr>
                         <div id="first">
                             {{ render_field(nameform.time_limit,class_="form-control")}}
                         </div>
-
+                        <hr>
                     </div>
                     <div class="form-group" id="division1">
                         <div id="first">
                             {{ render_field(nameform.point1,class_="form-control")}}
                         </div>
                         <div id="second">
-                            <p>Input file for subtask 1(txt)</p>
+                            <span>Input file for subtask 1(txt) : </span>
                             <input type=file name=ifile1>
-                        </div>
-                        <div id="second">
-                            <p>Output file for subtask 1(txt)</p>
+                            <br><br>
+                            <span>Output file for subtask 1(txt) : </span>
                             <input type=file name=ofile1>
                         </div>
+                        <hr>
                     </div>
 
                     <div class="form-group" id="division2">
@@ -128,13 +123,13 @@ p {
                             {{ render_field(nameform.point2,class_="form-control")}}
                         </div>
                         <div id="second">
-                            <p>Input file for subtask 2(txt)</p>
+                            <span>Input file for subtask 2(txt) : </span>
                             <input type=file name=ifile2>
-                        </div>
-                        <div id="second">
-                            <p>Output file for subtask 2(txt)</p>
+                            <br><br>
+                            <span>Output file for subtask 2(txt): </span>
                             <input type=file name=ofile2>
                         </div>
+                        <hr>
                     </div>
 
                     <div class="form-group" id="division3">
@@ -142,15 +137,15 @@ p {
                             {{ render_field(nameform.point3,class_="form-control")}}
                         </div>
                         <div id="second">
-                            <p>Input file for subtask 3(txt)</p>
+                            <span>Input file for subtask 3(txt) : </span>
                             <input type=file name="ifile3">
-                        </div>
-                        <div id="second">
-                            <p>Output file for subtask 3(txt)</p>
+                            <br><br>
+                            <span>Output file for subtask 3(txt) : </span>
                             <input type=file name="ofile3">
                         </div>
+                        <hr>
                     </div>
-                    <input type=submit id="container" value=Upload>
+                    <input class="btn btn-dark" type=submit id="container" value="Upload Problem"  align="center">
                 </form>
             </div>
         </div>
@@ -369,7 +364,9 @@ p {
     </script>
 
 
-
+<script>
+                highlight("Problem Set");
+            </script>
 
 
 

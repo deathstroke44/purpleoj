@@ -1,0 +1,84 @@
+{% block head %}
+    <title>
+    {{ title }}
+    </title>
+{% endblock head %}
+{% extends 'index.html' %}
+{% block content %}
+<head></head>
+<style>
+   .my
+   {
+   padding-top: 5%;
+   }
+   #lol
+   {
+   background-color: #1b6d85;
+   }
+   a{
+   color:black;
+   }
+   a:hover{
+   text-decoration:none;
+   }
+</style>
+<main role="main">
+   <div class="row offset-1 col-md-11">
+      <p><font size="12"> <b><i>{{ title }}</i></b></font></p>
+   </div>
+   <hr>
+   <div class="my row">
+      <div class="offset-1 col-md11">
+         <table id="mydata" class="table table-striped table-bordered table-hover">
+            <thead>
+               <tr>
+                  <th>Submission Id</th>
+                  <th>Language</th>
+                  <th>Verdict</th>
+                  <th>Execution Time</th>
+                  <th>Submission Time</th>
+               </tr>
+            </thead>
+            <tbody>
+               {% for submission in submissions %}
+               <tr>
+                  <td>
+                     <a href="/submissions/{{submission.submissionId}}">
+                     {{ submission.submissionId }}
+                     </a>
+                  </td>
+                  <td>
+                     {{ submission.language }}
+                  </td>
+                  <td>
+                     {% if submission.verdict=="AC" %}
+                     <font color="green">{{ submission.verdict }}</font>
+                     {% elif submission.verdict=="WA" %}
+                     <font color="red">{{ submission.verdict }}</font>
+                     {% elif submission.verdict=="RTE" %}
+                     <font color="#8b4513">{{ submission.verdict }}</font>
+                     {% elif submission.verdict=="TLE" %}
+                     <font color="blue">{{ submission.verdict }}</font>
+                     {% endif %}
+                  </td>
+                  <td>
+                     {{ submission.executionTime }}
+                  </td>
+                  <td>
+                     {{ submission.submissionTime }}
+                  </td>
+               </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+      </div>
+   </div>
+   <script src="/static/For%20Table/jquery.js"></script>
+   <script src="/static/For%20Table/jquery.dataTables.min.js"></script>
+   <script src="/static/For%20Table/dataTables.bootstrap4.min.js"></script>
+</main>
+     <script>
+                highlight("contests");
+            </script>
+{% endblock content %}
+
