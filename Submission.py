@@ -12,3 +12,12 @@ class Submission():
         self.executionTime = Dictionary.get("Execution Time")
         self.submissionTime = Dictionary.get("Submission Time")
         self.Code=Dictionary.get("Code")
+
+
+class ContestSubmission():
+    def __init__(self,DictionaryCursor):
+        self.submissionId = DictionaryCursor.get("Submission Id")
+        self.language = DictionaryCursor.get("Language")
+        self.verdict = DictionaryCursor.get("Status")
+        self.executionTime = DictionaryCursor.get("Execution Time")
+        self.submissionTime = DictionaryCursor.get("Submission Time")
