@@ -200,4 +200,32 @@ def get_clarifications(cntst_id):
     clarifications = clarification_db.find_one({'Contest Id':cntst_id})
     pass
 
+def UpcomingContests():
+    contest_db = mongo.db.contests
+    contest_cursor = contest_db.find({}).sort([['Start Date', 1], ['Start Time', 1]])
+    pclist = []
+    for pc in contest_cursor:
+        starting_datetime = pc['Start Date'] + "T" + pc['Start Time'] + ":00+06:00"
+        ending_date = pc['Start Date'] + "T" + pc['End Time'] + ":00+06:00"
+        id = pc['_id']
+        name = pc['Contest Title']
+        dt = datetime.datetime.now()
+        pcet = pc['End Time']
+        rep = ''
+        flag = 0
+        for i in range(0, len(pcet)):
+            if flag == 1:
+                rep += pcet[i]
+            if pcet[i] == '.':
+                flag = 1
+        pcet.replace(rep, '')
+        ds = datetime.datetime.strptime(pc['Start Date'] + ' ' + pcet, "%Y-%m-%d %H:%M")
+        xx = dt.strftime("%Y-%m-%d %H:%M")
+
+        cd = datetime.datetime.strptime(xx, "%Y-%m-%d %H:%M")
+        if ds >= dt:
+            pclist.append(tripled(starting_datetime, ending_date, id, name))
+
+    return pclist
+
 

@@ -397,9 +397,8 @@ def singleIssue(id):
 @app.route('/news')
 def news():
     from newsScrapping import newsCall
-    from newsStrategy import article_array
-    article_array = []
-    return render_template('news.html',article_array=newsCall())
+    article_array,pclist=newsCall()
+    return render_template('news.html',article_array=article_array,PC=pclist)
 
 
 @app.route('/submission/<id>')
