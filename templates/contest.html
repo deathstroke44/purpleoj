@@ -49,13 +49,22 @@ color:#98978b;
                <strong>Problems</strong>
             </div>
             {% for problems in obj %}
-            <a href="/currentcontest/{{ id }}/{{ problems.id }}" id="links">
                <div class="card mt-1" id="div">
                   <div class="card-header">
-                     {{ problems.name }}<i style="float:right" class="fa fa-check"></i>
+                     <a href="/currentcontest/{{ id }}/{{ problems.id }}" id="links" style="color: #0c5460">
+                         <b>{{ problems.name }}</b>
+                     </a>
+                      {% if problems.sub == "AC" %}
+                          <a href="/submissions/{{ id }}/{{ problems.id }}" style="color: darkgreen">
+                            <i href="/submissions/{{ id }}/{{ problems.id }}" style="float:right" class="fa fa-check"></i>
+                          </a>
+                      {% elif problems.sub == "null" %}
+                          <a href="/submissions/{{ id }}/{{ problems.id }}" style="color: #2d2006">
+                            <i style="float:right" class="fa fa-times-circle"></i>
+                          </a>
+                      {% endif %}
                   </div>
                </div>
-            </a>
             {% endfor %}
             </div>
          </div>

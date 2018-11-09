@@ -172,3 +172,32 @@ def valid2(strr, request):
         print("Something")
         return True
     return False
+
+def problem_status(submission,contest_id, problem_id, user_id):
+    any_submission=submission.find_one({'Contest Id':contest_id,"Problem Id":problem_id,'User Id':user_id})
+    # print(any_submission)
+    ac_submission=submission.find_one({'Contest Id':contest_id,"Problem Id":problem_id,'User Id':user_id,'Status': "AC"})
+    # print(ac_submission)
+    if any_submission == None:
+        return "none"
+    elif ac_submission == None:
+        return "null"
+    else:
+        return "AC"
+
+
+def get_my_submissions(submission_db,problems_db,contests_db,contestID,problemID,userID):
+    my_submissions = submission_db.find({'Contest Id':contestID,"Problem Id":problemID,'User Id':userID})
+    submission_list = []
+    for i in my_submissions:
+        submission_list.append(ContestSubmission(i))
+    name = problems_db.find({"myid":problemID})[0].get('name') + " Submissions"
+    return name , submission_list
+
+
+def get_clarifications(cntst_id):
+    clarification_db = mongo.db.clarification
+    clarifications = clarification_db.find_one({'Contest Id':cntst_id})
+    pass
+
+
