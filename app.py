@@ -37,6 +37,9 @@ mongo = PyMongo(app)
 app.secret_key = "super secret key"
 sess = Session()
 
+PDF=set(['pdf'])
+TXT=set(['txt'])
+
 def upload_picture(request,user):
     print('reach')
     if valid2(strr='userpic',request=request):
@@ -46,6 +49,38 @@ def upload_picture(request,user):
         filename = user + '.jpeg'  # secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
+def allowed_file_pdf(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in PDF
+
+def allowed_file_txt(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in TXT
+
+
+def pdfvalid(strr, request):
+    if strr not in request.files:
+        return False
+    filee = request.files[strr]
+    if filee.filename == '':
+        return False
+    if filee and allowed_file_pdf(filee.filename):
+        print("Something")
+        return True
+    return False
+
+
+def txtvalid(strr, request):
+    if strr not in request.files:
+        return False
+    filee = request.files[strr]
+    if filee.filename == '':
+        return False
+    if filee and allowed_file_txt(filee.filename):
+        print("Something")
+        return True
+    return False
+
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -53,20 +88,20 @@ def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
         sbcnt = int(request.form.get('cnt'))
-        if not valid(strr='file', request=request):
-            return redirect(request.url)
+        if not pdfvalid(strr='file', request=request):
+            return render_template('upload_problem.html', error='WA', nameform=nameform)
         if sbcnt >= 1:
-            if not valid(strr='ifile1', request=request) or not valid(strr='ofile1',
+            if not txtvalid(strr='ifile1', request=request) or not txtvalid(strr='ofile1',
                                                                       request=request) or nameform.point1.data == None:
-                return redirect(request.url)
+                return render_template('upload_problem.html',error='WA',nameform=nameform)
         if sbcnt >= 2:
-            if not valid(strr='ifile2', request=request) or not valid(strr='ofile2',
+            if not txtvalid(strr='ifile2', request=request) or not txtvalid(strr='ofile2',
                                                                       request=request) or nameform.point2.data == None:
-                return redirect(request.url)
+                return render_template('upload_problem.html',error='WA',nameform=nameform)
         if sbcnt >= 3:
-            if not valid(strr='ifile3', request=request) or not valid(strr='ofile3',
+            if not txtvalid(strr='ifile3', request=request) or not txtvalid(strr='ofile3',
                                                                       request=request) or nameform.point3.data == None:
-                return redirect(request.url)
+                return render_template('upload_problem.html', error='WA',nameform=nameform)
         checkerd =False
         if valid1(strr='checker',request=request):
             checkerd=True
@@ -115,7 +150,7 @@ def upload_file():
             'setter': session['username'],
             'checker':checkerd
         })
-
+        return render_template('upload_problem.html',error='AC',nameform=nameform)
         return redirect(url_for('upload_file', filename=filename))
 
     if not ('username' in session):

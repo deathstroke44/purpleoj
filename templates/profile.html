@@ -119,23 +119,62 @@
         }
     </script>
     <script>
-        var x="/static/uploads/"+document.getElementById("usn").innerHTML;
-        x="\<img src="+"\""+x+".jpeg\""+ " width=\"150\""+"\>";
-        document.getElementById("lol").innerHTML=x;
+        class Image
+        {
+            constructor()
+            {
+
+            }
+            display()
+            {
+                throw new Error("Needs to implements in subclass");
+            }
+        }
+        class realImage extends Image
+        {
+            constructor(filename)
+            {
+                super();
+                this.real=filename;
+            }
+            display()
+            {
+                var x="/static/uploads/"+this.real;
+                x="\<img src="+"\""+x+".jpeg\""+ " height=\"150\" width=\"150\""+"\>";
+                document.getElementById("lol").innerHTML=x;
+            }
+        }
+        class proxyImage extends Image
+        {
+            constructor(proxyfilename)
+            {
+                super();
+                this.proxy=proxyfilename;
+                this.real=null;
+            }
+            setReal(real)
+            {
+                this.real=real;
+            }
+            display()
+            {
+                if(this.real==null)
+                {
+                    var x="/static/uploads/"+this.proxy;
+                    x="\<img src="+"\""+x+".jpeg\""+ " height=\"150\" width=\"150\""+"\>";
+                    document.getElementById("lol").innerHTML=x;
+                }
+                else this.real.display();
+            }
+        }
+        let aa=new proxyImage("coder_avatar");
         var result = doesFileExist("/static/uploads/"+document.getElementById("usn").innerText+".jpeg");
         //alert(result);
         if(result===true){
-            var x="/static/uploads/"+document.getElementById("usn").innerHTML;
-            x="\<img src="+"\""+x+".jpeg\""+ " height=\"150\" width=\"150\""+"\>";
-            //alert(x);
-            document.getElementById("lol").innerHTML=x;
+            let bb=new realImage(document.getElementById("usn").innerHTML);
+            aa.setReal(bb);
         }
-        else
-            {
-            var x="/static/uploads/"+"coder_avatar";
-            x="\<img src="+"\""+x+".jpeg\""+ " height=\"150\" width=\"150\""+"\>";
-            //alert(x);
-            document.getElementById("lol").innerHTML=x;
-        }
+
+        aa.display();
     </script>
 {% endblock content2 %}
