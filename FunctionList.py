@@ -1,6 +1,8 @@
 from app import *
 from Submission import *
+import app
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
+import ClassesList
 A_CAT=set(['cpp'])
 SC=set(['jpeg'])
 def givenode(node_name):
@@ -201,7 +203,7 @@ def get_clarifications(cntst_id):
     pass
 
 def UpcomingContests():
-    contest_db = mongo.db.contests
+    contest_db = app.mongo.db.contests
     contest_cursor = contest_db.find({}).sort([['Start Date', 1], ['Start Time', 1]])
     pclist = []
     for pc in contest_cursor:
@@ -224,7 +226,7 @@ def UpcomingContests():
 
         cd = datetime.datetime.strptime(xx, "%Y-%m-%d %H:%M")
         if ds >= dt:
-            pclist.append(tripled(starting_datetime, ending_date, id, name))
+            pclist.append(ClassesList.tripled(starting_datetime, ending_date, id, name))
 
     return pclist
 
