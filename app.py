@@ -440,10 +440,10 @@ languages = ["Java", "C", "Python"]
 # )
 # app.config.from_object(__name__)
 # codemirror = CodeMirror(app)
-from codemirrorform import CodemirrorForm
-
-def runPython(auxForm):
-    pass
+# from codemirrorform import CodemirrorForm
+#
+# def runPython(auxForm):
+#     pass
     # form = CodemirrorForm(auxForm)
     # text = form.source_code.data
     # now=time.time()
@@ -487,8 +487,8 @@ def runPython(auxForm):
     #                            languages=languages)
 
 
-def runJava(auxForm):
-    pass
+# def runJava(auxForm):
+#     pass
     # form = CodemirrorForm(auxForm)
     # text = form.source_code.data
     # now = time.time()
@@ -552,8 +552,8 @@ def runJava(auxForm):
     #                            languages=languages)
     #
 
-def runC(auxForm):
-    pass
+# def runC(auxForm):
+#     pass
     # form = CodemirrorForm(auxForm)
     # text = form.source_code.data
     # now = time.time()

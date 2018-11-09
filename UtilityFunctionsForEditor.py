@@ -1,4 +1,6 @@
 import datetime, time, os
+import multiprocessing
+
 from codemirrorform import CodemirrorForm
 from app import session
 
@@ -159,7 +161,8 @@ def submitCode(auxform, problemId):
 
 
 def cleanup():
-    os.system("rm -r submissions/" + getUserId())
+    # os.system("rm -r submissions/" + getUserId())
+    pass
 
 
 from bson.objectid import ObjectId
@@ -238,3 +241,59 @@ def getInputsForUdebug(filename):
 
 def extractInputName(x, problemId):
     return x.replace(problemId, "").replace(".txt", "")
+
+
+def runUtil(args):
+    if args.get("language") == "Python":
+        if args.get("type") == "with custom inputs":
+            os.system("python3 " + getProgramFileName("Python") + " < " + getCustomInputsFileName() + " 1>" +
+                      getOutputFileName() + " 2>"
+                      + getErrorFileName())
+        elif args.get("type") == "without custom inputs":
+            os.system("python3 " + getProgramFileName(
+                "Python") + " 1>" + getOutputFileName() + " 2>" + getErrorFileName())
+        elif args.get("type") == "submit":
+            os.system("python3 " + getProgramFileName("Python") + " < " + getTestCaseFileName(
+                args.get("problem id")) + " 1>" +
+                      getOutputFileName() + " 2>"
+                      + getErrorFileName())
+
+    elif args.get("language") == "C":
+        if args.get("type") == "with custom inputs":
+            os.system(" ./" + getExecutibleFileName("C") + " < " + getCustomInputsFileName() +
+                      " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+        elif args.get("type") == "without custom inputs":
+            os.system(" ./" + getExecutibleFileName("C") + " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+        elif args.get("type") == "submit":
+            os.system(" ./" + getExecutibleFileName("C") + " < " + getTestCaseFileName(args.get("problem id")) +
+                      " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+
+
+    elif args.get("language") == "Java":
+        if args.get("type") == "with custom inputs":
+            os.system("java -cp " + getExecutibleFileName("Java") + " Main <" + getCustomInputsFileName() +
+                      " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+
+
+        elif args.get("type") == "without custom inputs":
+            os.system("java -cp " + getExecutibleFileName("Java") + " Main " + " 1> " +
+                      getOutputFileName() + " 2> " + getErrorFileName())
+        elif args.get("type") == "submit":
+            os.system(
+                "java -cp " + getExecutibleFileName("Java") + " Main <" + getTestCaseFileName(args.get("problem id")) +
+                " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+
+
+def runWithCoverage(args):
+    now = time.time()
+    p = multiprocessing.Process(target=runUtil, args=(args,))
+    p.start()
+    p.join(5)
+    then = time.time()
+    print(args)
+    if p.is_alive():
+        p.terminate()
+        return ("status", "timeout")
+    else:
+
+        return (now, then)
