@@ -4802,7 +4802,6 @@
 
         setSize: methodOp(function (width, height) {
             var cm = this;
-
             function interpret(val) {
                 return typeof val == "number" || /^\d+$/.test(String(val)) ? val + "px" : val;
             }

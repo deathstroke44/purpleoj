@@ -13,14 +13,15 @@
     <body>
     <br>
     {% if problemTitle!=None %}
-        <p><b>{{ problemTitle }}</b></p>
+
+        <p class="offset-1"><b>{{ problemTitle }}</b></p>
     {% endif %}
     {#    {% include 'layout.html' %}#}
     {% from "includes/_formhelpers.html" import render_field %}
     <div class="form-group">
         <form id="form" method="POST" action="">
-            <div class="container">
-                <div style="padding-left: 2%" class=" form-group">
+            <div class="container offset-1 col-md-10">
+                <div style="padding-left: 2%" class=" form-group col-sm">
                     <label for="inputs_table"><font color="black">Select An Input</font></label>
                     <br>
                     <table class="table table-striped table-hover table-bordered" width="1000" id="inputs_table">
@@ -41,7 +42,7 @@
                     </table>
 
                 </div>
-                <div style="padding-left: 2%">
+                <div align="center" style="padding-left: 5%" class="col-sm">
                     <label for="input_textarea"><font color="black">Inputs</font></label>
                     <br>
                     <textarea id="input_textarea" name="input_textarea" cols="50"
@@ -49,34 +50,34 @@
                 </div>
 
             </div>
-            <input type="submit" class="btn btn-primary center-block" name="get_accepted_output_button"
-                   value="Get Accepted Output" id="get_accepted_output_button"/>
+            <p align="center"><input type="submit" class="btn btn-dark shadow" name="get_accepted_output_button"
+                                     value="Get Accepted Output" id="get_accepted_output_button"/></p>
 
 
-            <div class="container">
+            <div class="container offset-1 col-md-10">
 
-                <div style="padding-left: 2%">
+                <div style="padding-left: 2%" class="col-sm">
 
                     <label for="accepted_output_textarea"><font color="black">Accepted Outputs</font></label>
                     <br>
-                    <textarea id="accepted_output_textarea" name="accepted_output_textarea" cols="50"
+                    <textarea id="accepted_output_textarea" name="accepted_output_textarea" cols="42"
                               rows="10">{{ acceptedOutput }}</textarea>
 
                 </div>
 
 
-
-                <div style="padding-left: 2%">
+                <div style="padding-left: 2%" class="col-sm">
                     <label for="your_output_textarea"><font color="black">Your Outputs</font></label>
                     <br>
-                    <textarea id="your_output_textarea" name="your_output_textarea" cols="50"
+                    <textarea id="your_output_textarea" name="your_output_textarea" cols="42"
                               rows="10">{{ yourOutput }}</textarea>
                 </div>
             </div>
 
 
-            <input type="submit" class="btn btn-primary center-block" name="compare_outputs_button"
-                   value="Compare Outputs" id="compare_outputs_button" align="center"/>
+            <p align="center"><input type="submit" class="btn btn-dark shadow center-block " style="align-self: center"
+                                     name="compare_outputs_button"
+                                     value="Compare Outputs" id="compare_outputs_button" align="center"/>
 
             {% if mismatchNumber>0 %}
                 <p style="padding-top: 2%" align="center">
@@ -144,5 +145,8 @@
 
 
     </script>
+    <script>
+                highlight("online_ide");
+            </script>
     </body>
 {% endblock content %}

@@ -2,6 +2,7 @@
 import newsStrategy
 from newsStrategy import LoadCodeForceStrategy, article_array, LoadHackerRankStrategy, LoadCrazyProgrammerStrategy,LoadTopCoderStrategy,LoadAtCoderStrategy
 from newsAdapter import Socket,Client,Adapter
+from FunctionList import UpcomingContests
 
 codeforce = LoadCodeForceStrategy()
 hackerrank = LoadHackerRankStrategy()
@@ -81,6 +82,8 @@ def newsCall():
 
     import random
     random.shuffle(newsStrategy.article_array)
-    return newsStrategy.article_array
+
+    pclist = UpcomingContests()
+    return newsStrategy.article_array,pclist
 
 

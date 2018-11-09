@@ -1,4 +1,6 @@
 import abc
+import multiprocessing
+
 from UtilityFunctionsForEditor import *
 import app
 import uuid
@@ -44,26 +46,38 @@ def submitCode(auxform, problemId):
 
         if (len(errors) != 0):
             print(errors)
-            submissionInfo["Comilation Status"] = "CE"
+            submissionInfo["Compilation Status"] = "CE"
             return submissionInfo
     # running the program
+    args = dict()
+    args["type"] = "submit"
+    args["problem id"] = problemId
     if selectedLanguage == "Python":
-        now = time.time()
-        os.system("python3 " + getProgramFileName("Python") + " < " + getTestCaseFileName(problemId) + " 1>" +
-                  getOutputFileName() + " 2>" + getErrorFileName())
-        then = time.time()
+        args["language"] = "Python"
+        # now = time.time()
+        # os.system("python3 " + getProgramFileName("Python") + " < " + getTestCaseFileName(problemId) + " 1>" +
+        #           getOutputFileName() + " 2>" + getErrorFileName())
+        # then = time.time()
     elif selectedLanguage == "Java":
-        now = time.time()
-        os.system("java -cp " + getExecutibleFileName("Java") + " Main <" + getTestCaseFileName(problemId) +
-                  " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
-        then = time.time()
+        args["language"] = "Java"
+        # now = time.time()
+        # os.system("java -cp " + getExecutibleFileName("Java") + " Main <" + getTestCaseFileName(problemId) +
+        #           " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+        # then = time.time()
     elif selectedLanguage == "C":
-        now = time.time()
-        os.system(" ./" + getExecutibleFileName("C") + " < " + getTestCaseFileName(problemId) +
-                  " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
-        then = time.time()
-
+        args["language"] = "C"
+        # now = time.time()
+        # os.system(" ./" + getExecutibleFileName("C") + " < " + getTestCaseFileName(problemId) +
+        #           " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+        # then = time.time()
     # reading runtime errors
+    (type, status) = runWithCoverage(args)
+    if type == "status":
+        submissionInfo["Run Status"] = "TLE"
+        submissionInfo["Execution Time"] = "Inf"
+        return submissionInfo
+    else:
+        (now, then) = (type, status)
     finputs = open(getErrorFileName(), "r")
     errors = finputs.readlines()
     finputs.close()
@@ -147,6 +161,7 @@ class SubmitForContestStrategy(SubmitStrategy):
         elif submissionInfo.get("Run Status") != None:
             verdict["Status"] = submissionInfo.get("Run Status")
             print("problemTimeLimit" + problemTimeLimit, submissionInfo.get("Execution Time"))
+
         else:
             print(problemTimeLimit, submissionInfo.get("Execution Time"))
             if float(problemTimeLimit) < float(submissionInfo.get("Execution Time")) * 1000:
@@ -241,11 +256,21 @@ class RunCStrategy(RunStrategy):
             finputs.close()
             # checking for compile errors
             if len(errors) == 0:
-                now = time.time()
-                os.system(" ./" + getExecutibleFileName("C") + " < " + getCustomInputsFileName() +
-                          " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
-                then = time.time()
 
+                # now = time.time()
+                # os.system(" ./" + getExecutibleFileName("C") + " < " + getCustomInputsFileName() +
+                #           " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+                # then = time.time()
+                args = dict()
+                args["language"] = "C"
+                args["type"] = "with custom inputs"
+                (type, status) = runWithCoverage(args)
+                if (type == "status"):
+                    status = "Program has been terminated after running for 5 seconds.\nThis maybe due to an infinity loop or waiting for an input. "
+                    return app.render_template('editor.html', form=form, status=status,
+                                               languages=app.languages)
+                else:
+                    (now, then) = (type, status)
             else:
                 # os.system("rm -r submissions/" + getUserId())
                 return app.render_template('editor.html', form=form, status="Program Compiled with errors",
@@ -254,10 +279,22 @@ class RunCStrategy(RunStrategy):
         # running without inputs
         else:
             if len(errors) == 0:
-                now = time.time()
-                os.system(
-                    " ./" + getExecutibleFileName("C") + " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
-                then = time.time()
+                # now = time.time()
+                # os.system(
+                #     " ./" + getExecutibleFileName("C") + " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+                # then = time.time()
+                args = dict()
+                args["language"] = "C"
+                args["type"] = "without custom inputs"
+                (type, status) = runWithCoverage(args)
+                if (type == "status"):
+                    status = "Program has been terminated after running for 5 seconds.\nThis maybe due to an infinity loop or waiting for an input. "
+                    return app.render_template('editor.html', form=form, status=status,
+                                               languages=app.languages)
+                else:
+                    (now, then) = (type, status)
+
+
             else:
                 # os.system("rm -r submissions/" + getUserId())
                 return app.render_template('editor.html', form=form, status="Program Compiled with errors",
@@ -291,6 +328,7 @@ class RunPythonStrategy(RunStrategy):
         text = form.source_code.data
         now = time.time()
         then = time.time()
+        timeout = False
         fout = open(getProgramFileName("Python"), "w")
         print(text, file=fout)
         fout.close()
@@ -301,17 +339,29 @@ class RunPythonStrategy(RunStrategy):
             print(inputs, file=finputs)
             finputs.close()
             now = time.time()
-            os.system("python3 " + getProgramFileName("Python") + " < " + getCustomInputsFileName() + " 1>" +
-                      getOutputFileName() + " 2>"
-                      + getErrorFileName())
-            then = time.time()
+            args = dict()
+            args["language"] = "Python"
+            args["type"] = "with custom inputs"
+            (type, status) = runWithCoverage(args)
+            if (type == "status"):
+                status = "Program has been terminated after running for 5 seconds.\nThis maybe due to an infinity loop or waiting for an input. "
+                return app.render_template('editor.html', form=form, status=status,
+                                           languages=app.languages)
+            else:
+                (now, then) = (type, status)
 
         else:
-            now = time.time()
-            os.system("python3 " + getProgramFileName(
-                "Python") + " 1>" + getOutputFileName() + " 2>"
-                      + getErrorFileName())
-            then = time.time()
+            args = dict()
+            args["language"] = "Python"
+            args["type"] = "without custom inputs"
+            (type, status) = runWithCoverage(args)
+            if (type == "status"):
+                status = "Program has been terminated after running for 5 seconds.\nThis maybe due to an infinity loop or waiting for an input. "
+                return app.render_template('editor.html', form=form, status=status,
+                                           languages=app.languages)
+            else:
+                (now, then) = (type, status)
+
         finputs = open(getOutputFileName(), "r")
         timeElapsed = then - now
         outputs = finputs.readlines()
@@ -355,9 +405,19 @@ class RunJavaStrategy(RunStrategy):
             finputs.close()
             if len(errors) == 0:
                 now = time.time()
-                os.system("java -cp " + getExecutibleFileName("Java") + " Main <" + getCustomInputsFileName() +
-                          " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
-                then = time.time()
+                args = dict()
+                args["language"] = "Java"
+                args["type"] = "with custom inputs"
+                (type, status) = runWithCoverage(args)
+                if (type == "status"):
+                    status = "Program has been terminated after running for 5 seconds.\nThis maybe due to an infinity loop or waiting for an input. "
+                    return app.render_template('editor.html', form=form, status=status,
+                                               languages=app.languages)
+                else:
+                    (now, then) = (type, status)
+                # os.system("java -cp " + getExecutibleFileName("Java") + " Main <" + getCustomInputsFileName() +
+                #           " 1> " + getOutputFileName() + " 2> " + getErrorFileName())
+
             else:
                 print(errors)
                 # os.system("rm -r submissions/" + getUserId())
@@ -367,10 +427,23 @@ class RunJavaStrategy(RunStrategy):
         # running without inputs
         else:
             if len(errors) == 0:
-                now = time.time()
-                os.system("java -cp " + getExecutibleFileName("Java") + " Main " + " 1> " +
-                          getOutputFileName() + " 2> " + getErrorFileName())
-                then = time.time()
+
+                # os.system("java -cp " + getExecutibleFileName("Java") + " Main " + " 1> " +
+                #           getOutputFileName() + " 2> " + getErrorFileName())
+                args = dict()
+                args["language"] = "Java"
+                args["type"] = "without custom inputs"
+                print("asdf")
+                (type, status) = runWithCoverage(args)
+                print(type, status)
+                if (type == "status"):
+                    print("terminated")
+                    status = "Program has been terminated after running for 5 seconds.\nThis maybe due to an infinity loop or waiting for an input. "
+                    return app.render_template('editor.html', form=form, status=status,
+                                               languages=app.languages)
+                else:
+                    (now, then) = (type, status)
+
 
             else:
                 print(errors)

@@ -70,8 +70,9 @@ class Mediator {
     }
 
 
-    constructor() {
-        this._edited=false
+    constructor(status) {
+        this._status = status;
+        this._edited = false
         this._boilerPlateCodes = {};
         this._boilerPlateCodes["Java"] = "class Main {\n" +
             "    public static void main(String[] args) {\n" +
@@ -120,10 +121,11 @@ class Mediator {
     }
 
     dropDownSelectAction() {
-        if (this._edited==false || this._editor.getValue().length==0){
+        document.cookie = "language=" + this._dropDown.options[this._dropDown.selectedIndex].value;
+        if ((this._edited == false && this._status.length == 0) || this._editor.getValue().length == 0) {
             this.setEditorBoilerPlateCode(
                 this._boilerPlateCodes[this._dropDown.options[this._dropDown.selectedIndex].value]);
-            this._edited=false
+            this._edited = false
         }
     }
 
@@ -131,7 +133,8 @@ class Mediator {
     checkboxAction() {
         if (this._checkbox.checked) {
             this._inputDiv.style.display = "block";
-            if (this._inputsTextArea.length == 0) {
+
+            if (this._inputsTextArea.value.length == 0 || this._inputsTextArea.value.length == undefined) {
                 this._runButton.disabled = true;
                 this._submitButton.disabled = true;
             }
@@ -142,8 +145,6 @@ class Mediator {
                 this._runButton.disabled = false;
                 this._submitButton.disabled = false;
             }
-
-
 
 
         }
@@ -166,13 +167,15 @@ class Mediator {
 
 
     editorKeyUp(cm, event) {
-        this._edited=true;
+        this._edited = true;
 
         if ((!cm.state.completionActive && /*Enables keyboard navigation in autocomplete list*/
             event.keyCode != 13 && event.code != "Backspace")) {
-            /*Enter - do not open autocomplete list just after item has been selected in it*/
-            CodeMirror.commands.autocomplete(cm, null, {completeSingle: false});
+            if (cm.getValue().split("\n")[cm.getCursor().line].length != 0) {
+                /*Enter - do not open autocomplete list just after item has been selected in it*/
+                CodeMirror.commands.autocomplete(cm, null, {completeSingle: false});
 
+            }
         }
 
         if (this._inputDiv.style.display == "none") {
@@ -199,21 +202,38 @@ class Mediator {
         }
     }
 
-    newThemeSelected(){
-        this._editor.setOption("theme",this._themeSelect.options[this._themeSelect.selectedIndex].value);
-        document.cookie="theme="+this._themeSelect.options[this._themeSelect.selectedIndex].value;
+    newThemeSelected() {
+        this._editor.setOption("theme", this._themeSelect.options[this._themeSelect.selectedIndex].value);
+        document.cookie = "theme=" + this._themeSelect.options[this._themeSelect.selectedIndex].value;
     }
 
-    init(data,theme) {
-        if(data.length==0) {
-            this.setEditorBoilerPlateCode(this._boilerPlateCodes["Python"]);
+    getCookie(cname) {
+
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    init(data, theme) {
+        if (data.length == 0) {
+            this.setEditorBoilerPlateCode(this._boilerPlateCodes[this.getCookie("language")]);
         }
         else {
             this._editor.getDoc().setValue(data);
         }
         this.checkboxAction();
-        this._edited=false;
-        this._themeSelect.value=theme;
+        this._edited = false;
+        this._themeSelect.value = theme;
 
     }
 
