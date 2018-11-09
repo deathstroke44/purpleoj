@@ -92,7 +92,7 @@
                   <br>
                   <div align="center"><font>End Time</font></div>
                   <div align="center">
-                     <strong class="sttimes">{{ pc.ed }}</strong>
+                     <strong>{{ pc.ed }}</strong>
                   </div>
                </div>
             </div>
@@ -114,6 +114,21 @@
    w3.includeHTML();
 </script>
 <script type="text/javascript">
+        function get(d,h,m,s) {
+                if(d==0 && m==0 && h==0)
+                {
+                    return  s + "s ";
+                }
+                if(d==0 && h==0)
+                {
+                    return m + "m " + s + "s ";
+                }
+                if(d==0)
+                {
+                    return h + "h " + m + "m " + s + "s ";
+                }
+                return d + "d " + h + "h " + m + "m " + s + "s ";
+        }
          var elements=document.getElementsByClassName('times');
          var ed_times=new Array(0);
          var elements1=document.getElementsByClassName('sttimes');
@@ -152,8 +167,7 @@
                  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
                  elements2[xx].innerHTML="Contest Has not started yet";
-                 elements[xx].innerHTML = days + "d " + hours + "h "
-         + minutes + "m " + seconds + "s ";
+                 elements[xx].innerHTML = get(days,hours,minutes,seconds);//days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
 
                  }
                  else{
@@ -164,8 +178,7 @@
                  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
                  elements2[xx].innerHTML="Contest is running";
-                 elements[xx].innerHTML = days + "d " + hours + "h "
-         + minutes + "m " + seconds + "s ";
+                 elements[xx].innerHTML = get(days,hours,minutes,seconds);//days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
                  if (distance < 0) {
                      //clearInterval(x);
                      elements[xx].innerHTML = "Contest Ended";
