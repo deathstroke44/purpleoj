@@ -2,158 +2,163 @@
 {% block head %}
 {% endblock head %}
 {% block content %}
-<head>
-    <script src="/static/vendor/codemirror/js/codemirror.js"></script>
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/codemirror.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/base16-dark.css">
-    <script src="/static/vendor/codemirror/js/css-hint.js"></script>
-    <script src="/static/vendor/codemirror/js/show-hint.js"></script>
-    <script src="/static/Patterns/MediatorForEditor/AddCheckbox.js"></script>
-    <script src="/static/Patterns/MediatorForEditor/Mediator.js"></script>
-    <script src="/static/Patterns/MediatorForEditor/AddInputsTextArea.js"></script>
-    <script src="/static/Patterns/MediatorForEditor/AddInputDiv.js"></script>
-    <script src="/static/Patterns/MediatorForEditor/AddEditor.js"></script>
-    <script src="/static/Patterns/MediatorForEditor/AddDropdown.js"></script>
-    <script src="/static/Patterns/MediatorForEditor/AddRunButton.js"></script>
-    <script src="/static/Patterns/MediatorForEditor/AddSubmitButton.js"></script>
-    <script src="/static/Patterns/MediatorForEditor/AddThemeSelect.js"></script>
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/show-hint.css">
-    <link rel="stylesheet" href="/static/css/editor.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/3024-day.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/3024-night.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/abcdef.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/ambiance.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/ambiance-mobile.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/base16-dark.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/base16-light.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/bespin.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/blackboard.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/cobalt.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/colorforth.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/darcula.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/dracula.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/duotone-dark.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/duotone-light.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/eclipse.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/elegant.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/erlang-dark.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/gruvbox-dark.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/hopscotch.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/icecoder.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/idea.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/isotope.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/lesser-dark.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/liquibyte.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/lucario.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/material.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/mbo.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/mdn-like.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/midnight.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/monokai.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/neat.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/neo.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/night.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/oceanic-next.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/panda-syntax.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/paraiso-dark.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/paraiso-light.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/pastel-on-dark.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/railscasts.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/rubyblue.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/seti.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/shadowfox.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/solarized.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/ssms.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/the-matrix.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/tomorrow-night-bright.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/tomorrow-night-eighties.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/ttcn.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/twilight.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/vibrant-ink.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/xq-dark.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/xq-light.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/yeti.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/zenburn.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/addon/fold/foldgutter.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/inlet.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/addon/lint/lint.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/addon/dialog/dialog.css">
-    <link rel="stylesheet" href="/static/vendor/codemirror/addon/hint/show-hint.css">
-    <script src="/static/vendor/codemirror/lib/codemirror.js"></script>
-    <script src="/static/vendor/codemirror/mode/javascript/javascript.js"></script>
-    <script src="/static/vendor/codemirror/mode/xml/xml.js"></script>
-    <script src="/static/vendor/codemirror/mode/css/css.js"></script>
-    <script src="/static/vendor/codemirror/mode/htmlmixed/htmlmixed.js"></script>
-    <script src="/static/vendor/codemirror/addon/edit/closetag.js"></script>
-    <script src="/static/vendor/codemirror/addon/edit/matchbrackets.js"></script>
-    <script src="/static/vendor/codemirror/addon/selection/active-line.js"></script>
-    <script src="/static/vendor/codemirror/addon/fold/foldcode.js"></script>
-    <script src="/static/vendor/codemirror/addon/fold/foldgutter.js"></script>
-    <script src="/static/vendor/codemirror/addon/fold/brace-fold.js"></script>
-    <script src="/static/vendor/codemirror/addon/fold/xml-fold.js"></script>
-    <script src="/static/vendor/codemirror/addon/fold/comment-fold.js"></script>
-    <script src="/static/vendor/codemirror/addon/search/search.js"></script>
-    <script src="/static/vendor/codemirror/addon/search/searchcursor.js"></script>
-    <script src="/static/vendor/codemirror/addon/dialog/dialog.js"></script>
-    <script src="/static/vendor/codemirror/addon/hint/show-hint.js"></script>
-    <script src="/static/vendor/codemirror/addon/hint/xml-hint.js"></script>
-    <script src="/static/vendor/codemirror/addon/hint/html-hint.js"></script>
-    <script src="/static/vendor/codemirror/addon/hint/css-hint.js"></script>
-    <script src="/static/vendor/codemirror/addon/hint/javascript-hint.js"></script>
-    <script src="/static/vendor/codemirror/addon/search/match-highlighter.js"></script>
-    <script src="/static/vendor/codemirror/htmlhint.js"></script>
-    <script src="/static/vendor/codemirror/csslint.js"></script>
-    <script src="/static/vendor/codemirror/jshint.js"></script>
-    <script src="/static/vendor/codemirror/addon/lint/lint.js"></script>
-    <script src="/static/vendor/codemirror/addon/lint/html-lint.js"></script>
-    <script src="/static/vendor/codemirror/addon/lint/css-lint.js"></script>
-    <script src="/static/vendor/codemirror/addon/lint/javascript-lint.js"></script>
-    <script src="/static/vendor/codemirror/inlet.min.js"></script>
-    <script src="/static/vendor/codemirror/emmet.js"></script>
-    <script src="/static/vendor/codemirror/addon/search/jump-to-line.js"></script>
-    <script src="/static/vendor/codemirror/markdown.js"></script>
-    <script src="/static/vendor/codemirror/continuelist.js"></script>
-    <script src="/static/vendor/codemirror/mode/ruby/ruby.js"></script>
-    <script src="/static/vendor/codemirror/mode/haml/haml.js"></script>
-    <script src="/static/vendor/codemirror/mode/jade/jade.js"></script>
-    <script src="/static/vendor/codemirror/mode/sass/sass.js"></script>
-    <script src="/static/vendor/codemirror/mode/livescript/livescript.js"></script>
-    <script src="/static/vendor/codemirror/mode/coffeescript/coffeescript.js"></script>
-    <script src="/static/vendor/codemirror/coffee-script.js"></script>
-    <script src="/static/vendor/codemirror/coffeelint.js"></script>
-    <script src="/static/vendor/codemirror/addon/lint/coffeescript-lint.js"></script>
-    <script src="/static/vendor/codemirror/mode/stylus/stylus.js"></script>
-</head>
+    <head>
+        <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap.min.css">
+        <script src="/static/vendor/jquery/jquery.min.js"></script>
+        <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+        <script src="/static/vendor/codemirror/js/codemirror.js"></script>
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/codemirror.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/base16-dark.css">
+        <script src="/static/vendor/codemirror/js/css-hint.js"></script>
+        <script src="/static/vendor/codemirror/js/show-hint.js"></script>
+        <script src="/static/Patterns/MediatorForEditor/AddCheckbox.js"></script>
+        <script src="/static/Patterns/MediatorForEditor/Mediator.js"></script>
+        <script src="/static/Patterns/MediatorForEditor/AddInputsTextArea.js"></script>
+        <script src="/static/Patterns/MediatorForEditor/AddInputDiv.js"></script>
+        <script src="/static/Patterns/MediatorForEditor/AddEditor.js"></script>
+        <script src="/static/Patterns/MediatorForEditor/AddDropdown.js"></script>
+        <script src="/static/Patterns/MediatorForEditor/AddRunButton.js"></script>
+        <script src="/static/Patterns/MediatorForEditor/AddSubmitButton.js"></script>
+        <script src="/static/Patterns/MediatorForEditor/AddThemeSelect.js"></script>
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/show-hint.css">
+        <link rel="stylesheet" href="/static/css/editor.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/3024-day.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/3024-night.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/abcdef.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/ambiance.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/ambiance-mobile.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/base16-dark.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/base16-light.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/bespin.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/blackboard.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/cobalt.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/colorforth.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/darcula.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/dracula.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/duotone-dark.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/duotone-light.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/eclipse.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/elegant.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/erlang-dark.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/gruvbox-dark.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/hopscotch.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/icecoder.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/idea.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/isotope.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/lesser-dark.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/liquibyte.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/lucario.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/material.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/mbo.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/mdn-like.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/midnight.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/monokai.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/neat.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/neo.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/night.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/oceanic-next.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/panda-syntax.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/paraiso-dark.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/paraiso-light.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/pastel-on-dark.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/railscasts.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/rubyblue.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/seti.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/shadowfox.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/solarized.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/ssms.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/the-matrix.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/tomorrow-night-eighties.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/ttcn.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/twilight.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/vibrant-ink.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/xq-dark.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/xq-light.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/yeti.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/css/theme/zenburn.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/addon/fold/foldgutter.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/inlet.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/addon/lint/lint.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/addon/dialog/dialog.css">
+        <link rel="stylesheet" href="/static/vendor/codemirror/addon/hint/show-hint.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <script src="/static/vendor/codemirror/lib/codemirror.js"></script>
+        <script src="/static/vendor/codemirror/mode/javascript/javascript.js"></script>
+        <script src="/static/vendor/codemirror/mode/xml/xml.js"></script>
+        <script src="/static/vendor/codemirror/mode/css/css.js"></script>
+        <script src="/static/vendor/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+        <script src="/static/vendor/codemirror/addon/edit/closetag.js"></script>
+        <script src="/static/vendor/codemirror/addon/edit/matchbrackets.js"></script>
+        <script src="/static/vendor/codemirror/addon/selection/active-line.js"></script>
+        <script src="/static/vendor/codemirror/addon/fold/foldcode.js"></script>
+        <script src="/static/vendor/codemirror/addon/fold/foldgutter.js"></script>
+        <script src="/static/vendor/codemirror/addon/fold/brace-fold.js"></script>
+        <script src="/static/vendor/codemirror/addon/fold/xml-fold.js"></script>
+        <script src="/static/vendor/codemirror/addon/fold/comment-fold.js"></script>
+        <script src="/static/vendor/codemirror/addon/search/search.js"></script>
+        <script src="/static/vendor/codemirror/addon/search/searchcursor.js"></script>
+        <script src="/static/vendor/codemirror/addon/dialog/dialog.js"></script>
+        <script src="/static/vendor/codemirror/addon/hint/show-hint.js"></script>
+        <script src="/static/vendor/codemirror/addon/hint/xml-hint.js"></script>
+        <script src="/static/vendor/codemirror/addon/hint/html-hint.js"></script>
+        <script src="/static/vendor/codemirror/addon/hint/css-hint.js"></script>
+        <script src="/static/vendor/codemirror/addon/hint/javascript-hint.js"></script>
+        <script src="/static/vendor/codemirror/addon/search/match-highlighter.js"></script>
+        <script src="/static/vendor/codemirror/htmlhint.js"></script>
+        <script src="/static/vendor/codemirror/csslint.js"></script>
+        <script src="/static/vendor/codemirror/jshint.js"></script>
+        <script src="/static/vendor/codemirror/addon/lint/lint.js"></script>
+        <script src="/static/vendor/codemirror/addon/lint/html-lint.js"></script>
+        <script src="/static/vendor/codemirror/addon/lint/css-lint.js"></script>
+        <script src="/static/vendor/codemirror/addon/lint/javascript-lint.js"></script>
+        <script src="/static/vendor/codemirror/inlet.min.js"></script>
+        <script src="/static/vendor/codemirror/emmet.js"></script>
+        <script src="/static/vendor/codemirror/addon/search/jump-to-line.js"></script>
+        <script src="/static/vendor/codemirror/markdown.js"></script>
+        <script src="/static/vendor/codemirror/continuelist.js"></script>
+        <script src="/static/vendor/codemirror/mode/ruby/ruby.js"></script>
+        <script src="/static/vendor/codemirror/mode/haml/haml.js"></script>
+        <script src="/static/vendor/codemirror/mode/jade/jade.js"></script>
+        <script src="/static/vendor/codemirror/mode/sass/sass.js"></script>
+        <script src="/static/vendor/codemirror/mode/livescript/livescript.js"></script>
+        <script src="/static/vendor/codemirror/mode/coffeescript/coffeescript.js"></script>
+        <script src="/static/vendor/codemirror/coffee-script.js"></script>
+        <script src="/static/vendor/codemirror/coffeelint.js"></script>
+        <script src="/static/vendor/codemirror/addon/lint/coffeescript-lint.js"></script>
+        <script src="/static/vendor/codemirror/mode/stylus/stylus.js"></script>
+    </head>
     <style>
         .CodeMirror {
             resize: vertical;
             overflow: auto !important;
         }
     </style>
-<main role="main" >
-    <div class="row">
-       <div class="col-md-12">
-        <div class="offset-1 col-md-11">
-           <h1 class="lead"><font size="20px"><strong>Code and Compile</strong></font></h1>
+    <main role="main">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="offset-1 col-md-11">
+                    <h1 class="lead"><font size="20px"><strong>Code and Compile</strong></font></h1>
+                </div>
+                <br>
+            </div>
         </div>
-        <br>
-       </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            {% from "includes/_formhelpers.html" import render_field %}
-            <br>
-            <div class="offset-1 col-md-10">
-                <form method="POST" action="">
+        <div class="row">
+            <div class="col-md-12">
+                {% from "includes/_formhelpers.html" import render_field %}
+                <br>
+                <div class="offset-1 col-md-10">
+                    <form method="POST" action="">
                     <span>
                         <select id="languages" name=languages method="GET" action="">
                             {% for language in languages %}
-                            <option value="{{ language }}" SELECTED>{{ language }}</option>
-                            "
+                                <option value="{{ language }}" SELECTED>{{ language }}</option>
+                                "
                             {% endfor %}
                         </select>
                     </span>
-                    <span style="margin-left:70%;">
+                        <span style="margin-left:70%;">
                         <select id="themes" name=themes method="GET" action="">
                             <option value='3024-day'>3024-day</option>
                             <option value='3024-night'>3024-night</option>
@@ -213,153 +218,202 @@
                             <option value='zenburn'>zenburn</option>
                         </select>
                     </span>
-                   <br><br>
-                    <script src="/static/vendor/codemirror/js/codemirror.js"></script>
-                    <link rel="stylesheet" href="/static/vendor/codemirror/css/codemirror.css">
-                    <script src="/static/vendor/codemirror/js/python.js"></script>
-                    <link rel="stylesheet" href="/static/vendor/codemirror/css/base16-light.css">
-                    <script src="/static/vendor/codemirror/js/placeholder.js"></script>
-                    <script src="/static/vendor/codemirror/js/anyword-hint.js"></script>
-                    <script src="/static/vendor/codemirror/js/show-hint.js"></script>
-                    <link rel="stylesheet" href="/static/vendor/codemirror/css/show-hint.css">
-                    <div class="form-group">
+                        <br><br>
+                        <script src="/static/vendor/codemirror/js/codemirror.js"></script>
+                        <link rel="stylesheet" href="/static/vendor/codemirror/css/codemirror.css">
+                        <script src="/static/vendor/codemirror/js/python.js"></script>
+                        <link rel="stylesheet" href="/static/vendor/codemirror/css/base16-light.css">
+                        <script src="/static/vendor/codemirror/js/placeholder.js"></script>
+                        <script src="/static/vendor/codemirror/js/anyword-hint.js"></script>
+                        <script src="/static/vendor/codemirror/js/show-hint.js"></script>
+                        <link rel="stylesheet" href="/static/vendor/codemirror/css/show-hint.css">
+                        <div class="form-group">
                         <textarea class="form_control" id="flask-codemirror-source_code"
                                   name="source_code">{{ form.source_code.data }}</textarea>
-                    </div>
-                    <p>
-                        <input type="submit" class="btn btn-dark" name="run" value="Run" id="run_button"/>
-                        <input type="submit" class="btn btn-dark" name="submit" value="Submit" id="submit_button"/>
-                        <script>
-                            if (window.location.href.endsWith("/onlineide")) {
-                                document.getElementById("submit_button").style.display = "none";
+                        </div>
+                        <p>
+                            <input type="submit" class="btn btn-dark" name="run" value="Run" id="run_button"/>
+                            <input type="submit" class="btn btn-dark" name="submit" value="Submit" id="submit_button"/>
+                            <script>
+                                if (window.location.href.endsWith("/onlineide")) {
+                                    document.getElementById("submit_button").style.display = "none";
+                                }
+                            </script>
+                            <input type="checkbox" class="checkbox-inline" id="custom_input" name="custom_input"
+                                   value="custom inputs"/>
+                            <label for="custom_input"><font color="black">Custom Inputs</font></label>
+                        </p>
+                        <div id="inputdiv" class="form-group">
+                            {{ render_field(form.inputs, class_="form-control",id="inputs") }}
+                        </div>
+                        {% if  outputs|length != 0 %}
+                            <table class="table table-striped table-hover table-bordered" id="mydata">
+                                <font size="12"> <b><i>
+
+                                    {% if status=="RTE" %}
+                                        <a href="/submissions/{{ submissionId }}"><font
+                                                color="#8b4513">{{ status }}</font></a>
+                                    {% elif status=="AC" %}
+                                        <a href="/submissions/{{ submissionId }}"> <font color=green>{{ status }}</font></a>
+                                    {% elif status=="CE" %}
+                                        <a href="/submissions/{{ submissionId }}"><font
+                                                color="#a52a2a">{{ status }}</font></a>
+                                    {% elif status=="TLE" %}
+                                        <a href="/submissions/{{ submissionId }}"><font color="blue">{{ status }}</font></a>
+                                    {% elif status=="WA" %}
+                                        <a href="/submissions/{{ submissionId }}"><font color="red">{{ status }}</font></a>
+                                    {% else %}
+                                        <a>{{ status }}</a>
+                                    {% endif %}
+
+                                </i></b></font> <i data-toggle="tooltip" title="Copy Output!" id="output-copier"
+                                                   class="material-icons right tooltipped"
+                                                   data-delay="50" data-tooltip="Copy Output"
+                                                   onclick="copyToClipboard('out')">content_copy</i>
+                                <script>
+                                    $(document).ready(function () {
+                                        $('[data-toggle="tooltip"]').tooltip();
+                                    });
+
+                                </script>
+                            </table>
+                            <hr>
+                            <div id="out">
+                                {% for output in outputs %}
+
+                                    <div>
+
+                                        {% if loop.index!=outputs|length %}{{ output }}{% endif %}
+
+                                    </div>
+
+
+                                {% endfor %}
+                                <p></p>
+                            </div>
+                            <p>{{ outputs[outputs|length-1] }}</p>
+
+
+                        {% endif %}
+
+                        {#                    <table class="table table-striped table-hover table-bordered" id="data">#}
+                        {##}
+                        {#                        <tr>#}
+                        {#                            {% if  check_submissions =="Check Submissions" %}#}
+                        {#                            <td>#}
+                        {#                                <p><a href="/submissions">{{ check_submissions }}</a></p>#}
+                        {#                            </td>#}
+                        {#                            {% endif %}#}
+                        {#                        </tr>#}
+                        {##}
+                        {#                    </table>#}
+
+                    </form>
+                </div>
+                <script>
+                    var status = "{{ status}}";
+                    var previouscode = document.getElementById("flask-codemirror-source_code").value;
+                    var mediator;
+                    mediator = new Mediator(status);
+                    checkbox = new AddCheckbox(mediator, "custom_input").checkbox;
+                    inputTextArea = new AddInputsTextArea(mediator, "inputs").inputTextArea;
+                    inputDiv = new AddInputDiv(mediator, "inputdiv").inputDiv;
+                    runButton = new AddRunButton(mediator, "run_button").button;
+                    submitButton = new AddSubmitButton(mediator, "submit_button").button;
+
+                    editor_for_source_code = new AddEditor(mediator, "flask-codemirror-source_code", {
+                            "extraKeys": {
+                                "Ctrl-Space": "autocomplete",
+
+                            },
+                            "mode": "python",
+                            "theme": getTheme(),
+                            "lineWrapping": "true",
+                            "lineNumbers": "true",
+                            "autoCloseTags": "true",
+                            "foldGutter": "true",
+                            "dragDrop": "true",
+                            "lint": "true",
+                            "gutters": ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],
+                            "matchBrackets": "true"
+                        }
+                    ).editor;
+
+                    dropDown = new AddDropdown(mediator, "languages").select;
+                    themeSelect = new AddThemeSelect(mediator, "themes").select
+                    editor_for_source_code.setSize(null, getCookie("CodemirrorHieght"));
+                    mediator.init(previouscode, getTheme());
+
+                    function getTheme() {
+                        var cname = "theme"
+                        var name = cname + "=";
+                        var decodedCookie = decodeURIComponent(document.cookie);
+                        var ca = decodedCookie.split(';');
+                        for (var i = 0; i < ca.length; i++) {
+                            var c = ca[i];
+                            while (c.charAt(0) == ' ') {
+                                c = c.substring(1);
                             }
-                        </script>
-                        <input type="checkbox" class="checkbox-inline" id="custom_input" name="custom_input"
-                            value="custom inputs"/>
-                        <label for="custom_input"><font color="black">Custom Inputs</font></label>
-                    </p>
-                    <div id="inputdiv" class="form-group">
-                        {{ render_field(form.inputs, class_="form-control",id="inputs") }}
-                    </div>
-                    {% if outputs != None %}
-                    <table class="table table-striped table-hover table-bordered" id="mydata">
-                        <font size="12"> <b><i>
-                            {% if status=="RTE" %}
-                                <a href="/submissions/{{ submissionId }}"><font color="#8b4513">{{ status }}</font></a>
-                            {% elif status=="AC" %}
-                                <a href="/submissions/{{ submissionId }}"> <font color=green>{{ status }}</font></a>
-                            {% elif status=="CE" %}
-                                <a href="/submissions/{{ submissionId }}"><font color="#a52a2a">{{ status }}</font></a>
-                            {% elif status=="TLE" %}
-                                <a href="/submissions/{{ submissionId }}"><font color="blue">{{ status }}</font></a>
-                            {% elif status=="WA" %}
-                                <a href="/submissions/{{ submissionId }}"><font color="red">{{ status }}</font></a>
-                            {% else %}
-                                <a>{{ status }}</a>
-                            {% endif %}
-                        </i></b></font>
-                        {% for output in outputs %}
-                        <tr>
-                            <td>
-                                {{ output }}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                    {% endif %}
+                            if (c.indexOf(name) == 0) {
+                                return c.substring(name.length, c.length);
+                            }
+                        }
+                        document.cookie = "theme=base16-dark";
+                        return "base16-dark";
+                    }
 
-                    {#                    <table class="table table-striped table-hover table-bordered" id="data">#}
-                    {##}
-                    {#                        <tr>#}
-                    {#                            {% if  check_submissions =="Check Submissions" %}#}
-                    {#                            <td>#}
-                    {#                                <p><a href="/submissions">{{ check_submissions }}</a></p>#}
-                    {#                            </td>#}
-                    {#                            {% endif %}#}
-                    {#                        </tr>#}
-                    {##}
-                    {#                    </table>#}
+                    function getCookie(cname) {
 
-                </form>
+                        var name = cname + "=";
+                        var decodedCookie = decodeURIComponent(document.cookie);
+                        var ca = decodedCookie.split(';');
+                        for (var i = 0; i < ca.length; i++) {
+                            var c = ca[i];
+                            while (c.charAt(0) == ' ') {
+                                c = c.substring(1);
+                            }
+                            if (c.indexOf(name) == 0) {
+                                return c.substring(name.length, c.length);
+                            }
+                        }
+                        return "";
+                    }
+
+                    function copyToClipboard(id) {
+                        var el = document.getElementById(id);
+                        var body = document.body, range, sel;
+                        if (document.createRange && window.getSelection) {
+                            range = document.createRange();
+                            sel = window.getSelection();
+                            sel.removeAllRanges();
+                            try {
+                                range.selectNodeContents(el);
+                                sel.addRange(range);
+                            } catch (e) {
+                                range.selectNode(el);
+                                sel.addRange(range);
+                            }
+                        } else if (body.createTextRange) {
+                            range = body.createTextRange();
+                            range.moveToElementText(el);
+                            range.select();
+                        }
+
+                        document.execCommand("copy");
+                        if (window.getSelection) {
+                            window.getSelection().removeAllRanges();
+                        }
+                        else if (document.selection) {
+                            document.selection.empty();
+                        }
+                    }
+
+
+                </script>
             </div>
-            <script>
-                var status = "{{ status}}";
-                var previouscode = document.getElementById("flask-codemirror-source_code").value;
-                var mediator;
-                mediator = new Mediator(status);
-                checkbox = new AddCheckbox(mediator, "custom_input").checkbox;
-                inputTextArea = new AddInputsTextArea(mediator, "inputs").inputTextArea;
-                inputDiv = new AddInputDiv(mediator, "inputdiv").inputDiv;
-                runButton = new AddRunButton(mediator, "run_button").button;
-                submitButton = new AddSubmitButton(mediator, "submit_button").button;
-
-                editor_for_source_code = new AddEditor(mediator, "flask-codemirror-source_code", {
-                        "extraKeys": {
-                            "Ctrl-Space": "autocomplete",
-
-                        },
-                        "mode": "python",
-                        "theme": getTheme(),
-                        "lineWrapping": "true",
-                    "lineNumbers": "true",
-                        "autoCloseTags": "true",
-                        "foldGutter": "true",
-                        "dragDrop": "true",
-                        "lint": "true",
-                        "gutters": ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],
-                        "matchBrackets": "true"
-                    }
-                ).editor;
-
-                dropDown = new AddDropdown(mediator, "languages").select;
-                themeSelect = new AddThemeSelect(mediator, "themes").select
-                mediator.init(previouscode,getTheme());
-                editor_for_source_code.setSize(null, getCookie("CodemirrorHieght"));
-                setInterval(function () {
-                    document.cookie = "CodemirrorHieght=" + editor_for_source_code.getWrapperElement().offsetHeight;
-                }, 200);
-                function getTheme() {
-                var cname="theme"
-                var name = cname + "=";
-                var decodedCookie = decodeURIComponent(document.cookie);
-                var ca = decodedCookie.split(';');
-                for(var i = 0; i <ca.length; i++) {
-                    var c = ca[i];
-                    while (c.charAt(0) == ' ') {
-                        c = c.substring(1);
-                    }
-                    if (c.indexOf(name) == 0) {
-                        return c.substring(name.length, c.length);
-                    }
-                }
-                    document.cookie = "theme=base16-dark";
-                return "base16-dark";
-                }
-
-                function getCookie(cname) {
-
-                    var name = cname + "=";
-                    var decodedCookie = decodeURIComponent(document.cookie);
-                    var ca = decodedCookie.split(';');
-                    for (var i = 0; i < ca.length; i++) {
-                        var c = ca[i];
-                        while (c.charAt(0) == ' ') {
-                            c = c.substring(1);
-                        }
-                        if (c.indexOf(name) == 0) {
-                            return c.substring(name.length, c.length);
-                        }
-                    }
-                    return "";
-                }
-
-
-
-            </script>
         </div>
-    </div>
-</main>
+    </main>
     <script>
-                highlight("onlineide");
-            </script>
+        highlight("onlineide");
+    </script>
 {% endblock content %}

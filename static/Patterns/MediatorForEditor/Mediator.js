@@ -87,6 +87,7 @@ class Mediator {
             "   return 0;\n" +
             "}"
         this._boilerPlateCodes["Python"] = "print(\"Hello, World\")"
+
     }
 
     setInputTextArea(string) {
@@ -234,6 +235,10 @@ class Mediator {
         this.checkboxAction();
         this._edited = false;
         this._themeSelect.value = theme;
+
+        setInterval(function () {
+            document.cookie = "CodemirrorHieght=" + editor_for_source_code.getWrapperElement().offsetHeight;
+        }, 200);
 
     }
 
