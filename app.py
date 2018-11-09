@@ -89,19 +89,19 @@ def upload_file():
         # check if the post request has the file part
         sbcnt = int(request.form.get('cnt'))
         if not pdfvalid(strr='file', request=request):
-            return redirect(request.url)
+            return render_template('upload_problem.html', error='WA', nameform=nameform)
         if sbcnt >= 1:
             if not txtvalid(strr='ifile1', request=request) or not txtvalid(strr='ofile1',
                                                                       request=request) or nameform.point1.data == None:
-                return redirect(request.url)
+                return render_template('upload_problem.html',error='WA',nameform=nameform)
         if sbcnt >= 2:
             if not txtvalid(strr='ifile2', request=request) or not txtvalid(strr='ofile2',
                                                                       request=request) or nameform.point2.data == None:
-                return redirect(request.url)
+                return render_template('upload_problem.html',error='WA',nameform=nameform)
         if sbcnt >= 3:
             if not txtvalid(strr='ifile3', request=request) or not txtvalid(strr='ofile3',
                                                                       request=request) or nameform.point3.data == None:
-                return redirect(request.url)
+                return render_template('upload_problem.html', error='WA',nameform=nameform)
         checkerd =False
         if valid1(strr='checker',request=request):
             checkerd=True
@@ -150,7 +150,7 @@ def upload_file():
             'setter': session['username'],
             'checker':checkerd
         })
-
+        return render_template('upload_problem.html',error='AC',nameform=nameform)
         return redirect(url_for('upload_file', filename=filename))
 
     if not ('username' in session):
