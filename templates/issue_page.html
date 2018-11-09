@@ -75,7 +75,7 @@
           <!-- Single Comment -->
             {% for comment in comment_array %}
           <div class="media mb-4">
-            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+            <img class="d-flex mr-3 rounded-circle" src="/static/uploads/{{comment.username}}.jpeg" alt="" width="50" height="50">
             <div class="media-body">
 
               <h5 class="mt-0"><a href="/profile/{{comment.username}}" style="color:black;text-decoration:none;"> {{comment.username}}</a></h5>
