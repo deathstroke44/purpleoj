@@ -192,7 +192,7 @@ class SubmitNormalStrategy(SubmitStrategy):
         submissionDatabase = app.mongo.db.submissions
         problemsdb = ProblemsDatabase()
         submissionInfo = submitCode(auxFrom, problemId)
-        # problemsdb.incrementSumissionCount(problemsDatabase, problemId)
+        problemsdb.incrementSumissionCount(problemsDatabase, problemId)
         print(submissionInfo)
         problemTimeLimit = problemsDatabase.find_one({"myid": problemId}).get("time_limit")
         verdict = dict()
@@ -208,7 +208,7 @@ class SubmitNormalStrategy(SubmitStrategy):
             else:
                 if submissionInfo.get("Result Verdict") == "Passed":
                     verdict["Status"] = "AC"
-                    # problemsdb.incrementAcSumissionCount(problemsDatabase, problemId)
+                    problemsdb.incrementAcSumissionCount(problemsDatabase, problemId)
                 else:
                     verdict["Status"] = "WA"
         verdict["Execution Time"] = submissionInfo.get("Execution Time")
@@ -217,7 +217,7 @@ class SubmitNormalStrategy(SubmitStrategy):
         verdict["Code"] = submissionInfo.get("Code")
         verdict["Contest Id"] = ""
         verdict["Submission Id"] = uuid.uuid4().__str__()
-        # print(submissionDatabase.insert(verdict))
+        print(submissionDatabase.insert(verdict))
         print(verdict)
         cleanup()
         return app.render_template('editor.html', form=CodemirrorForm(auxFrom), status=verdict.get("Status"),
