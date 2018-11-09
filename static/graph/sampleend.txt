@@ -36,5 +36,8 @@
  <script>
        highlight("graph");
    </script>
+   <script>
+                highlight("Problem Set");
+            </script>
 </body>
 {% endblock content %}
