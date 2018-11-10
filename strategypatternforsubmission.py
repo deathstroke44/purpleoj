@@ -221,6 +221,7 @@ class SubmitNormalStrategy(SubmitStrategy):
         print(submissionDatabase.insert(verdict))
         print(verdict)
         cleanup()
+        print(verdict.get("Status"))
         return app.render_template('editor.html', form=CodemirrorForm(auxFrom), status=verdict.get("Status"),
                                    languages=app.languages, check_submissions="Check Submissions",
                                    submissionId=verdict["Submission Id"])
