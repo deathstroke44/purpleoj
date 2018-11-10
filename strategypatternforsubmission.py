@@ -181,7 +181,8 @@ class SubmitForContestStrategy(SubmitStrategy):
         verdict["Submission Id"] = uuid.uuid4().__str__()
         submissionDatabase.insert(verdict)
         return app.render_template('editor.html', form=CodemirrorForm(auxFrom), status=verdict.get("Status"),
-                                   languages=app.languages, check_submissions="Check Submissions")
+                                   languages=app.languages, check_submissions="Check Submissions",
+                                   submissionId=verdict["Submission Id"])
 
 
 class SubmitNormalStrategy(SubmitStrategy):
@@ -221,7 +222,8 @@ class SubmitNormalStrategy(SubmitStrategy):
         print(verdict)
         cleanup()
         return app.render_template('editor.html', form=CodemirrorForm(auxFrom), status=verdict.get("Status"),
-                                   languages=app.languages, check_submissions="Check Submissions")
+                                   languages=app.languages, check_submissions="Check Submissions",
+                                   submissionId=verdict["Submission Id"])
 
 
 class RunStrategy(object):
