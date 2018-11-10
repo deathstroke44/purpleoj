@@ -146,16 +146,99 @@
 
 </script>
 <script type="text/javascript">
+    class SubjectAbastract
+        {
+            constructor()
+            {
+                this.states="public";
+                this.list=new Array(0);
+            }
+            addObserver()
+            {
+                throw new Error("Needs to implements in subclass");
+            }
+            notifyall()
+            {
+                throw new Error("Needs to implements in subclass");
+            }
+            setState(xx)
+            {
+                //this.states=xx;
+                //this.notifyall();
+            }
+        }
+        class Subject extends SubjectAbastract
+        {
+            constructor()
+            {
+                super();
+            }
+            addObserver(obs)
+            {
+                this.list.push(obs);
+                //alert("observer added");
+            }
+            setState(xx)
+            {
+                this.states=xx;
+                //alert(this.states);
+                this.notifyall();
+                //this.notifyall();
+            }
+            notifyall()
+            {
+                var i=0;
+                //alert(this.list.length);
+                for(i=0;i<this.list.length;i++)
+                {
+                    var xx=this.list[i];
+                    xx.update();
+                }
+            }
+        }
+        class Obsever
+        {
+            constructor(subject)
+            {
+                this.subject=subject;
+                this.subject.addObserver(this);
+            }
+            update()
+            {
+                throw new Error("Needs to implements in subclass");
+            }
+        }
+        class First extends Obsever
+        {
+            constructor(subject)
+            {
+                super(subject);
+            }
+            update()
+            {
+
+                //alert("Update first observer");
+                //alert(subject.states);
+                var xx=this.subject.states;
+                var xxx=document.getElementById("password");
+                //alert(xx);
+                if(xx.toLocaleString()=="public")
+                {
+                    xxx.style.display='none';
+
+                }
+                else xxx.style.display='block';
+
+            }
+        }
+        let subject=new Subject();
+        let first=new First(subject);
     document.getElementById("cb").onchange=function () {
         var x=document.getElementById("cb").value;
         var xx=document.getElementById("password");
         //alert(x);
-        if(x.toLocaleString()=="public")
-        {
-            xx.style.display='none';
 
-        }
-        else xx.style.display='block';
+        subject.setState(x);
     }
     
 </script>

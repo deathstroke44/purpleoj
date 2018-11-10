@@ -85,7 +85,7 @@ def txtvalid(strr, request):
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     nameform = UploadForm(request.form)
-    if request.method == 'POST':
+    if request.method == 'POST' and nameform.validate():
         # check if the post request has the file part
         sbcnt = int(request.form.get('cnt'))
         if not pdfvalid(strr='file', request=request):
@@ -246,7 +246,7 @@ def index():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm(request.form)
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate():
         names = form.name.data
         emails = form.email.data
         usernames = form.username.data
@@ -270,7 +270,7 @@ def register():
 def login():
     print("hello world")
     form = LoginForm(request.form)
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate():
         username = form.username.data
         password = form.password.data
         user = mongo.db.userlist
@@ -669,7 +669,7 @@ def contestant_wise_submission_formatter(submissions,total_problem,contest_start
                 submission_time=eachsub['Submission Time']
                 acc+=1
                 execution_time=eachsub['Execution Time']
-                penalty+=20*cnt+execution_time*100-100
+                penalty+=20*cnt+execution_time*100
                 cnt+=1
                 break
             cnt+=1

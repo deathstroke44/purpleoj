@@ -20,7 +20,7 @@
             <div class="row">
                <div class="col-md-12">
                   <div class="col-md-12" >
-                     <div class="picbox" style="" id="lol">
+                     <div class="picbox" style="float: right " id="lol" >
                      </div>
                      <span class="la offset-0" style="margin-left:20px;margin:10px;">
                      <font size="6"><strong id="usn" >{{user.username}}</strong></font></span>
@@ -140,7 +140,7 @@
             display()
             {
                 var x="/static/uploads/"+this.real;
-                x="\<img src="+"\""+x+".jpeg\""+ " height=\"150\" width=\"150\""+"\>";
+                x="\<img class=\"d-flex mr-3 rounded float-right\" src="+"\""+x+".jpeg\""+ " width=\"150\""+"\>";
                 document.getElementById("lol").innerHTML=x;
             }
         }
@@ -161,7 +161,7 @@
                 if(this.real==null)
                 {
                     var x="/static/uploads/"+this.proxy;
-                    x="\<img src="+"\""+x+".jpeg\""+ " height=\"150\" width=\"150\""+"\>";
+                    x="\<img class=\"d-flex mr-3 rounded float-right\" src="+"\""+x+".jpeg\""+ " width=\"150\""+"\>";
                     document.getElementById("lol").innerHTML=x;
                 }
                 else this.real.display();
