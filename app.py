@@ -835,8 +835,9 @@ def check_contest(contst_id):
 # clarification
 @app.route('/currentcontest/<cntst_id>/clarifications')
 def clarifications(cntst_id):
-    plist = FunctionList.get_clarifications(cntst_id)
-    return render_template("clarifications.html",selectmenu=plist,clarifications=plist)
+    pass
+    # plist = FunctionList.get_clarifications(cntst_id)
+    # return render_template("clarifications.html",selectmenu=plist,clarifications=plist)
 
 
 # add new clarification
@@ -853,6 +854,15 @@ def show_my_contest(contestID,problemID):
     contests_db = mongo.db.contests
     name, submission_list = FunctionList.get_my_submissions(submission_db,problems_db,contests_db,contestID,problemID,session["username"])
     return render_template("contest_submissions.html",title=name, submissions=submission_list)
+
+# all submissions of a contest
+@app.route('/currentcontest/<cntst_id>/submissions')
+def show_contest_submissions(cntst_id):
+    submission_db = mongo.db.submissions
+    problems_db = mongo.db.problems
+    contests_db = mongo.db.contests
+    name, submission_list = FunctionList.get_contest_submissions(submission_db,problems_db,contests_db,cntst_id)
+    return render_template("submissions.html",title=name, submissions=submission_list)
 
 
 ######################################################################################################
@@ -921,6 +931,8 @@ def test():
     problemsDatabase.incrementSumissionCount(mongo.db.problems,'ceed47bd-95a0-4297-bc75-6b46cc2b54c7')
     print("done")
     return "done"
+
+
 if __name__ == '__main__':
     app.secret_key = 'SUPER SECRET KEY'
     app.config['SESSION_TYPE'] = 'filesystem'
