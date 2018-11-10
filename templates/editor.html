@@ -246,7 +246,7 @@
                         <div id="inputdiv" class="form-group">
                             {{ render_field(form.inputs, class_="form-control",id="inputs") }}
                         </div>
-                        {% if  outputs|length != 0 %}
+
                             <table class="table table-striped table-hover table-bordered" id="mydata">
                                 <font size="12"> <b><i>
 
@@ -289,9 +289,12 @@
 
 
                                 {% endfor %}
+
                                 <p></p>
-                            </div>
-                            <p>{{ outputs[outputs|length-1] }}</p>
+                                {% if  outputs|length != 0 %}
+                                    </div>
+
+                                    <p>{{ outputs[outputs|length-1] }}</p>
 
 
                         {% endif %}
