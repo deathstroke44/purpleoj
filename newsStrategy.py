@@ -48,8 +48,8 @@ class LoadCodeForceStrategy(NewsStrategyAbstract):
                     content = str(content).replace(imageSource, 'http://codeforces.com/' + imageSource)
 
         for link in content2.find_all('a'):
-            if link:
-                linkSource = link['href']
+            if link and link.get('href'):
+                linkSource = link.get('href',' ')
                 st = 'http'
                 if linkSource.find(st) == -1:
                     content = str(content).replace(linkSource, 'http://codeforces.com/' + linkSource)

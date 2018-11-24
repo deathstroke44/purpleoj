@@ -46,7 +46,7 @@ class AtCoder(NewsMain):
 
 def newsCall():
     socket = Socket()
-    #socket.getData()
+    socket.getData()
     adapter = Adapter(socket)
     client = Client(adapter)
 
@@ -81,7 +81,7 @@ def newsCall():
     #     instance.Load(i)
 
     import random
-    random.shuffle(newsStrategy.article_array)
+    #random.shuffle(newsStrategy.article_array)
 
     pclist = UpcomingContests()
     return newsStrategy.article_array,pclist
